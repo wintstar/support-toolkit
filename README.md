@@ -1,4 +1,4 @@
-[![Support Toolkit](images/support_toolkit_logo_large.png)](https://github.com/wintstar/support-toolkit/ "Support Toolkit")
+[![Support Toolkit](stk/images/support_toolkit_logo_large.png)](https://github.com/wintstar/support-toolkit/ "Support Toolkit")
 
 Dies ist ein Fork des STK (Support Toolkit) - Tools für phpBB 3.3.14 in deutsch von [Mahony](http://phpbb3-support.square7.ch/viewtopic.php?p=5058 "STK für phpBB3.3.14")
 
