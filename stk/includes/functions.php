@@ -246,13 +246,16 @@ function user_lang()
 
 */
 function stk_add_lang($lang_file)
-{	global $template, $lang, $user, $config;
+{
+	global $template, $lang, $user, $config;
 
 	if (empty($user->data) || !$user->data['user_lang'] || $user->data['user_id'] == 1)
-	{		$default_lang = $config['default_lang'];
+	{
+		$default_lang = $config['default_lang'];
 	}
 	else
-	{		$default_lang = $user->data['user_lang'];
+	{
+		$default_lang = $user->data['user_lang'];
 	}
 
 	include(PHPBB_ROOT_PATH . 'language/' . $default_lang . '/common.' . PHP_EXT);
@@ -353,17 +356,21 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 					$v = (PHPBB_VERSION >= '3.3.0') ? "3.3.{$i}" : "3.2.{$i}";
 
 					if ($config['version'] < PHPBB_VERSION)
-					{						for ($i = $_phpbb_version; $i > 1; $i--)
+					{
+						for ($i = $_phpbb_version; $i > 1; $i--)
 						{
 							$d = ($v == $config['version']) ? " default='default'" : '';
 							$version_options .= "<option value='{$v}'{$d}>{$v}</option>";
 						}
 					}
 					else
-					{						list(,, $_phpbb_version) = explode('.', $version_data['current']);
+					{
+						list(,, $_phpbb_version) = explode('.', $version_data['current']);
 						for($i = $_phpbb_version; $i > 1; $i--)
-						{							$d = ($v == $config['version']) ? " default='default'" : '';
-							$version_options .= "<option value='{$v}'{$d}>{$v}</option>";						}					}
+						{
+							$d = ($v == $config['version']) ? " default='default'" : '';
+							$version_options .= "<option value='{$v}'{$d}>{$v}</option>";						}
+					}
 
 					$template->assign_vars(array(
 						'UPDATES_AVAILABLE'				=> (!$version_options && (PHPBB_VERSION < $version_data['current'] || $config['version'] < $version_data['current'])) ? sprintf($user->lang['UPDATES_AVAILABLE'], $version_data['current'], $announcement) : false,
@@ -1254,3 +1261,73 @@ function output($msg)
 	));
 }
 
+function check_json($dir, $file_name)
+{
+	global $lang, $default_lang, $user;
+
+	stk_add_lang('ext_cleaner');
+
+	if (file_exists(PHPBB_ROOT_PATH . $dir . '/' . $file_name . '.json'))
+	{
+		$string = file_get_contents(PHPBB_ROOT_PATH . $dir . '/' . $file_name . '.json');
+
+		json_decode($string);
+
+		switch(json_last_error()) {
+			case JSON_ERROR_NONE:
+				$message = sprintf($lang['EXT_JSON_ERROR_NONE'], $file_name);
+				$error_type = JSON_ERROR_NONE;
+			break;
+			case JSON_ERROR_DEPTH:
+				$message = sprintf($lang['EXT_JSON_ERROR_DEPTH'], $file_name);
+				$error_type = JSON_ERROR_DEPTH;
+			break;
+			case JSON_ERROR_STATE_MISMATCH:
+				$message = sprintf($lang['EXT_JSON_ERROR_STATE_MISMATCH'], $file_name);
+				$error_type = JSON_ERROR_STATE_MISMATCH;
+			break;
+			case JSON_ERROR_CTRL_CHAR:
+				$message = sprintf($lang['EXT_JSON_ERROR_CTRL_CHAR'], $file_name);
+				$error_type = JSON_ERROR_CTRL_CHAR;
+			break;
+			case JSON_ERROR_SYNTAX:
+				$message = sprintf($lang['EXT_JSON_ERROR_SYNTAX'], $file_name);
+				$error_type = JSON_ERROR_SYNTAX;
+			break;
+			case JSON_ERROR_UTF8:
+				$message = sprintf($lang['EXT_JSON_ERROR_UTF8'], $file_name);
+				$error_type = JSON_ERROR_UTF8;
+			break;
+			case JSON_ERROR_RECURSION:
+				$message = sprintf($lang['EXT_JSON_ERROR_RECURSION'], $file_name);
+				$error_type = JSON_ERROR_RECURSION;
+			break;
+			case JSON_ERROR_INF_OR_NAN:
+				$message = sprintf($lang['EXT_JSON_ERROR_INF_OR_NAN'], $file_name);
+				$error_type = JSON_ERROR_INF_OR_NAN;
+			break;
+			case JSON_ERROR_UNSUPPORTED_TYPE:
+				$message = sprintf($lang['EXT_JSON_ERROR_UNSUPPORTED_TYPE'], $file_name);
+				$error_type = JSON_ERROR_UNSUPPORTED_TYPE;
+			break;
+			case JSON_ERROR_INVALID_PROPERTY_NAME:
+				$message = sprintf($lang['EXT_JSON_ERROR_INVALID_PROPERTY_NAME'], $file_name);
+				$error_type = JSON_ERROR_INVALID_PROPERTY_NAME;
+			break;
+			case JSON_ERROR_UTF16:
+				$message = sprintf($lang['EXT_JSON_ERROR_UTF16'], $file_name);
+				$error_type = JSON_ERROR_UTF16;
+			break;
+			default:
+			$message = sprintf($lang['EXT_JSON_ERROR_UNKNOWN'], $file_name);
+			$error_type = 100000;
+			break;
+		}
+
+		return array('message' => $message, 'error_type' => $error_type);
+	}
+	else
+	{
+		return array('message' => sprintf($lang['EXT_NO_JSON'], $file_name, $dir), 'error_type' => 150000);
+	}
+}

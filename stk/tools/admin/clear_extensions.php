@@ -64,15 +64,15 @@ class clear_extensions
 
 	function display_options()
 	{
-		global $db, $template, $lang, $cache, $request, $phpbb_extension_manager, $config, $user;
+		global $db, $template,$phpbb_admin_path, $lang, $cache, $request, $phpbb_extension_manager, $config, $user;
 		$this->ext_manager = $phpbb_extension_manager;
 
 		$user->add_lang('acp/extensions');
+		$u_action = append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=clear_extensions');
 		$off = $request->variable('off', false);
 		$on = $request->variable('on', false);
 
 		page_header($lang['CLEAR_EXTENSIONS']);
-		$no_composer = false;
 
 		if ($off)
 		{
@@ -115,13 +115,11 @@ class clear_extensions
 			trigger_error($lang['ON_EXT_SUCCESS']);
 		}
 
-		$pattern = array('"', ' ');
-		$row_set_disabled = $row_set = array();
+		$row_set = array();
 
 		$sql = 'SELECT ext_name, ext_active
 			FROM ' . EXT_TABLE . '
-				WHERE ext_active = 1
-				ORDER BY ext_name DESC';
+			ORDER BY ext_name';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -129,143 +127,112 @@ class clear_extensions
 		}
 
 		$db->sql_freeresult($result);
-		$sql = 'SELECT ext_name, ext_active
-			FROM ' . EXT_TABLE . '
-				WHERE ext_active = 0
-				ORDER BY ext_name DESC';
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
+
+		$data = array();
+		foreach ($row_set as $row)
 		{
-			$row_set_disabled[] = $row;
-		}
-		$db->sql_freeresult($result);
+			$composer_check = check_json('ext/' . $row['ext_name'], 'composer');
+			$dir_exit = file_exists(PHPBB_ROOT_PATH . 'ext/' . $row['ext_name']) ? true : false;
 
-		$row_set = array_merge($row_set, $row_set_disabled);
+			$data = $row;
 
-		foreach ($row_set as $key => $row)
-		{
-			$path = explode('/', $row['ext_name']);
-			$display_name = $root = $missing_path = '';
-			foreach($path as $key => $ext_path)
+			$data = array(
+				'ext_name' 				=> (string) $row['ext_name'],
+				'ext_installed' 		=> 1,
+				'ext_active' 			=> (bool) $row['ext_active'],
+				'dir_exit' 				=> (bool) $dir_exit,
+				'composer_message' 		=> (string) $composer_check['message'],
+				'composer_error_type'	=> (int) $composer_check['error_type'],
+				'display_name'			=> (string) '',
+				'update'				=> (bool) false,
+				'version_check'			=> (bool) false,
+				'version'				=> (string) '',
+				'current'				=> (string) '',
+				'download'				=> (string) '',
+				'announcement'			=> (string) '',
+				'meta_error'			=> (string) '',
+				'meta_error_msg'		=> (bool) false,
+			);
+
+			if ($composer_check['error_type'] == 0)
 			{
-				if (file_exists(PHPBB_ROOT_PATH . 'ext/' . '' . $path[0] . '/' . $path[1]))
+				if ($row['ext_name'])
 				{
-					$dir = @opendir('' . PHPBB_ROOT_PATH . 'ext/' . $root . '' . $ext_path . '');
-					$file = readdir($dir);
-					$root = '' . $ext_path. '/';
-				}
-				else
-				{
-					$missing_path = $ext_path;
-					break;
-				}
-			}
+					$md_manager = $this->ext_manager->create_extension_metadata_manager($row['ext_name']);
 
-			if (!$missing_path)
-			{
-				if (file_exists('' . PHPBB_ROOT_PATH . 'ext/' . $row['ext_name'] . '/composer.json'))
-				{
-					$buffer =  file_get_contents('' . PHPBB_ROOT_PATH . 'ext/' . $row['ext_name'] . '/composer.json');
-					if ($buffer)
-					{
-						$obj = json_decode($buffer);
-						$display_name = $obj->{'extra'}->{'display-name'};
-						$name = $obj->{'name'};
-					}
-				}
-				else
-				{
-					$no_composer = true;
-				}
-
-				$updates_available = false;
-				$md_manager = $this->ext_manager->create_extension_metadata_manager($name);
-				$meta = $md_manager->get_metadata('all');
-				$version_check_url = false;
-				$version_check_fail = false;
-				$download = false;
-				$current = false;
-				$update_info = array();
-				if (isset($meta['extra']['version-check']))
-				{
-					$version_check_url = 'http://' . $meta['extra']['version-check']['host'] . '' . $meta['extra']['version-check']['directory'] . '/' . $meta['extra']['version-check']['filename'] .'';
 					try
 					{
-						$updates_available = $this->ext_manager->version_check($md_manager, false, false, $config['extension_force_unstable'] ? 'unstable' : null);
-						if ($updates_available)
+						$md_manager->get_metadata('all');
+					}
+					catch (stk_exception_interface $e)
+					{
+						$message = call_user_func_array(array($this->user, 'lang'), array_merge(array($e->getMessage()), $e->get_parameters()));
+						trigger_error($message . adm_back_link($u_action), E_USER_WARNING);
+					}
+				}
+
+				$meta = $md_manager->get_metadata('all');
+
+				$updates_available = array('current' => '', 'download' => '', 'announcement' => '', 'eol' => null, 'security' => false);
+
+				if (isset($meta['extra']['version-check']))
+				{
+					$data['version_check'] = true;
+					$url_force = $phpbb_admin_path . 'index.php?i=acp_extensions&amp;sid='. $user->data['session_id'] . '&amp;action=details&amp;versioncheck_force=1&amp;ext_name=' . urlencode($md_manager->get_metadata('name'));
+
+					try
+					{
+						$data['display_name'] = $md_manager->get_metadata('display-name');
+						$data['version'] = $meta['version'];
+						$updates_available = $this->ext_manager->version_check($md_manager, $request->variable('versioncheck_force', false), false, $config['extension_force_unstable'] ? 'unstable' : null);
+
+						if (!empty($updates_available))
 						{
-							$version_check = $meta['extra']['version-check'];
-							$version_helper = new \phpbb\version_helper($cache, $config, new \phpbb\file_downloader());
-							$version_helper->set_current_version($meta['version']);
-							$version_helper->set_file_location($version_check['host'], $version_check['directory'], $version_check['filename'], isset($version_check['ssl']) ? $version_check['ssl'] : false);
-							$versions = $version_helper->get_versions_matching_stability(true, true);
-							$current_version = $meta['version'];
-							$force_update = $force_cache = false;
-							preg_match('/^(\d+\.\d+).*$/', $config['version'], $matches);
-							$current_branch = $matches[1];
-							// Filter out any versions less than the current version
-							$versions = array_filter($versions, function($data) use ($version_helper, $current_version) {
-								return $version_helper->compare($data['current'], $current_version, '>=');
-							});
-
-							// Filter out any phpbb branches less than the current version
-							$branches = array_filter(array_keys($versions), function($branch) use ($version_helper, $current_branch) {
-								return $version_helper->compare($branch, $current_branch, '>=');
-							});
-							if (!empty($branches))
-							{
-								$versions = array_intersect_key($versions, array_flip($branches));
-							}
-							else
-							{
-								// If branches are empty, it means the current phpBB branch is newer than any branch the
-								// extension was validated against. Reverse sort the versions array so we get the newest
-								// validated release available.
-								krsort($versions);
-							}
-							// Get the first available version from the previous list.
-							$update_info = array_reduce($versions, function($value, $data) use ($version_helper, $current_version) {
-								if ($value === null && $version_helper->compare($data['current'], $current_version, '>='))
-								{
-									if (!$data['eol'] && (!$data['security'] || $version_helper->compare($data['security'], $data['current'], '<=')))
-									{
-										return $version_helper->compare($data['current'], $current_version, '>') ? $data : array();
-									}
-									else
-									{
-										return null;
-									}
-								}
-
-								return $value;
-							});
-							$download = (isset($update_info['download'])) ? $update_info['download'] : $update_info['announcement'];
-							$current = (isset($update_info['current'])) ? $update_info['current'] : '';
+							$data['update'] = true;
+							$data['current'] = $updates_available['current'] ? $updates_available['current'] : '';
+							$data['download'] = $updates_available['download'] ? $updates_available['download'] : '';
+							$data['announcement'] = $updates_available['announcement'] ? $updates_available['announcement'] : '';
 						}
 					}
 					catch (\RuntimeException $e)
 					{
-						$version_check_fail = true;
+						$data['meta_error'] = true;
+						$data['meta_error_msg'] = call_user_func_array(array($user, 'lang'), array_merge(array($e->getMessage()), $e->get_parameters()));
+						$data['version_check'] = false;
 					}
+				}
+				else
+				{
+					$data['display_name'] = $md_manager->get_metadata('display-name');
+					$data['version'] = $meta['version'];
+					$data['version_check'] = false;
 				}
 			}
 
-			$template->assign_block_vars('row', array(
-				'EXT_NAME'				=> $row['ext_name'],
-				'VERSION'				=> (isset($meta)) ? $meta['version'] : null,
-				'VERSION_CHECK_FAIL'	=> (isset($version_check_fail)) ? $version_check_fail : null,
-				'VERSION_NOT_UP_TO_DATE'=> (isset($meta) && $updates_available) ? true : false,
-				'VERSION_CHECK'			=> (isset($meta)) ? $version_check_url : null,
-				'DOWNLOAD'				=> (isset($meta)) ? $download : null,
-				'MISSING_PATH'			=> ($missing_path) ? $missing_path : '',
-				'NO_COMPOSER'			=> ($no_composer) ? true : false,
-				'DISPLAY_NAME'			=> ($display_name) ? $display_name : sprintf($lang['NO_COMPOSER'], $row['ext_name']),
-				'NO_COMPOSER'			=> ($display_name) ? false : true,
-				'S_ACTIVE'				=> $row['ext_active'],
-				'EXT_MISSING_PATH'		=> ($missing_path) ? sprintf($lang['EXT_MISSING_PATH'], $row['ext_name']) : '',
-				'L_NOT_UP_TO_DATE'		=> (isset($meta)) ?  sprintf($user->lang['NOT_UP_TO_DATE'], $current) : null,
+			$template->assign_block_vars('list', array(
+				'S_DIR_EXIT' 			=> ($data['dir_exit']),
+				'S_UP_TO_DATE' 			=> ($data['update']),
+				'S_VIEW_VERSIONS'		=> ($composer_check['error_type'] == 0),
+				'S_META_ERROR'			=> $data['meta_error'],
+				'S_COMPOSER_ERROR'		=> ($composer_check['error_type'] != 0),
+				'S_NO_ANNOUNCEMENT'		=> !empty($data['announcement']) ? true : false,
+				'S_NO_DOWNLOAD'			=> !empty($data['download']) ? true : false,
+				'S_VERSION_CHECK'		=> $data['version_check'],
+
+				'COMPOSER_MESSAGE'		=> $data['composer_message'],
+				'EXT_NAME'				=> $data['ext_name'],
+				'META_ERROR'			=> $data['meta_error_msg'],
+				'EXT_DIR_PATH'			=> !empty($data['dir_exit']) ? PHPBB_REL_PATH . 'ext/' . $data['ext_name'] : '',
+				'EXT_STATUS'			=> ($composer_check['error_type'] != 0) ? false : ($data['ext_active']),
+				'DISPLAY_NAME'			=> !empty($data['display_name']) ? $data['display_name'] : $data['ext_name'],
+
+				'U_ANNOUNCEMENT'		=> $data['announcement'],
+				'U_DOWNLOAD'			=> $data['download'],
+				'U_VERSIONCHECK_FORCE'	=> (isset($meta['extra']['version-check'])) ? $url_force : '',
+
+				'VERSION'				=> $data['version'],
+				'VERSION_CURRENT'		=> $data['current'],
 			));
-			$version_check_fail = false;
 		}
 
 		$template->assign_vars(array(

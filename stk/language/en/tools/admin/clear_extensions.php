@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'				=> 'Verification and management extensions',
-	'CLEAR_EXTENSIONS_EXPLAIN'		=> 'Here you can manage <strong>installed</strong> extensions.',
+	'CLEAR_EXTENSIONS'				=> 'Control and management of extensions (emergency mode)',
+	'CLEAR_EXTENSIONS_EXPLAIN'		=> 'Here you can deactivate/activate or remove <strong>installed</strong> extensions.',
 	'EXT_PATH'						=> 'Path relative to the folder ' . PHPBB_ROOT_PATH . 'ext/',
 	'MISSING_PATH'					=> 'Missing folder',
 	'S_ACTIVE'						=> ' (active) ',
@@ -62,5 +62,31 @@ $lang = array_merge($lang, array(
 	'NO_COMPOSER'					=> 'File not found: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
 	'NO_EXTENSIONS_TITLE'			=> 'Extensions',
 	'NO_EXTENSIONS_TEXT'			=> 'No any installed extensions',
-	'VERSION_CHECK_FAIL'			=> 'Failed to obtain latest version information'
+
+	'EXT_VERSIONCHECK_FAIL'			=> 'The information about the current version could not be called up.',
+	'EXT_NOT_UP_TO_DATE'			=> 'New version',
+	'EXT_INSTALL_VERSION'			=> 'Installed version',
+	'EXT_DIR'						=> 'Directory',
+	'EXT_DIR_EXIT'					=> 'Directory is available',
+	'EXT_DIR_NO_EXIT'				=> 'Directory is not available',
+	'EXT_STATUS'					=> 'Status',
+	'EXT_STATUS_ON'					=> 'Activated',
+	'EXT_STATUS_OFF'				=> 'Deactivated',
+	'EXT_COMPOSER'					=> 'composer.json',
+	'VALID'							=> 'Valid',
+	'NOT_VALID'						=> 'Not valid',
+
+	'EXT_JSON_ERROR_NONE'					=> 'No error has occurred in file: %s.json',
+	'EXT_JSON_ERROR_DEPTH'					=> 'The maximum stack depth has been exceeded in file: %s.json',
+	'EXT_JSON_ERROR_STATE_MISMATCH'			=> 'Invalid or malformed JSON in file: %s.json',
+	'EXT_JSON_ERROR_CTRL_CHAR'				=> 'Control character error, possibly incorrectly encoded in file: %s.json',
+	'EXT_JSON_ERROR_SYNTAX'					=> 'Syntax error in file: %s.json',
+	'EXT_JSON_ERROR_UTF8'					=> 'Malformed UTF-8 characters, possibly incorrectly encoded in file: %s.json',
+	'EXT_JSON_ERROR_RECURSION'				=> 'One or more recursive references in the value to be encoded in file: %s.json',
+	'EXT_JSON_ERROR_INF_OR_NAN'				=> 'One or more NAN or INF values in the value to be encoded  in file: %s.json',
+	'EXT_JSON_ERROR_UNSUPPORTED_TYPE'		=> 'A value of a type that cannot be encoded was given in file: %s.json',
+	'EXT_JSON_ERROR_INVALID_PROPERTY_NAME'	=> 'A property name that cannot be encoded was given in file: %s.json',
+	'EXT_JSON_ERROR_UTF16'					=> 'Malformed UTF-16 characters, possibly incorrectly encoded in file: %s.json',
+	'EXT_JSON_ERROR_UNKNOWN'				=> 'Unknown error in file: %s.json',
+	'EXT_NO_JSON'							=> 'The required file %s.json with the extension “%s” could not be found',
 ));

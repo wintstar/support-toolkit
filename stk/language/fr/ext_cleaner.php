@@ -39,8 +39,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'			=> 'Verifier & gérer les extensions',
-	'CLEAR_EXTENSIONS_EXPLAIN'	=> 'Depuis cette page il est possible de désactiver/activer ou supprimer les supprimer les extensions <strong>installées</strong>.',
 	'EXT_PATH'					=> 'Chemin relatif au répertoire ' . PHPBB_ROOT_PATH . 'ext/',
 	'MISSING_PATH'				=> 'Répertoire manquant ',
 	'S_ACTIVE'					=> ' (activée) ',

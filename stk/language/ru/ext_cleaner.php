@@ -38,8 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'			=> 'Проверка и управление расширениями (аварийный режим)',
-	'CLEAR_EXTENSIONS_EXPLAIN'	=> 'Здесь вы можете отключить/включить или удалить <strong>установленные</strong> расширения.',
 	'EXT_PATH'					=> 'Путь относительно папки ' . PHPBB_ROOT_PATH . 'ext/',
 	'MISSING_PATH'				=> 'Отсутствующая папка',
 	'S_ACTIVE'					=> ' (активно) ',

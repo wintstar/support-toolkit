@@ -14,15 +14,19 @@
 	font-size: 100%;
 }
 
+abbr {
+	text-decoration: none;
+}
+
 body, div, p, th, td, li, dd {
 	font-size: x-small;
 	voice-family: "\"}\"";
 	voice-family: inherit;
-	font-size: small
+	font-size: small;
 }
 
 html>body, html>div, html>p, html>th, html>td, html>li, html>dd {
-	font-size: small
+	font-size: small;
 }
 
 html {
@@ -80,6 +84,13 @@ p {
 	font-size: 0.90em;
 }
 
+p.error {
+	color:#BC2A4D;
+	padding:0 1% 0 2%;
+	margin-bottom: 0.7em;
+	line-height: 1.40em;
+}
+
 ul {
 	list-style: disc;
 	margin: 0 0 1em 2em;
@@ -101,6 +112,12 @@ hr {
 	font-size: 0.85em;
 }
 
+.lside {
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+}
+
 .column1 {
 	float: left;
 	clear: left;
@@ -112,6 +129,12 @@ hr {
 	float: right;
 	clear: right;
 	width: 49%;
+}
+
+.legend {
+	line-height: 1.40em;
+	padding: 0.5%;
+	margin-bottom: 0.7em;
 }
 
 /* General links  */
@@ -455,6 +478,16 @@ table {
 	padding: 1px;
 }
 
+.table2 {
+	display: inline-block;
+	border-spacing: 1px;
+	border-collapse: separate;
+}
+
+th, td {
+	font-size: 1.00em;
+}
+
 th {
 	padding: 3px 4px;
 	color: #FFFFFF;
@@ -462,7 +495,6 @@ th {
 	border-top: 1px solid #6DACD2;
 	border-bottom: 1px solid #327AA5;
 	text-align: left;
-	font-size: 0.75em;
 	text-transform: uppercase;
 }
 
@@ -481,9 +513,21 @@ table.tablesorter thead tr .header {
 
 td {
 	text-align: left;
-	font-size: 0.85em;
 	padding: 4px;
 	line-height: 1.20em;
+}
+
+td.status {
+	text-align: center;
+}
+
+td.update-info {
+	text-align: center;
+	width: 4em;
+}
+
+.tabled {
+	width: 1%;
 }
 
 .rtl th, .rtl td {
@@ -557,6 +601,13 @@ table.type3 td {
 	padding: 1px;
 }
 
+table.type4 {
+	font-size: 1.00em;
+	border: none;
+	background: none;
+	padding: 0 1%;
+}
+
 th.name {
 	text-align: left;
 	width: auto;
@@ -590,6 +641,8 @@ td.name {
 .row4 { background-color: #E4E8EB; }
 .col1 { background-color: #DCEBFE; }
 .col2 { background-color: #F9F9F9; }
+table.zebra-table tbody tr:nth-child(odd) { background-color: #F9F9F9; }
+table.zebra-table tbody tr:nth-child(even) { background-color: #DCEBFE; }
 
 .spacer {
 	background-color: #DBDFE2;
@@ -1074,8 +1127,8 @@ li.pagination {
 
 .pagination ul {
 	display: inline-block;
-	*display: inline; /* IE7 inline-block hack */
-	*zoom: 1;
+	display: inline; /* IE7 inline-block hack */
+	zoom: 1;
 	margin-left: 0;
 	margin-bottom: 0;
 }
@@ -1143,13 +1196,15 @@ li.pagination ul {
 		min-width: 10px;
 	}
 }
+
 /* Action Highlighting
 ---------------------------------------- */
-.successbox, .errorbox {
+.successbox, .errorbox, .warningbox {
 	padding: 8px;
 	margin: 10px 0;
 	color: #FFFFFF;
 	text-align: center;
+	clear: both;
 }
 
 .success {
@@ -1168,18 +1223,20 @@ li.pagination ul {
 	background-color: #BC2A4D;
 }
 
-* html .errorbox, * html .successbox { height: 1%; } /* Pixel shift fix for IE */
+.warningbox {
+	background-color: #fca600;
+}
 
 .successbox h3, .errorbox h3 {
 	color: #FFFFFF;
 	margin: 0 0 0.5em;
-	font-size: 1.10em;
+	font-size: 1.30em;
 	font-family: "Lucida Grande",Verdana,Helvetica,Arial,sans-serif;
 }
 
 .successbox p, .errorbox p {
 	color: #FFFFFF;
-	font-size: 0.85em;
+	font-size: 1.00em;
 	margin-bottom: 0;
 }
 
@@ -1196,8 +1253,8 @@ li.pagination ul {
 	font-weight: bold;
 }
 
-.errorbox p {
-	border-bottom: thin dashed #f5f5f5;
+.notice {
+	background-color: #62A5CC;
 }
 
 /* Special cases for the error page */
@@ -1865,12 +1922,54 @@ dl.querybox {
 	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
 	color: #fff;
 }
-.notice
-{
-	background-image:	url("./../images/notice.png");
 
-}
 .warning
 {
 	background-image:	url("./../images/warning.png");
+}
+
+/* FontAwesome icons
+----------------------------------------*/
+.icon {
+	font-family: FontAwesome;
+}
+
+/* Icons
+----------------------------------------*/
+.acp-icon {
+	font-size: 1.5em;
+}
+
+/* fa fa-bell */
+.acp-icon-bell {
+	color: #ff4500;
+	font-size: 1.00em;
+	font-weight: bold;
+}
+
+/* fa fa-bell-slash */
+.acp-icon-no-bell {
+	color: #80808088;
+	font-size: 1.00em;
+	font-weight: bold;
+}
+
+/* fa fa-download */
+.acp-icon-download {
+	color: #70d61d;
+	font-size: 1.00em;
+	font-weight: bold;
+}
+
+.acp-icon-no-download {
+	color: #80808088;
+	font-size: 1.00em;
+	font-weight: bold;
+}
+
+/* fa fa-refresh */
+.acp-icon-refresh {
+	color: #0a649988;
+	font-size: 1.00em;
+	font-weight: bold;
 }

@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'				=> 'Verifikation und Management der Extensions',
-	'CLEAR_EXTENSIONS_EXPLAIN'		=> 'Hier kannst Du <b>installierte</b> Extensions verwalten.',
+	'CLEAR_EXTENSIONS'				=> 'Kontrolle und Verwaltung von Erweiterungen (Notfallmodus)',
+	'CLEAR_EXTENSIONS_EXPLAIN'		=> 'Hier können sie <strong>Installierte</strong> Erweiterungen deaktivieren/aktivieren oder entfernen.',
 	'EXT_PATH'						=> 'Pfad relativ zum Ordner ' . PHPBB_ROOT_PATH . 'ext/',
 	'MISSING_PATH'					=> 'Fehlender Ordner',
 	'S_ACTIVE'						=> ' (aktiviert) ',
@@ -62,5 +62,31 @@ $lang = array_merge($lang, array(
 	'NO_COMPOSER'					=> 'Datei nicht gefunden: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
 	'NO_EXTENSIONS_TITLE'			=> 'Extensions',
 	'NO_EXTENSIONS_TEXT'			=> 'Keine installierten Extensions',
-	'VERSION_CHECK_FAIL'			=> 'Keine Informationen zur neuesten Version erhalten'
+
+	'EXT_VERSIONCHECK_FAIL'			=> 'Die Informationen über die aktuelle Version konnten nicht abgerufen werden.',
+	'EXT_NOT_UP_TO_DATE'			=> 'Neue Version',
+	'EXT_INSTALL_VERSION'			=> 'Installierte Version',
+	'EXT_DIR'						=> 'Verzeichnis',
+	'EXT_DIR_EXIT'					=> 'Verzeichnis ist vorhanden',
+	'EXT_DIR_NO_EXIT'				=> 'Verzeichnis ist nicht vorhanden',
+	'EXT_STATUS'					=> 'Status',
+	'EXT_STATUS_ON'					=> 'Aktiviert',
+	'EXT_STATUS_OFF'				=> 'Deaktiviert',
+	'EXT_COMPOSER'					=> 'composer.json',
+	'VALID'							=> 'Valide',
+	'NOT_VALID'						=> 'Nicht valide',
+
+	'EXT_JSON_ERROR_NONE'					=> 'Keine Fehler in der Datei: %s.json',
+	'EXT_JSON_ERROR_DEPTH'					=> 'Maximale Stacktiefe überschritten in der Datei: %s.json',
+	'EXT_JSON_ERROR_STATE_MISMATCH'			=> 'Ungültiges oder missgestaltetes JSON in der Datei: %s.json',
+	'EXT_JSON_ERROR_CTRL_CHAR'				=> 'Steuerzeichenfehler, möglicherweise unkorrekt kodiert in der Datei: %s.json',
+	'EXT_JSON_ERROR_SYNTAX'					=> 'Syntaxfehler in der Datei: %s.json',
+	'EXT_JSON_ERROR_UTF8'					=> 'Missgestaltete UTF-8 Zeichen, möglicherweise fehlerhaft kodiert in der Datei: %s.json',
+	'EXT_JSON_ERROR_RECURSION'				=> 'Eine oder mehrere rekursive Referenzen im zu kodierenden Wert in der Datei: %s.json',
+	'EXT_JSON_ERROR_INF_OR_NAN'				=> 'Eine oder mehrere NAN oder INF Werte im zu kodierenden Wert in der Datei: %s.json',
+	'EXT_JSON_ERROR_UNSUPPORTED_TYPE'		=> 'Ein Wert eines Typs, der nicht kodiert werden kann, wurde übergeben in der Datei: %s.json',
+	'EXT_JSON_ERROR_INVALID_PROPERTY_NAME'	=> 'Ein Eigenschaftsname, der nicht kodiert werden kann, wurde übergeben in der Datei: %s.json',
+	'EXT_JSON_ERROR_UTF16'					=> 'Deformierte UTF-16 Zeichen; möglicherweise fehlerhaft kodiert in der Datei: %s.json',
+	'EXT_JSON_ERROR_UNKNOWN'				=> 'Unbekannter Fehler in der Datei: %s.json',
+	'EXT_NO_JSON'							=> 'Die erforderliche Datei %s.json der Erweiterung „%s“ konnte nicht gefunden werden',
 ));

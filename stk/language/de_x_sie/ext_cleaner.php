@@ -38,8 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'			=> 'Verifizieren und Verwalten von Extensions',
-	'CLEAR_EXTENSIONS_EXPLAIN'	=> 'Hier kannst Du die <strong>installierten</strong> Extensions deaktivieren/aktivieren oder entfernen.',
 	'EXT_PATH'					=> 'Pfad relativ zum Ordner ' . PHPBB_ROOT_PATH . 'ext/',
 	'MISSING_PATH'				=> 'Fehlender Ordner ',
 	'S_ACTIVE'					=> ' (enabled) ',
