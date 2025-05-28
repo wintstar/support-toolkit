@@ -15,6 +15,10 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+// Report all errors, except notices and deprecation messages
+$level = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
+error_reporting($level);
+
 // What version are we using?
 define('STK_VERSION', '1.0.19-dev');
 define('STK_QA', true);
@@ -31,6 +35,11 @@ $phpEx = PHP_EXT;
 
 // Prepare some vars
 $stk_no_error = false;
+
+require(STK_ROOT_PATH . 'core/stk_class_loader.' . $phpEx);
+
+$stk_class_loader = new \core\stk_class_loader('core\\', "{$stk_root_path}core/", $phpEx);
+$stk_class_loader->register();
 
 // Include all common stuff
 require(STK_ROOT_PATH . 'includes/fatal_error_handler.' . PHP_EXT);
