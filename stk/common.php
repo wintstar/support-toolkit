@@ -19,11 +19,12 @@ if (!defined('IN_PHPBB'))
 $level = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
 error_reporting($level);
 
+define('ADMIN_START', true);
+
 // What version are we using?
 define('STK_VERSION', '1.0.19-dev');
-define('STK_QA', true);
-
-define('ADMIN_START', true);
+// QA-related
+//define('STK_QA', 1);
 
 // This seems like a rather nasty thing to do, but the only places this IN_LOGIN is checked is in session.php when creating a session
 // Reason for having it is that it allows us in the STK if we can not login and the board is disabled.
@@ -85,36 +86,3 @@ if (!isset($stk_config))
 // Setup some common variables
 $action = $request->variable('action', '');
 $submit = $request->variable('submit', false);
-
-// Try to determine the phpBB version number, we might need that down the road
-// `PHPBB_VERSION` was added in 3.0.3, for older versions just rely on the config
-if (!defined('IN_ERK') && (defined('PHPBB_VERSION') && PHPBB_VERSION == $config['version']) || !defined('PHPBB_VERSION'))
-{
-	define('PHPBB_VERSION_NUMBER', $config['version']);
-	stk_add_lang('common');
-	// Try to determine the phpBB actually version number
-	$updates_available = false;
-	$version_helper = $phpbb_container->get('version_helper');
-	try
-	{
-		$updates_available = $version_helper->get_suggested_updates(false);
-	}
-	catch (\RuntimeException $e)
-	{
-		$template->assign_vars(array(
-			'S_VERSIONCHECK_FAIL'		=> true,
-			'VERSIONCHECK_FAIL_REASON'	=> $user->lang('VERSIONCHECK_FAIL'),
-		));
-	}
-	if ($updates_available)
-	{
-		check_phpbb_version();
-	}
-}
-// Cant correctly determine the version, let the user define it.
-// As the `perform_unauthed_quick_tasks` function is used skip this
-// if there is already an action to be performed.
-else if ($action != 'genpasswdfile' || $action != 'downpasswdfile' || $action != 'stklogout' || $action != 'request_phpbb_version')
-{
-	$action = 'request_phpbb_version';
-}

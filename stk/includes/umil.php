@@ -80,8 +80,6 @@ define('UMIL_VERSION', '1.0.5');
 *	table_row_remove($table_name, $data = array())
 *	table_row_update($table_name, $data = array(), $new_data = array())
 *
-* Version Check Function
-* 	version_check($url, $path, $file)
 */
 class umil
 {
@@ -164,61 +162,27 @@ class umil
 		{
 			global $config, $user, $phpbb_root_path, $phpEx;
 
-			/* Does not have the fall back option to use en/ if the user's language file does not exist, so we will not use it...unless that is changed.
-			if (method_exists('user', 'set_custom_lang_path'))
+			// Include the umil language file.  First we check if the language file for the user's language is available, if not we check if the board's default language is available, if not we use the english file.
+			if (isset($user->data['user_lang']) && file_exists("{$phpbb_root_path}umil/language/{$user->data['user_lang']}/umil.$phpEx"))
 			{
-				$user->set_custom_lang_path($phpbb_root_path . 'umil/language/');
-				$user->add_lang('umil');
-				$user->set_custom_lang_path($phpbb_root_path . 'language/');
+				$path = $user->data['user_lang'];
+			}
+			else if (file_exists("{$phpbb_root_path}umil/language/" . basename($config['default_lang']) . "/umil.$phpEx"))
+			{
+				$path = basename($config['default_lang']);
+			}
+			else if (file_exists("{$phpbb_root_path}umil/language/en/umil.$phpEx"))
+			{
+				$path = 'en';
 			}
 			else
-			{*/
-				// Include the umil language file.  First we check if the language file for the user's language is available, if not we check if the board's default language is available, if not we use the english file.
-				if (isset($user->data['user_lang']) && file_exists("{$phpbb_root_path}umil/language/{$user->data['user_lang']}/umil.$phpEx"))
-				{
-					$path = $user->data['user_lang'];
-				}
-				else if (file_exists("{$phpbb_root_path}umil/language/" . basename($config['default_lang']) . "/umil.$phpEx"))
-				{
-					$path = basename($config['default_lang']);
-				}
-				else if (file_exists("{$phpbb_root_path}umil/language/en/umil.$phpEx"))
-				{
-					$path = 'en';
-				}
-				else
-				{
-					trigger_error('Language Files Missing.<br /><br />Please download the latest UMIL (Unified MOD Install Library) from: <a href="http://www.phpbb.com/mods/umil/">phpBB.com/mods/umil</a>', E_USER_ERROR);
-				}
+			{
+				trigger_error('Language Files Missing.<br /><br />Please download the latest UMIL (Unified MOD Install Library) from: <a href="http://www.phpbb.com/mods/umil/">phpBB.com/mods/umil</a>', E_USER_ERROR);
+			}
 
-				$user->add_lang('./../../umil/language/' . $path . '/umil');
-			//}
+			$user->add_lang('./../../umil/language/' . $path . '/umil');
 
 			$user->add_lang(array('acp/common', 'acp/permissions'));
-
-			// Check to see if a newer version is available.
-			$info = $this->version_check('version.phpbb.com', '/umil', ((defined('PHPBB_QA')) ? 'umil_qa.txt' : 'umil.txt'));
-			if (is_array($info) && isset($info[0]) && isset($info[1]) && defined('DEBUG'))
-			{
-				if (version_compare(UMIL_VERSION, $info[0], '<'))
-				{
-					global $template;
-
-					// Make sure user->setup() has been called
-					if (empty($user->lang))
-					{
-						$user->setup();
-					}
-
-					page_header('', false);
-
-					$user->lang['UPDATE_UMIL'] = (isset($user->lang['UPDATE_UMIL'])) ? $user->lang['UPDATE_UMIL'] : 'This version of UMIL is outdated.<br /><br />Please download the latest UMIL (Unified MOD Install Library) from: <a href="%1$s">%1$s</a>';
-					$template->assign_vars(array(
-						'S_BOARD_DISABLED'		=> true,
-						'L_BOARD_DISABLED'		=> sprintf($user->lang['UPDATE_UMIL'], $info[1]),
-					));
-				}
-			}
 		}
 	}
 
@@ -2849,42 +2813,6 @@ class umil
 		$this->db->sql_query($sql);
 
 		return $this->umil_end();
-	}
-
-	/**
-	* Version Checker
-	*
-	* Format the file like the following:
-	* http://www.phpbb.com/updatecheck/30x.txt
-	*
-	* @param string $url The url to access (ex: www.phpbb.com)
-	* @param string $path The path to access (ex: /updatecheck)
-	* @param string $file The name of the file to access (ex: 30x.txt)
-	*
-	* @return array|string Error Message if there was any error, or an array (each line in the file as a value)
-	*/
-	function version_check($url, $path, $file, $timeout = 10, $port = 443)
-	{
-		if (!function_exists('get_remote_file'))
-		{
-			global $phpbb_root_path, $phpEx;
-
-			include($phpbb_root_path . 'includes/functions_compatibility.php.' . $phpEx);
-		}
-
-		$errstr = $errno = '';
-
-		$info = get_remote_file($url, $path, $file, $errstr, $errno, $port, $timeout);
-
-		if ($info === false)
-		{
-			return $errstr . ' [ ' . $errno . ' ]';
-		}
-
-		$info = str_replace("\r\n", "\n", $info);
-		$info = explode("\n", $info);
-
-		return $info;
 	}
 
 	/**

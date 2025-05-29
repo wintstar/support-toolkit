@@ -245,8 +245,80 @@ if (isset($_POST['cancel']))
 	redirect(append_sid(STK_INDEX, false, true, $user->session_id));
 }
 
+$user->add_lang('install');
+
 // Setup the plugin manager
 $plugin = new plugin();
+
+$stk_version_helper = new \core\stk_version_helper($cache, $config, $stk_config);
+
+try
+{
+	$stk_recheck = $request->variable('stk_versioncheck_force', false);
+	$stk_updates_available = $stk_version_helper->get_update_on_branch($stk_recheck);
+	$stk_upgrades_available = $stk_version_helper->get_suggested_updates();
+
+	if (!empty($stk_upgrades_available))
+	{
+		$stk_upgrades_available = array_pop($stk_upgrades_available);
+	}
+
+	$template->assign_vars(array(
+		'S_STK_VERSION_UP_TO_DATE'		=> empty($stk_updates_available),
+		'S_STK_VERSION_UPGRADEABLE'		=> !empty($stk_upgrades_available),
+		'S_STK_VERSIONCHECK_FORCE'		=> (bool) $stk_recheck,
+		'STK_UPGRADE_INSTRUCTIONS'		=> !empty($stk_upgrades_available) ? user_lang('STK_UPGRADE_INSTRUCTIONS', $stk_upgrades_available['current'], $stk_upgrades_available['announcement']) : false,
+	));
+}
+catch (stk_exception\runtime_exception $e)
+{
+	$message = call_user_func_array(array($user, 'lang'), array_merge(array($e->getMessage()), $e->get_parameters()));
+	$template->assign_vars(array(
+		'S_STK_VERSIONCHECK_FAIL'		=> true,
+		'STK_VERSIONCHECK_FAIL_REASON'	=> ($e->getMessage() !== 'STK_VERSIONCHECK_FAIL') ? $message : '',
+	));
+}
+
+// Incomplete update?
+if (stk_version_compare($config['version'], STK_VERSION, '<'))
+{
+	$template->assign_var('S_STK_UPDATE_INCOMPLETE', true);
+}
+
+$version_helper = $phpbb_container->get('version_helper');
+
+try
+{
+	$recheck = $request->variable('versioncheck_force', false);
+	$updates_available = $version_helper->get_update_on_branch($recheck);
+	$upgrades_available = $version_helper->get_suggested_updates();
+
+	if (!empty($upgrades_available))
+	{
+		$upgrades_available = array_pop($upgrades_available);
+	}
+
+	$template->assign_vars(array(
+		'S_VERSION_UP_TO_DATE'		=> empty($updates_available),
+		'S_VERSION_UPGRADEABLE'		=> !empty($upgrades_available),
+		'S_VERSIONCHECK_FORCE'		=> (bool) $recheck,
+		'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? $user->lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
+	));
+}
+catch (\phpbb\exception\runtime_exception $e)
+{
+	$message = call_user_func_array(array($user, 'lang'), array_merge(array($e->getMessage()), $e->get_parameters()));
+	$template->assign_vars(array(
+		'S_VERSIONCHECK_FAIL'		=> true,
+		'VERSIONCHECK_FAIL_REASON'	=> ($e->getMessage() !== 'VERSIONCHECK_FAIL') ? $message : '',
+	));
+}
+
+// Incomplete update?
+if (phpbb_version_compare($config['version'], PHPBB_VERSION, '<'))
+{
+	$template->assign_var('S_UPDATE_INCOMPLETE', true);
+}
 
 // Output common stuff
 $template->assign_vars(array(
@@ -257,6 +329,11 @@ $template->assign_vars(array(
 	'U_BACK_TOOL'	=> ($plugin->get_part('t')) ? append_sid(STK_INDEX, $plugin->url_arg(), true, $user->session_id) : false,
 	'U_INDEX'		=> append_sid(PHPBB_ROOT_PATH . 'index.' . PHP_EXT),
 	'U_LOGOUT'		=> append_sid(PHPBB_ROOT_PATH . 'ucp.' . PHP_EXT, 'mode=logout', true, $user->session_id),
+
+	'U_STK_VERSIONCHECK'	=> append_sid(STK_INDEX, 'c=main&amp;stk_version_check', true, $user->session_id),
+	'U_STK_VERSIONCHECK_FORCE'	=> append_sid(STK_INDEX, 'c=main&amp;stk_versioncheck_force=1', true, $user->session_id),
+	'U_VERSIONCHECK'	=> append_sid(PHPBB_ROOT_PATH . 'adm/index.' . PHP_EXT, 'i=update&amp;mode=version_check', true, $user->session_id),
+	'U_VERSIONCHECK_FORCE'	=> append_sid(STK_INDEX, 'c=main&amp;versioncheck_force=1', true, $user->session_id),
 
 	'USERNAME'		=> $user->data['username'],
 ));

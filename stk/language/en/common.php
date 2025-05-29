@@ -77,10 +77,6 @@ $lang = array_merge($lang, array(
 	'LOGIN_STK_SUCCESS'					=> 'You have successfully authenticated and will now be redirected to the Support Toolkit.',
 
 	'NOTICE'							=> 'Notice',
-	'NO_VERSION_FILE'					=> 'The Support Toolkit (STK) was not able to determine the latest version. Please go to the <a href="http://phpbb.com/support/stk">Support Toolkit section of phpBB.com</a> and verify that you are using the latest version before using the STK.',
-
-	'REQUEST_PHPBB_VERSION'				=> 'Define phpBB version',
-	'REQUEST_PHPBB_VERSION_EXPLAIN'		=> 'The Support Toolkit was unable to correctly identify which phpBB version you are running, please select the appropriate version in this form before continuing.<br />This indicates that your board files and board version are inconsistent, most likely due to an incomplete update. Please visit the <a href="https://www.phpbb.com/community/viewforum.php?f=46">support forums</a> to get assistance to resolve this issue.',
 
 	'PASS_GENERATED'					=> 'Your STK password file was successfully generated!<br/>The password that was generated for you is: <em>%1$s</em><br />This password will expire on: <span style="text-decoration: underline;">%2$s</span>. After this time you <strong>must</strong> generate a new password file in order to keep using the emergency login feature!<br /><br />Use the following button to download the file. Once you’ve downloaded this file you must upload it to your server into the "stk" directory',
 	'PASS_GENERATED_REDIRECT'			=> 'Once you have uploaded the password file to the correct location, click <a href="%s">here</a> to go back to the login page.',
@@ -114,7 +110,7 @@ $lang = array_merge($lang, array(
 											Click <a href="%s"><b>here</b></a> and go to Emergency Repair Kit - Anonymous user will be automatically restored.',
 
 	'ERK_NO_WHITELIST'					=> 'The BOM sniffer couldn\'t read the whitelist, and can\'t run the tests. Please seek assistance in the <a href="%s">Support Forums</a>.',
-	'ERK_ISSUE_FOUND'					=> 'As part of the “Emergency Repair Kit” of the Support Toolkit the ERK has checked your phpBB files and determined that some of the files contain invalid content that potentially could stop the board from operating. The Support Toolkit has tried to resolve these issues and created a package with the corrected files <em>(backed up versions can be found in <c>store/bom_sniffer_backup/</c>)</em>. This package is stored in the <c>store/bom_sniffer/</c> directory. To apply the changed files to your board please <strong>move</strong> the files from the “store” to their correct location and load the Support Toolkit again. The toolkit will check these files again and will redirect you to the ERK if no flaws are found.<br /><br /><strong style="color: #ff0000;">Before moving the generated files, please make sure that the generated files are correct!</strong> When in doubt please seek assistance in the <a href="http://www.phpbb.com/community/viewforum.php?f=46">support forum</a>.',
+	'ERK_ISSUE_FOUND'					=> 'As part of the “Emergency Repair Kit” of the Support Toolkit the ERK has checked your phpBB files and determined that some of the files contain invalid content that potentially could stop the board from operating. The Support Toolkit has tried to resolve these issues and created a package with the corrected files <em>(backed up versions can be found in <c>store/bom_sniffer_backup/</c>)</em>. This package is stored in the <c>store/bom_sniffer/</c> directory. To apply the changed files to your board please <strong>move</strong> the files from the “store” to their correct location and load the Support Toolkit again. The toolkit will check these files again and will redirect you to the ERK if no flaws are found.<br /><br /><strong style="color: #ff0000;">Before moving the generated files, please make sure that the generated files are correct!</strong> When in doubt please seek assistance in the <a href="https://www.phpbb.com/community/viewforum.php?f=46">support forum</a>.',
 	'ERK_STORE_WRITE'					=> 'The BOM sniffer requires the <c>store</c> directory to exist and to be writable!',
 	'ERK_REMOVE_DIR'					=> 'The Support Toolkit has tried to remove the repaired file storage directory of this tool but wasn\'t able to do so. In order for this tool to run correctly the \'<c>%s</c>\' must be removed from the server. Please remove this directory manually and release the Support Toolkit.',
 	'BOM_SNIFFER_WRITABLE'				=> 'The BOM sniffer requires the ' . STK_ROOT_PATH . 'cache directory to exist and to be writable!',
@@ -132,8 +128,6 @@ $lang = array_merge($lang, array(
 	'CONFIG_LIST'						=> 'Configuration parameters',
 	'CONFIG_LIST_EXPLAIN'				=> 'Here you can view and change the configuration .',
 	'CLOSE'								=> 'Close',
-	'UPDATES_AVAILABLE'					=> 'Your version of phpBB is not the latest. Available version for updates is %1$s<br />Follow this link <a href="%2$s" target="_blank" />%2$s</a> to the release announcement for the latest version, which contains additional information, as well as instructions for updating phpBB',
-	'VERSIONCHECK_FAIL'					=> 'Failed to obtain latest phpBB version information.',
 
 	'SELECT_ALL'						=> 'To select all, move cursor in field below and press Ctrl-A (PC), Cmd-A (Mac) <br />Double click selects a word and triple entire row.',
 
@@ -148,7 +142,26 @@ $lang = array_merge($lang, array(
 	'FILE_WRITE_FAIL'					=> 'Failed to write file',
 	'STK_INCOMPATIBLE'					=> 'This STK version is dedicated to phpBB 3.2.x boards, while your phpBB version is %1$s.',
 
-	'PHPBB_DEBUG'					=> '[phpBB Debug]',
-	'DEBUG_IN_FILE'					=> 'in file',
-	'DEBUG_ON_LINE'					=> 'on line',
+	'PHPBB_DEBUG'						=> '[phpBB Debug]',
+	'DEBUG_IN_FILE'						=> 'in file',
+	'DEBUG_ON_LINE'						=> 'on line',
+
+	'STK_VERSION'						=> 'Version of the Support Tookit',
+
+	'STK_VERSIONCHECK_FAIL'				=> 'The information about the current version could not be retrieved.',
+	'STK_VERSIONCHECK_FORCE_UPDATE'		=> 'Check version again',
+	'STK_VERSION_CHECK'					=> 'Version check',
+	'STK_VERSION_CHECK_EXPLAIN'			=> 'Checks whether the Support Toolkit is up to date.',
+	'STK_VERSIONCHECK_INVALID_ENTRY'	=> 'The information about the current version contains an unsupported entry.',
+	'STK_VERSIONCHECK_INVALID_URL'		=> 'The information about the current version contains an invalid URL.',
+	'STK_VERSIONCHECK_INVALID_VERSION'	=> 'The information about the current version contains an invalid version.',
+	'STK_VERSION_NOT_UP_TO_DATE_ACP'	=> 'Your support toolkit is not up to date..<br />Below is a link to the release announcement, which contains additional information and instructions for updating.',
+	'STK_VERSION_NOT_UP_TO_DATE_TITLE'	=> 'Your support toolkit is not up to date..',
+	'STK_VERSION_UNSTABLE_TITLE'		=> 'There is a new unstable developer version.',
+	'STK_VERSION_UP_TO_DATE_ACP'		=> 'Your Support Toolkit is up to date. No updates are currently available.',
+	'STK_HTTP_HANDLER_NOT_FOUND'		=> 'Dieser Vorgang konnte konnte nicht abgeschlossen werden, weil die cURL-PHP-Erweiterung und die allow_url_fopen-PHP-ini-Einstellung deaktiviert wurden und kein anderer Dienst (HTTP-Handler) zum Aufruf von externen URLs gefunden werden konnte.',
+	'STK_UPGRADE_INSTRUCTIONS'			=> 'A new feature release <strong>%1$s</strong> is available. Please read <a href="%2$s" title="%2$s"><strong>the release announcement</strong></a> to find out what\'s new and for upgrade instructions.',
+	'STK_FILE_NOT_FOUND'				=> 'The specified file could not be found: %s',
+	'STK_FSOCK_DISABLED'				=> 'This process cannot be completed because the <var>fsockopen</var> function has been deactivated or because the specified server could not be found.',
+	'STK_FSOCK_TIMEOUT'					=> 'A timeout has occurred while reading the data stream.',
 ));

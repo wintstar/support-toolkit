@@ -79,10 +79,6 @@ $lang = array_merge($lang, array(
 	'LOGIN_STK_SUCCESS'					=> 'Du hast dich erfolgreich angemeldet und wirst nun zum Support Toolkit weitergeleitet.',
 
 	'NOTICE'							=> 'Hinweis',
-	'NO_VERSION_FILE'					=> 'Das Support Toolkit (STK) war nicht in der Lage, die aktuelle Version zu ermitteln. Bitte besuche die <a href="http://phpbb.com/support/stk">Seiten des Support Toolkits auf phpBB.com</a> und prüfe, ob du die aktuelle Version verwendest, bevor du fortfährst.',
-
-	'REQUEST_PHPBB_VERSION'				=> 'phpBB-Version festlegen',
-	'REQUEST_PHPBB_VERSION_EXPLAIN'		=> 'Die Support-Tools waren nicht in der Lage, die verwendete phpBB-Version zu identifizieren. Bitte wähle die richtige Version aus der Liste aus, bevor du fortfährst.<br />Bitte besuche die <a href="http://www.phpbb.com/community/viewforum.php?f=46">Support-Foren</a> (<a href="https://www.phpbb.de/go/3/supportforum">deutschsprachige Foren</a>), um Unterstützung bei der Behebung des Problems zu erhalten.',
 
 	'PASS_GENERATED'					=> 'Deine STK Passwort-Datei wurde erfolgreich erstellt!<br/>Das Passwort, das für dich erstellt wurde, lautet: <em>%1$s</em><br />Dieses Passwort ist gültig bis: <span style="text-decoration: underline;">%2$s</span>. Nach Ablauf dieser Zeit <strong>musst</strong> du eine neue Passwort-Datei erstellen, um den Notfall-Zugang weiterhin nutzen zu können!<br /><br />Benutze die folgende Schaltfläche, um die Datei herunterzuladen. Anschließend musst du die Datei in das „stk“-Verzeichnis des Servers hochladen.',
 	'PASS_GENERATED_REDIRECT'			=> 'Sobald du die Datei im richtigen Verzeichnis hochgeladen hast, klicke <a href="%s">hier</a>, um zur Anmelde-Seite zurückzukehren.',
@@ -116,7 +112,7 @@ $lang = array_merge($lang, array(
 											Klicke <a href="%s"><b>hier</b></a> und gehe zurück zum Emergency Repair Kit - der Gast Benutzer wird automatisch wiederhergestellt.',
 
 	'ERK_NO_WHITELIST'					=> 'Der BOM-Sniffer konnte die Whitelist nicht lesen und kann die Tests nicht ausführen. Bitte suche Unterstützung in den<a href="%s">Support Foren</a>.',
-	'ERK_ISSUE_FOUND'					=> 'Als Teil des "Notfall-Reparatur-Kits" des Support-Toolkits hat das ERK Ihre phpBB-Dateien überprüft und festgestellt, dass einige Dateien ungültige Inhalte enthalten, die möglicherweise den Betrieb deines Boards behindern könnten.Das Support-Toolkit hat versucht, diese Probleme zu beheben und erstellt ein Paket mit den korrigierten Dateien <em>(die Backup Versionen findest Du unter <c>store/bom_sniffer_backup/</c>)</em>. Das Paket mit den neuen Dateien findest Du im <c>store/bom_sniffer/</c> Verzeichnis. Um die geänderten Dateien auf Dein Board zu übertragen, <strong>verschiebe</strong> die Dateien aus dem "store" an die richtige Stelle und lade das Support Toolkit erneut. Das Toolkit überprüft diese Dateien erneut und leitet Dich zum ERK zurück, wenn keine Fehler aufgetreten sind. .<br /><br /><strong style="color: #ff0000;">Bevor Du die erzeugten Dateien verschiebst, stelle bitte sicher, dass Die generierten Dateien korrekt sind!</strong>  Im Zweifelsfall wende Dich bitte an den Support im <a href="http://www.phpbb.com/community/viewforum.php?f=46">Support Forum</a>.',
+	'ERK_ISSUE_FOUND'					=> 'Als Teil des "Notfall-Reparatur-Kits" des Support-Toolkits hat das ERK Ihre phpBB-Dateien überprüft und festgestellt, dass einige Dateien ungültige Inhalte enthalten, die möglicherweise den Betrieb deines Boards behindern könnten.Das Support-Toolkit hat versucht, diese Probleme zu beheben und erstellt ein Paket mit den korrigierten Dateien <em>(die Backup Versionen findest Du unter <c>store/bom_sniffer_backup/</c>)</em>. Das Paket mit den neuen Dateien findest Du im <c>store/bom_sniffer/</c> Verzeichnis. Um die geänderten Dateien auf Dein Board zu übertragen, <strong>verschiebe</strong> die Dateien aus dem "store" an die richtige Stelle und lade das Support Toolkit erneut. Das Toolkit überprüft diese Dateien erneut und leitet Dich zum ERK zurück, wenn keine Fehler aufgetreten sind. .<br /><br /><strong style="color: #ff0000;">Bevor Du die erzeugten Dateien verschiebst, stelle bitte sicher, dass Die generierten Dateien korrekt sind!</strong>  Im Zweifelsfall wende Dich bitte an den Support im <a href="https://www.phpbb.com/community/viewforum.php?f=46">Support Forum</a>.',
 	'ERK_STORE_WRITE'					=> 'Der BOM-Sniffer benötigt ein bestehendes und beschreibbares <c>store</c> Verzeichnis!',
 	'ERK_REMOVE_DIR'					=> 'Das Support Toolkit versuchte, das reparierte Dateispeicherverzeichnis dieses Tools zu entfernen, war aber nicht in der Lage, dies zu tun. Damit dieses Tool korrekt ausgeführt wird, muss \'<c>%s</c>\' vom Server entfernt werden. Bitte entferne dieses Verzeichnis manuell und gib das Support-Toolkit frei.',
 	'BOM_SNIFFER_WRITABLE'				=> 'Der BOM-Sniffer benötigt das existierende und beschreibbare ' . STK_ROOT_PATH . 'cache Verzeichnis!',
@@ -134,8 +130,6 @@ $lang = array_merge($lang, array(
 	'CONFIG_LIST'						=> 'Konfigurationsparameter',
 	'CONFIG_LIST_EXPLAIN'				=> 'Hier kannst Du die Konfiguration ansehen und ändern.',
 	'CLOSE'								=> 'Schließen',
-	'UPDATES_AVAILABLE'					=> 'Deine phpBB Version ist nicht die neueste. Die letzte Verfügbare Update Version ist %1$s<br />Folge diesem Link <a href="%2$s" target="_blank" />%2$s</a> zur Release-Ankündigung für die neueste Version, die zusätzliche Informationen enthält, sowie Anweisungen für die Aktualisierung von phpBB',
-	'VERSIONCHECK_FAIL'					=> 'Fehler beim Abrufen der neuesten phpBB Versions information.',
 
 	'SELECT_ALL'						=> 'Um alle auszuwählen, bewege den Cursor in das Feld unten und drücke Strg-A (PC), Cmd-A (Mac) <br />Doppelklick wählt ein Wort und dreifachklick die ganze Zeile.',
 
@@ -147,9 +141,27 @@ $lang = array_merge($lang, array(
 	'CANCEL'							=> 'Abbrechen',
 	'FORUM_INDEX'						=> 'Foren-Übersicht',
 	'FILE_WRITE_FAIL'					=> 'Fehler beim Schreiben der Datei',
-	'STK_INCOMPARTIBLE'					=> 'Diese STK Version ist für phpBB 3.2.x, während deine Version %1$s ist',
 	
 	'PHPBB_DEBUG'					=> '[phpBB Debug]',
 	'DEBUG_IN_FILE'					=> 'in Datei',
 	'DEBUG_ON_LINE'					=> 'in Zeile',
+
+	'STK_VERSION'						=> 'Version des Support Tookit',
+
+	'STK_VERSIONCHECK_FAIL'				=> 'Die Informationen über die aktuelle Version konnten nicht abgerufen werden.',
+	'STK_VERSIONCHECK_FORCE_UPDATE'		=> 'Version erneut prüfen',
+	'STK_VERSION_CHECK'					=> 'Versionsprüfung',
+	'STK_VERSION_CHECK_EXPLAIN'			=> 'Prüft, ob das Support Toolkit aktuell ist.',
+	'STK_VERSIONCHECK_INVALID_ENTRY'	=> 'Die Information über die aktuelle Version enthält einen nicht unterstützten Eintrag.',
+	'STK_VERSIONCHECK_INVALID_URL'		=> 'Die Information über die aktuelle Version enthält eine ungültige URL.',
+	'STK_VERSIONCHECK_INVALID_VERSION'	=> 'Die Information über die aktuelle Version enthält eine ungültige Version.',
+	'STK_VERSION_NOT_UP_TO_DATE_ACP'	=> 'Dein Support Toolkit ist nicht aktuell.<br />Unten ist ein Link zur Release-Bekanntmachung, die zusätzliche Informationen und Anweisung für die Aktualisierung enthält.',
+	'STK_VERSION_NOT_UP_TO_DATE_TITLE'	=> 'Dein Support Toolkit ist nicht aktuell.',
+	'STK_VERSION_UNSTABLE_TITLE'		=> 'Es gibt eine neue unstabile Entwickler-Version.',
+	'STK_VERSION_UP_TO_DATE_ACP'		=> 'Dein Support Toolkit ist aktuell. Zurzeit sind keine Updates verfügbar.',
+	'STK_HTTP_HANDLER_NOT_FOUND'		=> 'Dieser Vorgang konnte konnte nicht abgeschlossen werden, weil die cURL-PHP-Erweiterung und die allow_url_fopen-PHP-ini-Einstellung deaktiviert wurden und kein anderer Dienst (HTTP-Handler) zum Aufruf von externen URLs gefunden werden konnte.',
+	'STK_UPGRADE_INSTRUCTIONS'			=> 'Ein neues Feature-Release <strong>%1$s</strong> ist verfügbar. Bitte lies <a href="%2$s" title="%2$s"><strong>die Release-Bekanntmachung</strong></a>, um die Neuerungen zu erfahren und eine Anleitung zum Upgrade zu erhalten.',
+	'STK_FILE_NOT_FOUND'				=> 'Die angegebene Datei konnte nicht gefunden werden: %s',
+	'STK_FSOCK_DISABLED'				=> 'Dieser Vorgang kann nicht abgeschlossen werden, da die <var>fsockopen</var>-Funktion deaktiviert wurde oder weil der angegebene Server nicht gefunden werden konnte.',
+	'STK_FSOCK_TIMEOUT'					=> 'Beim Lesen des Datenstroms ist eine Zeitüberschreitung aufgetreten.',
 ));

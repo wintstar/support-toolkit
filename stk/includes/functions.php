@@ -290,113 +290,6 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			trigger_error($lang['STK_LOGOUT_SUCCESS']);
 		break;
 
-		// Can't rely on phpBB to get the phpBB version.
-		case 'request_phpbb_version' :
-			global $cache, $config, $phpbb_container;
-
-			if ($config['version'] < '3.2.0')
-			{
-				trigger_error(sprintf($lang['STK_INCOMPATIBLE'], $config['version']), E_USER_WARNING);
-			}
-
-			$_version_number = $cache->get('_stk_phpbb_version_number');
-			if ($_version_number === false)
-			{
-				if ($submit)
-				{
-					if (!check_form_key('request_phpbb_version'))
-					{
-						trigger_error('FORM_INVALID');
-					}
-
-					$_version_number = $request->variable('version_number', $config['version']);
-					$cache->put('_stk_phpbb_version_number', $_version_number);
-				}
-				else
-				{
-					add_form_key('request_phpbb_version');
-					page_header($lang['REQUEST_PHPBB_VERSION'], false);
-
-					$version_helper = $phpbb_container->get('version_helper');
-					$template->assign_vars(array(
-						'CONFIG_VERSION'				=> $config['version'],
-						'CONSTANT_VERSION'				=> PHPBB_VERSION,
-					));
-					$updates_available = $version_helper->get_suggested_updates(false);
-					if ($updates_available)
-					{
-						foreach ($updates_available as $branch => $version_data)
-						{
-							$announcement = $version_data['announcement'];
-						}
-						// Grep the latest phpBB version number
-						list(,, $_phpbb_version) = explode('.', $version_data['current']);
-					}
-					elseif ($config['version'] != PHPBB_VERSION)
-					{
-						$config['version'] = PHPBB_VERSION;
-						$version_helper = $phpbb_container->get('version_helper');
-						$updates_available = $version_helper->get_suggested_updates(false);
-						if ($updates_available)
-						{
-							foreach ($updates_available as $branch => $version_data)
-							{
-								$announcement = $version_data['announcement'];
-							}
-						}
-						else
-						{
-							$version_data['current'] = $config['version'];
-						}
-						list(,, $_phpbb_version) = explode('.', PHPBB_VERSION);
-					}
-
-					// Build the options
-					$version_options = '';
-					$v = (PHPBB_VERSION >= '3.3.0') ? "3.3.{$i}" : "3.2.{$i}";
-
-					if ($config['version'] < PHPBB_VERSION)
-					{
-						for ($i = $_phpbb_version; $i > 1; $i--)
-						{
-							$d = ($v == $config['version']) ? " default='default'" : '';
-							$version_options .= "<option value='{$v}'{$d}>{$v}</option>";
-						}
-					}
-					else
-					{
-						list(,, $_phpbb_version) = explode('.', $version_data['current']);
-						for($i = $_phpbb_version; $i > 1; $i--)
-						{
-							$d = ($v == $config['version']) ? " default='default'" : '';
-							$version_options .= "<option value='{$v}'{$d}>{$v}</option>";						}
-					}
-
-					$template->assign_vars(array(
-						'UPDATES_AVAILABLE'				=> (!$version_options && (PHPBB_VERSION < $version_data['current'] || $config['version'] < $version_data['current'])) ? sprintf($user->lang['UPDATES_AVAILABLE'], $version_data['current'], $announcement) : false,
-						'PROCEED_TO_STK'				=> user_lang('PROCEED_TO_STK', '', ''),
-						'REQUEST_PHPBB_VERSION_OPTIONS'	=> $version_options,
-						'U_ACTION'						=> append_sid(STK_INDEX, array('action' => 'request_phpbb_version')),
-					));
-
-					$template->set_filenames(array(
-						'body'	=> 'request_phpbb_version.html',
-					));
-					page_footer(false);
-				}
-			}
-			if ($config['version'] < '3.2.0')
-			{
-				trigger_error(sprintf($lang['INCORRECT_PHPBB_VERSION'], $version_data['current']), E_USER_WARNING);
-			}
-			define('PHPBB_VERSION_NUMBER', $_version_number);
-		break;
-
-		// Check PHPBB version
-		case 'check_phpbb_version' :
-			check_phpbb_version();
-		break;
-
 		// Generate the passwd file
 		case 'genpasswdfile' :
 			// Create a 25 character alphanumeric password (easier to select with a browser and won't cause confusion like it could if it ends in "." or something).
@@ -489,66 +382,6 @@ function perform_authed_quick_tasks($action)
 				perform_unauthed_quick_tasks('stklogout');
 			}
 		break;
-	}
-}
-
-/**
- * Check the STK version. If out of date
- * block access to the kit
- * @return unknown_type
- */
-function stk_version_check()
-{
-	global $cache, $template, $umil, $user, $lang;
-
-	// We cache the result, check once per session
-	$version_check = $cache->get('_stk_version_check');
-	if (!$version_check || $version_check['last_check_session'] != $user->session_id || isset($_GET['force_check']))
-	{
-		// Make sure that the cache file is distroyed if we got one
-		if ($version_check || isset($_GET['force_check']))
-		{
-			$cache->destroy('_stk_version_check');
-		}
-
-		// Lets collect the latest version data. We can use UMIL for this
-		$info = $umil->version_check('sheer.phpbbguru.net', '/stk', ((defined('STK_QA') && STK_QA) ? 'stk_32_qa.txt' : 'stk_32.txt'));
-
-		// Compare it and cache the info
-		$version_check = array();
-		if (is_array($info) && isset($info[0]) && isset($info[1]))
-		{
-			if (version_compare(STK_VERSION, $info[0], '<'))
-			{
-				$version_check = array(
-					'outdated'	=> true,
-					'latest'	=> $info[0],
-					'topic'		=> $info[1],
-					'current'	=> STK_VERSION,
-				);
-			}
-
-			$version_check['last_check_session'] = $user->session_id;
-
-			// We've gotten some version data, cache the result for a hour or until the session id changes
-			$cache->put('_stk_version_check', $version_check, 3600);
-		}
-	}
-
-	// Something went wrong while retrieving the version file, lets inform the user about this, but don't kill the STK
-	if (empty($version_check))
-	{
-		$template->assign_var('S_NO_VERSION_FILE', true);
-		return;
-	}
-	// The STK is outdated, kill it!!!
-	else if (isset($version_check['outdated']) && $version_check['outdated'] === true)
-	{
-		// Need to clear the $user->lang array to prevent the error page from breaking
-		$msg = sprintf($lang['STK_OUTDATED'], $version_check['latest'], $version_check['current'], $version_check['topic'], append_sid(STK_ROOT_PATH . $user->page['page_name'], $user->page['query_string'] . '&amp;force_check=1'));
-
-		// Trigger
-		trigger_error($msg, E_USER_WARNING);
 	}
 }
 
@@ -1070,27 +903,6 @@ function stk_send_status_line($code, $message)
 	}
 }
 
-// Check PHPBB version
-function check_phpbb_version()
-{
-	global $phpbb_container, $template, $config, $lang;
-
-	$version_helper = $phpbb_container->get('version_helper');
-	$updates_available = $version_helper->get_suggested_updates(false);
-	if ($updates_available)
-	{
-		foreach ($updates_available as $branch => $version_data)
-		{
-			$announcement = $version_data['announcement'];
-			$version = $version_data['current'];
-		}
-
-		$template->assign_vars(array(
-			'UPDATES_AVAILABLE'		=> (PHPBB_VERSION < $version_data['current'] || $config['version'] < $version_data['current']) ? sprintf($lang['UPDATES_AVAILABLE'], $version_data['current'], $announcement) : false,
-		));
-	}
-}
-
 function sinc_stats()
 {
 	global $db, $config;
@@ -1329,5 +1141,33 @@ function check_json($dir, $file_name)
 	else
 	{
 		return array('message' => sprintf($lang['EXT_NO_JSON'], $file_name, $dir), 'error_type' => 150000);
+	}
+}
+
+/**
+* Wrapper for version_compare() that allows using uppercase A and B
+* for alpha and beta releases.
+*
+* See http://www.php.net/manual/en/function.version-compare.php
+*
+* @param string $version1		First version number
+* @param string $version2		Second version number
+* @param string $operator		Comparison operator (optional)
+*
+* @return mixed					Boolean (true, false) if comparison operator is specified.
+*								Integer (-1, 0, 1) otherwise.
+*/
+function stk_version_compare($version1, $version2, $operator = null)
+{
+	$version1 = strtolower($version1);
+	$version2 = strtolower($version2);
+
+	if (is_null($operator))
+	{
+		return version_compare($version1, $version2);
+	}
+	else
+	{
+		return version_compare($version1, $version2, $operator);
 	}
 }

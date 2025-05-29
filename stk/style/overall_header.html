@@ -220,17 +220,58 @@ function selectCode(a) {
 	</div>
 	<!-- ENDIF -->
 
-	<!-- IF S_NO_VERSION_FILE && CAT != 'main' -->
-	<div class="errorbox">
-		<h3>{L_NOTICE}</h3>
-		<p>{L_NO_VERSION_FILE}</p>
-	</div>
+	<!-- IF CAT == 'main' -->
+	<!-- IF S_STK_UPDATE_INCOMPLETE -->
+		<div class="errorbox">
+			<p>{L_UPDATE_INCOMPLETE} <a href="{U_STK_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF S_STK_VERSIONCHECK_FAIL -->
+		<div class="errorbox notice">
+			<p>{L_STK_VERSIONCHECK_FAIL}</p>
+			<p>{STK_VERSIONCHECK_FAIL_REASON }</p>
+			<p><a href="{U_STK_VERSIONCHECK_FORCE}">{L_STK_VERSIONCHECK_FORCE_UPDATE}</a> &middot; <a href="{U_STK_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF not S_STK_VERSION_UP_TO_DATE -->
+		<div class="errorbox">
+			<p>{L_STK_VERSION_NOT_UP_TO_DATE_TITLE}</p>
+			<p><a href="{U_STK_VERSIONCHECK_FORCE}">{L_STK_VERSIONCHECK_FORCE_UPDATE}</a> &middot; <a href="{U_STK_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF S_STK_VERSION_UP_TO_DATE && S_STK_VERSIONCHECK_FORCE -->
+		<div class="successbox">
+			<p>{L_STK_VERSION_UP_TO_DATE_ACP}</p>
+		</div>
 	<!-- ENDIF -->
-	<!-- IF UPDATES_AVAILABLE && CAT != 'main' -->
-		<div class="errorbox"><h3>{L_NOTICE}</h3><p>{UPDATES_AVAILABLE}</p></div>
+	<!-- IF S_STK_VERSION_UPGRADEABLE -->
+		<div class="errorbox notice">
+			<p>{STK_UPGRADE_INSTRUCTIONS}</p>
+		</div>
 	<!-- ENDIF -->
-	<!-- IF S_VERSIONCHECK_FAIL -->
-		<div class="errorbox"><h3>{L_NOTICE}</h3><p>{VERSIONCHECK_FAIL_REASON}</p></div>
+
+	<!-- IF S_UPDATE_INCOMPLETE -->
+		<div class="errorbox">
+			<p>{L_UPDATE_INCOMPLETE} <a href="{U_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF S_VERSIONCHECK_FAIL -->
+		<div class="errorbox notice">
+			<p>{L_VERSIONCHECK_FAIL}</p>
+			<p>{VERSIONCHECK_FAIL_REASON}</p>
+			<p><a href="{U_VERSIONCHECK_FORCE}">{L_VERSIONCHECK_FORCE_UPDATE}</a> &middot; <a href="{U_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF not S_VERSION_UP_TO_DATE -->
+		<div class="errorbox">
+			<p>{L_VERSION_NOT_UP_TO_DATE_TITLE}</p>
+			<p><a href="{U_VERSIONCHECK_FORCE}">{L_VERSIONCHECK_FORCE_UPDATE}</a> &middot; <a href="{U_VERSIONCHECK}">{L_MORE_INFORMATION}</a></p>
+		</div>
+	<!-- ELSEIF S_VERSION_UP_TO_DATE && S_VERSIONCHECK_FORCE -->
+		<div class="successbox">
+			<p>{L_VERSION_UP_TO_DATE_ACP}</p>
+		</div>
+	<!-- ENDIF -->
+	<!-- IF S_VERSION_UPGRADEABLE -->
+		<div class="errorbox notice">
+			<p>{UPGRADE_INSTRUCTIONS}</p>
+		</div>
+	<!-- ENDIF -->
 	<!-- ENDIF -->
 
 	<div id="page-body">
