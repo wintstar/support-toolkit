@@ -32,6 +32,7 @@ define('IN_LOGIN', true);
 
 // Make that phpBB itself understands out paths
 $phpbb_root_path = PHPBB_ROOT_PATH;
+$stk_root_path = STK_ROOT_PATH;
 $phpEx = PHP_EXT;
 
 // Prepare some vars
