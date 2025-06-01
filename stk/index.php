@@ -248,7 +248,7 @@ if (isset($_POST['cancel']))
 $user->add_lang('install');
 
 // Setup the plugin manager
-$plugin = new plugin();
+$plugin = new core\plugin\plugin();
 
 $stk_version_helper = new \core\stk_version_helper($cache, $config, $stk_config);
 
