@@ -40,13 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'TEST'				=> 'General Information',
-	'DATABASE_INFO'		=> 'Database server',
-	'DBMS'				=> 'Database type',
-	'PHP_INFO'			=> 'Information about php',
-	'PHP_VERSION'		=> 'PHP version',
-	'STK_VERSION'		=> 'Support Tookit version',
-	'MBSTRING_LOADED'	=> 'Functions for working with multi-byte strings (PHP extension <strong>mbstring</strong>) is loaded',
-	'MBSTRING_NOT_LOADED'				=> 'Functions for working with multi-byte strings (PHP extension <strong>mbstring</strong>) not loaded',
-	'ERROR_MBSTRING_NOT_LOADED_EXPLAIN'	=> 'mbstring is not included in the list of extensions that are installed by default. This means that initially this extension is disabled. To use the functions of this extension, you must explicitly enable the module to configure php. Need to consult the documentation for <a href="http://php.net/manual/ru/mbstring.configuration.php">PHP</a>.',
+	'PHP_INFO'				=> 'PHP information',
+	'PHP_INFO_EXPLAIN'		=> 'This page lists information on the version of PHP installed on this server. It includes details of loaded modules, available variables and default settings. This information may be useful when diagnosing problems. Please be aware that some hosting companies will limit what information is displayed here for security reasons. You are advised to not give out any details on this page except when asked by <a href="https://www.phpbb.com/about/team/">official team members</a> on the support forums.',
+	'NO_PHPINFO_AVAILABLE'	=> 'Information about your PHP configuration is unable to be determined. Phpinfo() has been disabled for security reasons.',
 ));

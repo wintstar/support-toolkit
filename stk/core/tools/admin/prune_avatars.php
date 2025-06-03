@@ -126,9 +126,8 @@ class prune_avatars
 		$template->assign_vars(array(
 			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_avatars&amp;go=1'),
 
-/*			'L_PRUNE_AVATARS'			=> user_lang('PRUNE_AVATARS'),
+			'L_PRUNE_AVATARS'			=> user_lang('PRUNE_AVATARS'),
 			'L_PRUNE_AVATARS_EXPLAIN'	=> user_lang('PRUNE_AVATARS_EXPLAIN'),
-*/
 		));
 
 		$template->set_filenames(array(

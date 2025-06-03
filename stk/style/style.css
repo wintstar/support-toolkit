@@ -137,6 +137,16 @@ hr {
 	margin-bottom: 0.7em;
 }
 
+.phpinfo {
+	overflow: auto;
+	width: 99%;
+	direction: ltr;
+}
+
+.phpinfo td, .phpinfo th, .phpinfo h2, .phpinfo h1 {
+	text-align: left;
+}
+
 /* General links  */
 a:link, a:visited {
 	color: #105289;

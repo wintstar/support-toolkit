@@ -10,7 +10,7 @@
 
 namespace core\tools\main;
 
-class test
+class php_info
 {
 	/**
 	* Display Options
@@ -23,7 +23,7 @@ class test
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($lang['TEST']);
+		page_header($lang['PHP_INFO']);
 
 		ob_start();
 		phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);
@@ -66,32 +66,16 @@ class test
 		$output = (!empty($output[1][0])) ? $output[1][0] : $orig_output;
 
 		$template->assign_vars(array(
-			'INFO'				=> $output,
-			'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $user->lang['ON'] : $user->lang['OFF'],
-			'DATABASE_INFO'		=> $db->sql_server_info(),
-			'BOARD_VERSION'		=> $config['version'],
-			'DBMS'				=> $db->get_sql_layer(),
-			'PHP_VERSION'		=> @phpversion(),
-			'STK_VERSION'		=> STK_VERSION,
+			'PHPINFO' => $output,
 		));
 
-		if (extension_loaded('mbstring'))
-		{
-			$template->assign_vars(array(
-				'S_MBSTRING_LOADED'						=> true,
-				//'S_MBSTRING_FUNC_OVERLOAD_FAIL'			=> (intval(@ini_get('mbstring.func_overload')) & (MB_OVERLOAD_MAIL | MB_OVERLOAD_STRING)),
-				'S_MBSTRING_ENCODING_TRANSLATION_FAIL'	=> (@ini_get('mbstring.encoding_translation') != 0),
-				'S_MBSTRING_HTTP_INPUT_FAIL'			=> !in_array(@ini_get('mbstring.http_input'), array('pass', '')),
-				'S_MBSTRING_HTTP_OUTPUT_FAIL'			=> !in_array(@ini_get('mbstring.http_output'), array('pass', '')),
-			));
-		}
-
 		$template->set_filenames(array(
-			'body' => 'test_body.html',
+			'body' => 'tools/main_php_info_body.html',
 		));
 
 		page_footer();
 	}
+
 	function remove_spaces($matches)
 	{
 		return '<a name="' . str_replace(' ', '_', $matches[1]) . '">';

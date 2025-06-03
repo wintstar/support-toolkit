@@ -12,50 +12,6 @@ namespace core\tools\admin;
 
 class clear_extensions
 {
-	function run_tool(&$error)
-	{
-		global $cache, $db, $template, $request, $lang, $config;
-
-		$uids = $request->variable('marked_name', array('', ''));
-
-		if (empty($uids))
-		{
-			$error[] = 'NO_EXT_SELECTED';
-			trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
-		}
-
-		if (confirm_box(true) || (@phpversion() >= '7.0.0'))
-		{
-			$sql = 'SELECT ext_name FROM ' . EXT_TABLE . '
-				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$ext_name = explode('/', $row['ext_name']);
-				$keyword = '*' . $ext_name[1] . '*';
-				$sql = 'DELETE FROM ' . MIGRATIONS_TABLE . '
-					WHERE migration_name ' . $db->sql_like_expression(str_replace('*', $db->get_any_char(), $keyword));
-				$db->sql_query($sql);
-			}
-			$db->sql_freeresult($result);
-
-			$sql = 'DELETE FROM ' . EXT_TABLE . '
-				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
-			$db->sql_query($sql);
-			if (empty($error))
-			{
-				// Purge the cache
-				$cache->purge();
-				trigger_error($lang['CLEAR_EXT_SUCCESS']);
-			}
-		}
-		else
-		{
-			$hidden = build_hidden_fields(array('marked_name' => $uids));
-			confirm_box(false, $lang['EXT_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
-		}
-	}
-
 	function display_options()
 	{
 		global $db, $template,$phpbb_admin_path, $lang, $cache, $request, $phpbb_extension_manager, $config, $user;
@@ -76,7 +32,7 @@ class clear_extensions
 				$error[] = 'NO_EXT_SELECTED';
 				trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
 			}
-			if (confirm_box(true) || (@phpversion() >= '7.0.0'))
+			if (stk_confirm_box(true))
 			{
 				$sql = 'UPDATE ' . EXT_TABLE . '
 					SET ext_active = 0
@@ -88,7 +44,7 @@ class clear_extensions
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_name' => $uids));
-				confirm_box(false, $lang['EXT_OFF_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
+				stk_confirm_box(false, $lang['EXT_OFF_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
 			}
 		}
 
@@ -239,5 +195,49 @@ class clear_extensions
 		));
 
 		page_footer();
+	}
+
+	function run_tool(&$error)
+	{
+		global $cache, $db, $template, $request, $lang, $config;
+
+		$uids = $request->variable('marked_name', array('', ''));
+
+		if (empty($uids))
+		{
+			$error[] = 'NO_EXT_SELECTED';
+			trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
+		}
+
+		if (stk_confirm_box(true))
+		{
+			$sql = 'SELECT ext_name FROM ' . EXT_TABLE . '
+				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$ext_name = explode('/', $row['ext_name']);
+				$keyword = '*' . $ext_name[1] . '*';
+				$sql = 'DELETE FROM ' . MIGRATIONS_TABLE . '
+					WHERE migration_name ' . $db->sql_like_expression(str_replace('*', $db->get_any_char(), $keyword));
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'DELETE FROM ' . EXT_TABLE . '
+				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
+			$db->sql_query($sql);
+			if (empty($error))
+			{
+				// Purge the cache
+				$cache->purge();
+				trigger_error($lang['CLEAR_EXT_SUCCESS']);
+			}
+		}
+		else
+		{
+			$hidden = build_hidden_fields(array('marked_name' => $uids));
+			stk_confirm_box(false, $lang['EXT_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
+		}
 	}
 }

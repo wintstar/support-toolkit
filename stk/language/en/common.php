@@ -57,6 +57,7 @@ $lang = array_merge($lang, array(
 	'CONFIG_VERSION'					=> 'Version number in Database',
 	'CONSTANT_VERSION'					=> 'Version number in /includes/constants.php',
 
+	'DATABASE_INFO'						=> 'Database server',
 	'DOWNLOAD_PASS'						=> 'Download the password file.',
 	'STK_PASSWORD'						=> 'Password',
 
@@ -148,8 +149,8 @@ $lang = array_merge($lang, array(
 
 	'STK_VERSION'						=> 'Version of the Support Tookit',
 
-	'STK_VERSIONCHECK_FAIL'				=> 'The information about the current version could not be retrieved.',
-	'STK_VERSIONCHECK_FORCE_UPDATE'		=> 'Check version again',
+	'STK_VERSIONCHECK_FAIL'				=> 'Failed to obtain latest version information.',
+	'STK_VERSIONCHECK_FORCE_UPDATE'		=> 'Re-Check version',
 	'STK_VERSION_CHECK'					=> 'Version check',
 	'STK_VERSION_CHECK_EXPLAIN'			=> 'Checks whether the Support Toolkit is up to date.',
 	'STK_VERSIONCHECK_INVALID_ENTRY'	=> 'The information about the current version contains an unsupported entry.',

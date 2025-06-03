@@ -59,6 +59,7 @@ $lang = array_merge($lang, array(
 	'CONFIG_VERSION'					=> 'Versionsnummer in der Datenbank',
 	'CONSTANT_VERSION'					=> 'Versionsnummer in /includes/constants.php',
 
+	'DATABASE_INFO'						=> 'Datenbankserver',
 	'DOWNLOAD_PASS'						=> 'Passwort-Datei herunterladen',
 	'STK_PASSWORD'						=> 'Passwort',
 

@@ -19,21 +19,7 @@ class purge_cache
 	*/
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'PURGE_CACHE';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('PURGE_CACHE_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=purge_cache&amp;submit=' . true);
-		}
+		return 'PURGE_CACHE';
 	}
 
 	/**

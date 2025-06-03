@@ -40,13 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'TEST'				=> 'Allgemeine Information',
-	'DATABASE_INFO'		=> 'Datenbankserver',
-	'DBMS'				=> 'Datenbank-Typ',
-	'PHP_INFO'			=> 'Informationen über php',
-	'PHP_VERSION'		=> 'php version',
-	'STK_VERSION'		=> 'Support Tookit version',
-	'MBSTRING_LOADED'	=> 'Funktionen für das Arbeiten mit Multi-Byte-Zeichenfolgen (Extension php <b>mbstring</b>) wurden geladen',
-	'MBSTRING_NOT_LOADED'				=> 'Funktionen für das Arbeiten mit Multi-Byte-Zeichenfolgen (Extension php <b> mbstring </b>) wurden nicht geladen',
-	'ERROR_MBSTRING_NOT_LOADED_EXPLAIN'	=> 'Mbstring ist nicht in der Liste der Erweiterungen enthalten, die standardmäßig installiert werden. Dies bedeutet, dass diese Erweiterung zunächst deaktiviert ist. Um die Funktionen dieser Erweiterung zu nutzen, musst Du das Modul explizit aktivieren, um php zu konfigurieren. Bitte die Dokumentation konsultieren <a href="http://php.net/manual/ru/mbstring.configuration.php"> php </a>',
+	'PHP_INFO'				=> 'PHP-Information',
+	'PHP_INFO_EXPLAIN'		=> 'Auf dieser Seite finden Sie Informationen zu der auf Ihrem Server installierten PHP-Version. Sie enthält Details zu den geladenen Modulen, den verfügbaren Variablen und Einstellungen. Diese Informationen können bei der Problemsuche hilfreich sein. Bitte beachten Sie, dass manche Internet-Provider die hier angezeigten Informationen aus Sicherheitsgründen einschränken. Sie sollten keine Informationen von dieser Seite veröffentlichen, sofern Sie nicht ein offizielles Team-Mitglied des Support-Forums dazu auffordert.',
+	'NO_PHPINFO_AVAILABLE'	=> 'Es konnten keine Informationen über Ihre PHP-Installation ermittelt werden. phpinfo() wurde vermutlich aus Sicherheitsgründen deaktiviert.',
 ));

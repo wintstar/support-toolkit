@@ -205,7 +205,7 @@ class critical_repair
 			</div>
 			<div id="page-footer">
 				Support Toolkit for phpBB3.2.x and 3.3.x &copy;</a><br />
-				Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group - adaptation for phpBB3.2.x and 3.3.x by &copy; Sheer
+				Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group - maintained by &copy; <a href="https://github.com/wintstar/support-toolkit/discussions">wintstar</a>
 			</div>
 		</div>
 	</body>

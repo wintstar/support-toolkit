@@ -30,21 +30,7 @@ class flash_checker
 	 */
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'FLASH_CHECKER';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('FLASH_CHECKER_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=flash_checker&amp;submit=' . true);
-		}
+		return 'FLASH_CHECKER';
 	}
 
 	/**

@@ -26,7 +26,7 @@ class profile_list
 		if ($submit)
 		{
 			$uids = $request->variable('marked_user_id', array(0, 0));
-			if (confirm_box(true) || (@phpversion() >= '7.0.0'))
+			if (stk_confirm_box(true))
 			{
 				if (!function_exists('user_delete'))
 				{
@@ -44,7 +44,7 @@ class profile_list
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_user_id' => $uids));
-				confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=profile_list&amp;sa=' . true);
+				stk_confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=profile_list&amp;sa=' . true);
 			}
 		}
 

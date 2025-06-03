@@ -91,14 +91,16 @@ class delete_bbcode
 	*/
 	function display_options()
 	{
+		$reparse_bbcode = new \core\tools\admin\reparse_bbcode();
+
 		return array(
 			'title'	=> 'DELETE_BBCODE',
 			'vars'	=> array(
 				'legend1'			=> 'DELETE_BBCODE',
 				'create_backup'		=> array('lang' => 'CREATE_BACKUP_TABLE', 'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 				'reparseids'		=> array('lang'	=> 'DELETE_BBCODE_POST_IDS', 'type' => 'textarea:3:255', 'explain' => 'true'),
-				'reparseforums'		=> array('lang' => 'DELETE_BBCODE_FORUMS', 'explain' => true, 'type' => 'select_multiple', 'function' => 'get_forums'),
-				'bbcode_select'		=> array('lang' => 'DELETE_BBCODE_SELECT', 'explain' => true, 'type' => 'select', 'function' => 'get_bbcodes'),
+				'reparseforums'		=> array('lang' => 'DELETE_BBCODE_FORUMS', 'explain' => true, 'type' => 'select_multiple', 'methode' => [$reparse_bbcode, 'get_forums']),
+				'bbcode_select'		=> array('lang' => 'DELETE_BBCODE_SELECT', 'explain' => true, 'type' => 'select', 'methode' => [$this, 'get_bbcodes']),
 				'reparseall'		=> array('lang' => 'DELETE_BBCODE_ALL', 'type' => 'checkbox', 'explain' => true),
 			),
 		);
@@ -512,17 +514,17 @@ class delete_bbcode
 
 		$db->sql_multi_insert($this->_backup_table_name, $data);
 	}
-}
 
-function get_bbcodes()
-{
-	$bbcodes = array('youtube', 'video', 'audio', 'media', 'url', 'BBvideo');
-	$s_bbcodes = '';
-	$i = 0;
-	foreach ($bbcodes as $bbcode)
+	function get_bbcodes()
 	{
-		$s_bbcodes .= '<option value="'. $i++ .'">' . $bbcode . '</option>';
-	}
+		$bbcodes = array('youtube', 'video', 'audio', 'media', 'url', 'BBvideo');
+		$s_bbcodes = '';
+		$i = 0;
+		foreach ($bbcodes as $bbcode)
+		{
+			$s_bbcodes .= '<option value="'. $i++ .'">' . $bbcode . '</option>';
+		}
 
-	return $s_bbcodes;
+		return $s_bbcodes;
+	}
 }

@@ -45,8 +45,8 @@ class resync_user_groups
 	function display_options()
 	{
 		$this->_load_classes();
-		$this->rr	= new resync_registered($this);
-		$this->rnr	= new resync_newly_registered($this);
+		$this->rr	= new \resync_registered($this);
+		$this->rnr	= new \resync_newly_registered($this);
 
 		// Set the options
 		$vars = array();

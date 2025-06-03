@@ -26,8 +26,8 @@ class reset_styles
 		return array(
 			'title'	=> 'RESET_STYLES',
 			'vars'	=> array(
-				'legend1'				=> 'RESET_STYLES',
-				'style_id'				=> array('lang' => 'STYLE', 'type' => 'custom', 'function' => 'style_select2', 'explain' => true, 'default' => $config['default_style']),
+				'legend1' => 'RESET_STYLES',
+				'style_id' => array('lang' => 'STYLE', 'type' => 'custom', 'methode' => [$this, 'style_select2'], 'explain' => true, 'default' => $config['default_style']),
 			)
 		);
 	}
@@ -60,9 +60,9 @@ class reset_styles
 
 		trigger_error($lang['RESET_STYLE_COMPLETE']);
 	}
-}
 
-function style_select2($value, $key)
-{
-	return '<select name="' . $key . '">' . style_select($value) . '</select>';
+	function style_select2($value, $key)
+	{
+		return '<select name="' . $key . '">' . style_select($value) . '</select>';
+	}
 }

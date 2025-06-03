@@ -95,6 +95,10 @@ function build_cfg_template($tpl_type, $name, $vars)
 			{
 				$call = $vars['function'];
 			}
+			elseif (isset($vars['methode']))
+			{
+				$call = $vars['methode'];
+			}
 			else
 			{
 				break;
@@ -268,6 +272,120 @@ function stk_add_lang($lang_file)
 			$template->assign_var('L_' . $key, $value);
 		}
 	}
+}
+
+// Message/Login boxes
+
+/**
+* Build Confirm box
+* @param boolean $check True for checking if confirmed (without any additional parameters) and false for displaying the confirm box
+* @param string|array $title Title/Message used for confirm box.
+*		message text is _CONFIRM appended to title.
+*		If title cannot be found in user->lang a default one is displayed
+*		If title_CONFIRM cannot be found in user->lang the text given is used.
+*       If title is an array, the first array value is used as explained per above,
+*       all other array values are sent as parameters to the language function.
+* @param string $hidden Hidden variables
+* @param string $html_body Template used for confirm box
+* @param string $u_action Custom form action
+*
+* @return bool True if confirmation was successful, false if not
+*/
+function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
+{
+	global $user, $template, $db, $request, $lang;
+	global $config, $phpbb_path_helper;
+
+	if (isset($_POST['cancel']))
+	{
+		return false;
+	}
+
+	$confirm = ($lang['YES'] === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
+
+	if ($check && $confirm)
+	{
+		$user_id = $request->variable('confirm_uid', 0);
+		$session_id = $request->variable('sess', '');
+		$confirm_key = $request->variable('confirm_key', '');
+
+		if ($user_id != $user->data['user_id'] || $session_id != $user->session_id || !$confirm_key || !$user->data['user_last_confirm_key'] || $confirm_key != $user->data['user_last_confirm_key'])
+		{
+			return false;
+		}
+
+		// Reset user_last_confirm_key
+		$sql = 'UPDATE ' . USERS_TABLE . " SET user_last_confirm_key = ''
+			WHERE user_id = " . $user->data['user_id'];
+		$db->sql_query($sql);
+
+		return true;
+	}
+	else if ($check)
+	{
+		return false;
+	}
+
+	$s_hidden_fields = build_hidden_fields(array(
+		'confirm_uid'	=> $user->data['user_id'],
+		'sess'			=> $user->session_id,
+		'sid'			=> $user->session_id,
+	));
+
+	// generate activation key
+	$confirm_key = gen_rand_string(10);
+
+	$confirm_title	= (!isset($lang[$title])) ? $lang['CONFIRM'] : $lang[$title];
+	$confirm_text 	= (!isset($lang[$title . '_CONFIRM'])) ? $title : $lang[$title . '_CONFIRM'];
+
+	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	{
+		adm_page_header($confirm_title);
+	}
+	else
+	{
+		page_header($confirm_title);
+	}
+
+	$template->set_filenames(array(
+		'body' => $html_body)
+	);
+
+	// If activation key already exist, we better do not re-use the key (something very strange is going on...)
+	if ($request->variable('confirm_key', ''))
+	{
+		// This should not occur, therefore we cancel the operation to safe the user
+		return false;
+	}
+
+	// re-add sid / transform & to &amp; for user->page (user->page is always using &)
+	$use_page = ($u_action) ? $u_action : str_replace('&', '&amp;', $user->page['page']);
+	$u_action = reapply_sid($phpbb_path_helper->get_valid_page($use_page, $config['enable_mod_rewrite']));
+	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
+
+	$template->assign_vars(array(
+		'MESSAGE_TITLE'		=> $confirm_title,
+		'MESSAGE_TEXT'		=> $confirm_text,
+
+		'YES_VALUE'			=> $lang['YES'],
+		'S_CONFIRM_ACTION'	=> $u_action,
+		'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields)
+	);
+
+	$sql = 'UPDATE ' . USERS_TABLE . " SET user_last_confirm_key = '" . $db->sql_escape($confirm_key) . "'
+		WHERE user_id = " . $user->data['user_id'];
+	$db->sql_query($sql);
+
+	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	{
+		adm_page_footer();
+	}
+	else
+	{
+		page_footer();
+	}
+
+	exit; // unreachable, page_footer() above will call exit()
 }
 
 /**

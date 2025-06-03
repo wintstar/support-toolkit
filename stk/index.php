@@ -248,7 +248,7 @@ if (isset($_POST['cancel']))
 $user->add_lang('install');
 
 // Setup the plugin manager
-$plugin = new core\plugin\plugin();
+$plugin = new \core\plugin\plugin();
 
 $stk_version_helper = new \core\stk_version_helper($cache, $config, $stk_config);
 
@@ -302,7 +302,7 @@ try
 		'S_VERSION_UP_TO_DATE'		=> empty($updates_available),
 		'S_VERSION_UPGRADEABLE'		=> !empty($upgrades_available),
 		'S_VERSIONCHECK_FORCE'		=> (bool) $recheck,
-		'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? $user->lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
+		'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? user_lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
 	));
 }
 catch (\phpbb\exception\runtime_exception $e)
@@ -456,20 +456,13 @@ if ($plugin->get_part('t'))
 		}
 		else if (is_string($options))
 		{
-			if (@phpversion() < '7.0.0')
+			if (stk_confirm_box(true))
 			{
-				if (confirm_box(true))
-				{
-					$tool->run_tool();
-				}
-				else
-				{
-					confirm_box(false, $lang[$options . '_CONFIRM'], '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
-				}
+				$tool->run_tool($error);
 			}
 			else
 			{
-				$tool->run_tool();
+				stk_confirm_box(false, $options, '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . $plugin->url_arg(true));
 			}
 		}
 		else
@@ -498,6 +491,13 @@ else
 		'L_TITLE'			=> $lang['CAT_' . strtoupper($plugin->get_part('c'))],
 		'L_TITLE_EXPLAIN'	=> isset($lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN']) ? $lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN'] : '',
 		'CAT'				=> $plugin->get_part('c'),
+
+		'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $user->lang['ON'] : $user->lang['OFF'],
+		'DATABASE_INFO'		=> $db->sql_server_info(),
+		'BOARD_VERSION'		=> $config['version'],
+		'DBMS'				=> $db->get_sql_layer(),
+		'PHP_VERSION'		=> phpversion(),
+		'STK_VERSION'		=> STK_VERSION,
 	));
 
 	$template->set_filenames(array(

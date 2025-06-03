@@ -19,21 +19,7 @@ class fix_left_right_ids
 	*/
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'FIX_LEFT_RIGHT_IDS';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('FIX_LEFT_RIGHT_IDS_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=fix_left_right_ids&amp;submit=' . true);
-		}
+		return 'FIX_LEFT_RIGHT_IDS';
 	}
 
 	/**

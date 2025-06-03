@@ -26,21 +26,7 @@ class resync_attachments
 	 */
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'RESYNC_ATTACHMENTS';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('RESYNC_ATTACHMENTS_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=resync_attachments&amp;submit=' . true);
-		}
+		return 'RESYNC_ATTACHMENTS';
 	}
 
 	function run_tool()

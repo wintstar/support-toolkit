@@ -63,21 +63,7 @@ class readd_module_management
 	*/
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'READD_MODULE_MANAGEMENT';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('READD_MODULE_MANAGEMENT_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=readd_module_management&amp;submit=' . true);
-		}
+		return 'READD_MODULE_MANAGEMENT';
 	}
 
 	/**

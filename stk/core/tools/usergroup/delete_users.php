@@ -121,13 +121,13 @@ class delete_users
 
 		if ($delete)
 		{
-			if (confirm_box(true))
+			if (stk_confirm_box(true))
 			{
 			}
 			else
 			{
 				$hidden = build_hidden_fields(array('period' => $period));
-				confirm_box(false, user_lang('DELETE_USERS_CONFIRM'), $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
+				stk_confirm_box(false, user_lang('DELETE_USERS_CONFIRM'), $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
 			}
 		}
 		page_header(user_lang('DELETE_USERS'));

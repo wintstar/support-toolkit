@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'SET_PROSILVER'						=> 'setze prosilver als default style',
-	'SET_PROSILVER_CONFIRM'				=> 'setze prosilver als default style für alle Benutzer.',
-	'SET_PROSILVER_ALLREADY_ASSIGNED'	=> 'prosilver ist bereits als default style gesetzt. Es wurde nichts geändert.',
-	'SET_PROSILVER_ACTIVATED'			=> 'prosilver wurde erfolgreich aktiviert.',
-	'SET_PROSILVER_RESET'				=> 'prosilver wurde als Standardstil zugewiesen.',
-	'SET_PROSILVER_DOES_NOT_EXIST'		=> 'prosilver existiert nicht. Bitte lade eine Kopie von prosilver aus dem <a href="https://www.phpbb.com/downloads/">3.2.x Full Package</a>.',
+	'SET_PROSILVER'						=> 'Setze prosilver als Standard Style',
+	'SET_PROSILVER_CONFIRM'				=> 'Setze prosilver als Standard Style für alle Benutzer.',
+	'SET_PROSILVER_ALLREADY_ASSIGNED'	=> 'Prosilver ist bereits als Standard Style gesetzt. Es wurde nichts geändert.',
+	'SET_PROSILVER_ACTIVATED'			=> 'Prosilver wurde erfolgreich aktiviert.',
+	'SET_PROSILVER_RESET'				=> 'Prosilver wurde als Standard Style zugewiesen.',
+	'SET_PROSILVER_DOES_NOT_EXIST'		=> 'Prosilver existiert nicht. Bitte laden Sie eine Kopie von prosilver aus dem <a href="https://www.phpbb.com/downloads/">Full Package</a> herunter.',
 ));

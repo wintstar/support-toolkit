@@ -117,7 +117,7 @@ class reparse_bbcode
 				'reparseids'		=> array('lang'	=> 'REPARSE_POST_IDS', 'type' => 'textarea:3:255', 'explain' => 'true'),
 				'reparsepms'		=> array('lang' => 'REPARSE_PM_IDS', 'type' => 'textarea:3:255', 'explain' => 'true'),
 				'reparsesig'		=> array('lang' => 'REPARSE_SIG', 'type' => 'checkbox', 'explain' => true),
-				'reparseforums'		=> array('lang' => 'REPARSE_FORUMS', 'explain' => true, 'type' => 'select_multiple', 'function' => 'get_forums'),
+				'reparseforums'		=> array('lang' => 'REPARSE_FORUMS', 'explain' => true, 'type' => 'select_multiple', 'methode' => [$this, 'get_forums']),
 				'reparseall'		=> array('lang' => 'REPARSE_ALL', 'type' => 'checkbox', 'explain' => true),
 			),
 		);
@@ -792,14 +792,15 @@ class reparse_bbcode
 
 		$db->sql_multi_insert($this->_backup_table_name, $data);
 	}
+
 	function _trim_post_ids(&$post_id, $key)
 	{
 		// This is difficult, no?
 		$post_id = (int) trim($post_id);
 	}
-}
 
-function get_forums()
-{
-	return make_forum_select(false, false, false, true, true);
+	function get_forums()
+	{
+		return make_forum_select(false, false, false, true, true);
+	}
 }

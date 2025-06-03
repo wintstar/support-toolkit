@@ -22,21 +22,7 @@ class update_email_hashes
 	*/
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'UPDATE_EMAIL_HASHES';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('UPDATE_EMAIL_HASHES_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=update_email_hashes&amp;submit=' . true);
-		}
+		return 'UPDATE_EMAIL_HASHES';
 	}
 
 	/**

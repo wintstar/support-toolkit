@@ -2,8 +2,60 @@
 
 <h1>{L_TITLE}</h1>
 <p>
-	<!-- IF U_PAGE_LOGO --><img src="{U_PAGE_LOGO}" /><br /><!-- ENDIF -->
 	{L_TITLE_EXPLAIN}
 </p>
+
+<!-- IF CAT == 'main' -->
+<div class="lside">
+	<table class="table2 responsive zebra-table no-header">
+		<thead>
+			<tr>
+				<th>{L_STATISTIC}</th>
+				<th>{L_VALUE}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="tabled">{L_DATABASE_INFO}{L_COLON}</td>
+				<td class="tabled"><strong>{DATABASE_INFO}</strong></td>
+			</tr>
+			<tr>
+				<td class="tabled">{L_GZIP_COMPRESSION}{L_COLON}</td>
+				<td class="tabled"><strong>{GZIP_COMPRESSION}</strong></td>
+			</tr>
+			<tr>
+				<td class="tabled">{L_STK_VERSION}{L_COLON}</td>
+				<td class="tabled">
+					<strong><span <!-- IF S_STK_VERSION_UP_TO_DATE -->style="color: #228822;" <!-- ELSEIF not S_STK_VERSIONCHECK_FAIL -->style="color: #BC2A4D;"<!-- ENDIF -->>{STK_VERSION}</span></strong> [&nbsp;<a href="{U_STK_VERSIONCHECK_FORCE}">{L_STK_VERSIONCHECK_FORCE_UPDATE}</a>&nbsp;]
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="table2 responsive zebra-table no-header">
+		<thead>
+			<tr>
+				<th>{L_STATISTIC}</th>
+				<th>{L_VALUE}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="tabled">{L_DBMS}{L_COLON}</td>
+				<td class="tabled"><strong>{DBMS}</strong></td>
+			</tr>
+			<tr>
+				<td class="tabled">{L_PHP_VERSION}{L_COLON}</td>
+				<td class="tabled"><strong>{PHP_VERSION}</strong></td>
+			</tr>
+			<tr>
+				<td class="tabled">{L_BOARD_VERSION}{L_COLON}</td>
+				<td class="tabled">
+					<strong><span <!-- IF S_VERSION_UP_TO_DATE -->style="color: #228822;" <!-- ELSEIF not S_VERSIONCHECK_FAIL -->style="color: #BC2A4D;"<!-- ENDIF -->>{BOARD_VERSION}</span></strong> [&nbsp;<a href="{U_VERSIONCHECK_FORCE}">{L_VERSIONCHECK_FORCE_UPDATE}</a>&nbsp;]
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->

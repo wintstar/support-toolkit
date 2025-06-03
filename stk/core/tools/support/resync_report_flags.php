@@ -21,21 +21,7 @@ class resync_report_flags
 	 */
 	function display_options()
 	{
-		if (@phpversion() < '7.0.0')
-		{
-			return 'RESYNC_REPORT_FLAGS';
-		}
-
-		global $lang;
-
-		if (confirm_box(true))
-		{
-			$this->run_tool();
-		}
-		else
-		{
-			confirm_box(false, user_lang('RESYNC_REPORT_FLAGS_CONFIRM'), '', 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=support&amp;t=resync_report_flags&amp;submit=' . true);
-		}
+		return 'RESYNC_REPORT_FLAGS';
 	}
 
 	/**
