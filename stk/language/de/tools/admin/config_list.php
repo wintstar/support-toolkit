@@ -431,5 +431,5 @@ $lang = array_merge($lang, array(
 	'display_unapproved_posts'					=> ' ',
 	'queue_trigger_posts'						=> 'Nicht verwendet in phpBB-Versionen höher als 3.0.5',
 	'enable_queue_trigger'						=> 'Nicht verwendet in phpBB-Versionen höher als 3.0.5',
-	'UNKNOWN'							=> '<span style="color:#FF5D00"><em>Zweck unbekannt, Parameter ist nicht im Standardset für phpBB3.2.x oder 3.3.x enthalten</em></span>',
+	'UNKNOWN'									=> '<span style="color:#FF5D00"><em>Zweck unbekannt, Parameter ist nicht im Standardset für phpBB enthalten</em></span>',
 ));

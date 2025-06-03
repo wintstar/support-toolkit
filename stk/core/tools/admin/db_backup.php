@@ -258,7 +258,7 @@ class db_backup
 			$records = $records + $row['Rows'];
 		}
 
-		$data =	'-- Status:' . $table_count . ':' . $records . ':MP_0:' . $db_name . ':STK for phpBB3.2.x:' . STK_VERSION . '::' . $db->sql_server_info() . ':1:::utf8:EXTINFO<br />--<br />'.
+		$data =	'-- Status:' . $table_count . ':' . $records . ':MP_0:' . $db_name . ':STK for phpBB:' . STK_VERSION . '::' . $db->sql_server_info() . ':1:::utf8:EXTINFO<br />--<br />'.
 				'-- TABLE-INFO<br />';
 
 		foreach($row_set as $row)
@@ -541,7 +541,7 @@ class mysql_dumper_extractor extends dbbase_extractor
 			$records = $records + $row['Rows'];
 		}
 
-		$data =	"-- Status:" . $table_count . ":" . $records . ":MP_0:" . $db_name . ":STK for phpBB3.2.x:" . STK_VERSION . "::" . $db->sql_server_info() . ":1:::utf8:EXTINFO\n--\n".
+		$data =	"-- Status:" . $table_count . ":" . $records . ":MP_0:" . $db_name . ":STK for phpBB:" . STK_VERSION . "::" . $db->sql_server_info() . ":1:::utf8:EXTINFO\n--\n".
 				"-- TABLE-INFO\n";
 
 		foreach($row_set as $row)
@@ -552,7 +552,7 @@ class mysql_dumper_extractor extends dbbase_extractor
 		$db->sql_freeresult($result);
 
 		$data .="-- EOF TABLE-INFO\n--\n".
-				'-- Dump created by Support Toolkit for phpBB3.2.x and compatible with MySQLDumper 1.24.4 (http://mysqldumper.net)'.
+				'-- Dump created by Support Toolkit for phpBB'.
 				"\n/*!40101 SET NAMES 'utf8' */;".
 				"\nSET FOREIGN_KEY_CHECKS=0;".
 				"\n-- Dump created: " . $user->format_date(time(), 'Y-m-d H:i') . "\n";

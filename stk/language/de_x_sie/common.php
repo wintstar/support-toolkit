@@ -123,7 +123,7 @@ $lang = array_merge($lang, array(
 											 Um das ERK auszuführen, klicken Sie bitte <a href="' . STK_ROOT_PATH . 'erk.' . PHP_EXT . '"><b>hier</b></a>.',
 	'CONFIG_REPAIR'						=> 'Repariere die config.php',
 	'CONFIG_REPAIR_EXPLAIN'				=> 'Mit diesem Tool können Sie Ihre Konfigurationsdatei regenerieren lassen.',
-	'CONFIG_REPAIR_NO_TABLES'			=> 'Es konnten keine phpBB3 Tabellen mit diesem Tabellenpräfix in dieser Datenbank gefunden werden.',
+	'CONFIG_REPAIR_NO_TABLES'			=> 'Es konnten keine phpBB Tabellen mit diesem Tabellenpräfix in dieser Datenbank gefunden werden.',
 	'CONFIG_REPAIR_NO_DBMS'				=> 'Es konnte kein geeigneter Datenbanktyp ermittelt werden.',
 	'CONFIG_REPAIR_CONNECT_FAIL'		=> 'Datenbankverbindung fehlgeschlagen.',
 	'CONFIG_REPAIR_WRITE_ERROR'			=> '<strong style="color: #ff0000;">FEHLER: Konfigurationsdatei konnte nicht geschrieben werden.</strong><br />Bitte kopieren Sie den unten stehenden Text, fügen diesen in eine Datei namens config.php ein und platzieren diese Datei in das Stammverzeichnis Ihres Forums.<br /><br />',

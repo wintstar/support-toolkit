@@ -863,7 +863,7 @@ if (!function_exists('adm_back_link'))
 * and converts backslashes to forward slashes.
 *
 * @param string $errfile	Absolute file path
-*							(e.g. /var/www/phpbb3/phpBB/includes/functions.php)
+*							(e.g. /var/www/phpbb/phpBB/includes/functions.php)
 *							Please note that if $errfile is outside of the phpBB root,
 *							the root path will not be found and can not be filtered.
 * @return string			Relative file path

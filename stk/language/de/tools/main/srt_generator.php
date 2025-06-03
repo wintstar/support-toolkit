@@ -102,7 +102,7 @@ $lang = array_merge($lang, array(
 			'php'				=> 'To determine which PHP version you are using, go to the Administration Control Panel. On the "General" tab, click on "PHP Information", here you’ll find "PHP Version x.y.z"',
 			'host_name'			=> 'Some problems experienced with phpBB boards can be attributed to particular hosts. This field should be filled with the company that is providing your webhosting package (like GoDaddy, Yahoo!, 1&1, etc.). If you are hosting the board yourself, please indicate this. Likewise, if you do not know who is hosting your board, please indicate this as well.',
 			'install_type'		=> 'If you installed your board by downloading the phpBB files, uploading them to your host, then browsing to the installer, select "I installed the board by myself." If you had someone do the installation for you, select "Someone else installed my board for me." If you used an automated tool like Fantastico, select "I used a tool provided by my host."',
-			'inst_converse'		=> 'If your board was a fresh install, this means your board did not exist prior to installing phpBB. If you recently updated your board from an older version of phpBB3 prior to your problem beginning, then selected "Update from a previous version of phpBB3". If it is a conversion, this means your board was installed previously as another piece of software then later converted to phpBB.',
+			'inst_converse'		=> 'If your board was a fresh install, this means your board did not exist prior to installing phpBB. If you recently updated your board from an older version of phpBB prior to your problem beginning, then selected "Update from a previous version of phpBB". If it is a conversion, this means your board was installed previously as another piece of software then later converted to phpBB.',
 			'mods_installed'	=> 'MODs are often the cause of many problems with phpBB. This information can help to determine the exact cause of your issue.',
 			'registration_req'	=> 'Select "Yes" if one must be registered and logged in to experience this problem.',
 		),
@@ -133,10 +133,10 @@ $lang = array_merge($lang, array(
 			'inst_converse'	=> array(
 				null			=> 'Please select your answer',
 				'fresh'				=> 'Fresh Install',
-				'phpbb_update'		=> 'Update from a previous version of phpBB3',
-				'convert_phpbb2'	=> 'Conversion from phpBB2',
-				'convert_phpbb30'	=> 'Conversion from phpBB3.0',
-				'convert_phpbb31'	=> 'Conversion from phpBB3.1',
+				'phpbb_update'		=> 'Update from a previous version of phpBB',
+				'convert_phpbb2'	=> 'Conversion from phpBB v2*',
+				'convert_phpbb30'	=> 'Conversion from phpBB v3.0',
+				'convert_phpbb31'	=> 'Conversion from phpBB v3.1',
 				'convert_other'		=> 'Conversion from another software',
 			)
 		),

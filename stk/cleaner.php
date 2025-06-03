@@ -432,8 +432,8 @@ function marklist(id, name, state)
 	</div>
 </div>
 <div class="copyright">
-	Support Toolkit for phpBB3.2.x &amp; phpBB3.3.x &copy;<br>
-	Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group - maintained by &copy; <a href="https://github.com/wintstar/support-toolkit/discussions">wintstar</a>
+	Support Toolkit for phpBB &copy;<br>
+	Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Limited - maintained by &copy; <a href="https://github.com/wintstar/support-toolkit/discussions">wintstar</a>
 </div>
 </body>
 </html>
