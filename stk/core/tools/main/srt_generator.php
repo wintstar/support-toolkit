@@ -3,7 +3,7 @@
 *
 * @package Support Toolkit - Support Request Generator
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -22,7 +22,7 @@ class srt_generator
 	 * The data array contains all data required to build the SRT questions,
 	 * for each question the following keys can be used
 	 * <code>
-	 *		'name'			=>	Required, the identifier that is used for everything
+	 *		'name'			=>	Required, the identifier that is used for everything is onlny in english
 	 *							(field names/langauge entries/etc)
 	 *		'type'			=>	Required, the type of the input field. (dropdown ||
 	 *							text || texteara || boolean)
@@ -123,9 +123,9 @@ class srt_generator
 					'type'			=> 'dropdown',
 				),
 				array(
-					'name'			=> 'mods_installed',
+					'name'			=> 'exts_installed',
 					'type'			=> 'boolean',
-					'p_callback'	=> array($this, '_prefill_has_mods_installed'),
+					'p_callback'	=> array($this, '_prefill_has_exts_installed'),
 					'hide'			=> true,
 				),
 				array(
@@ -136,10 +136,10 @@ class srt_generator
 			),
 			'step3'	=> array(
 				array(
-					'name'			=> 'installed_mods',
+					'name'			=> 'installed_exts',
 					'type'			=> 'textarea',
-					'depends'		=> 'mods_installed',
-					'p_callback'	=> array($this, '_prefill_installed_mods'),
+					'depends'		=> 'exts_installed',
+					'p_callback'	=> array($this, '_prefill_installed_exts'),
 				),
 				array(
 					'name'			=> 'installed_styles',
@@ -187,10 +187,7 @@ class srt_generator
 	{
 		global $cache, $template, $lang;
 
-		if (@phpversion() >= '7.0.0')
-		{
-			$template->assign_var('S_PHP7', true);
-		}
+		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
 
 		// Step 0 is easy
 		if ($this->step == 0)
@@ -216,6 +213,7 @@ class srt_generator
 
 			// Run through the questions
 			$_prefilled = array();
+			$questionrow_count = 0;
 			foreach ($this->_data["step{$this->step}"] as $question)
 			{
 				// Some questions are only asked when certain answers are given earlier
@@ -241,7 +239,7 @@ class srt_generator
 
 				// If there is a prefill result use that as answer
 				// Handle MODs a bit different (ugly :/)
-				if ($_p_callback_result !== false && $question['name'] != 'installed_mods')
+				if ($_p_callback_result !== false && $question['name'] != 'installed_exts')
 				{
 					$_prefilled[$question['name']] = $_p_callback_result;
 				}
@@ -257,12 +255,14 @@ class srt_generator
 					}
 
 					$template->assign_block_vars('questionrow', array(
-						'EXPLAIN'	=> (!empty($lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']])) ? $lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']] : '',
-						'NAME'		=> $question['name'],
-						'OPTIONS'	=> ($question['type'] == 'dropdown') ? $options : '',
-						'PREFILL'	=> $_p_callback_result,
-						'QUESTION'	=> $lang['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
-						'TYPE'		=> $question['type'],
+						'EXPLAIN'			=> (!empty($lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']])) ? $lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']] : '',
+						'NAME'				=> $question['name'],
+						'OPTIONS'			=> ($question['type'] == 'dropdown') ? $options : '',
+						'PREFILL'			=> $_p_callback_result,
+						'QUESTION'			=> $english['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
+						'QUESTION_LABEL'	=> $lang['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
+						'TYPE'				=> $question['type'],
+						'ID_COUNT'			=> $question['name'] . '_' . $questionrow_count++,
 					));
 				}
 			}
@@ -277,7 +277,7 @@ class srt_generator
 		page_header(user_lang('SRT_GENERATOR'));
 
 		$template->set_filenames(array(
-			'body' => 'tools/srt_generator.html',
+			'body' => 'tools/main_srt_generator.html',
 		));
 
 		page_footer();
@@ -289,6 +289,8 @@ class srt_generator
 	function run_tool()
 	{
 		global $cache, $lang, $request;
+
+		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
 
 		// Step 0 is a special place to be, only available for special people
 		// this user isn't special so kick him to the user spot
@@ -305,11 +307,11 @@ class srt_generator
 			// Disable the back link
 			$template->assign_var('U_BACK_TOOL', false);
 
-			$mod_related = $request->variable('mod_related', false);
+			$ext_related = $request->variable('ext_related', false);
 
-			if (!empty($mod_related) && $mod_related == '1')
+			if (!empty($ext_related) && $ext_related == '1')
 			{
-				trigger_error($lang['STEP1_MOD_ERROR']);
+				trigger_error($lang['STEP1_EXT_ERROR']);
 			}
 
 			$hacked = $request->variable('hacked', false);
@@ -324,6 +326,7 @@ class srt_generator
 		else
 		{
 			$_cached_data	= $cache->get('_stk_srt_generator');
+
 			$_prefilled		= unserialize(htmlspecialchars_decode($request->variable('prefill', '', true)));
 
 			// $_cached_data can be "false"
@@ -366,7 +369,7 @@ class srt_generator
 						}
 						else
 						{
-							$_answers[$question['name']] = $lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$question['name']][$_answers[$question['name']]];
+							$_answers[$question['name']] = $english['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$question['name']][$_answers[$question['name']]];
 						}
 					break;
 				}
@@ -391,6 +394,8 @@ class srt_generator
 	{
 		global $cache, $template, $lang, $user;
 
+		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+
 		$_template = array();
 
 		// Get the submitted data
@@ -398,11 +403,11 @@ class srt_generator
 		if ($_answers === false)
 		{
 			// Shouldn't happening in normal operation
-			trigger_error('COULDNT_LOAD_SRT_ANSWERS');
+			trigger_error($lang['COULDNT_LOAD_SRT_ANSWERS']);
 		}
 
 		// Header
-		$_template[] = '[size=115][color=#368AD2][b]' . $lang['SRT_GENERATOR'] . '[/b][/color][/size]<br />';
+		$_template[] = '[size=115][color=#368AD2][b]' . $english['SRT_GENERATOR'] . '[/b][/color][/size]<br />';
 
 		// Walk through the data
 		foreach ($this->_data as $step => $questions)
@@ -416,21 +421,21 @@ class srt_generator
 					continue;
 				}
 
-				$question_string = $lang['SRT_QUESTIONS'][$step][$question['name']];
+				$question_string = $english['SRT_QUESTIONS'][$step][$question['name']];
 
 				// No answer, easy :)
 				if (empty($_answers[$question['name']]))
 				{
-					$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]: [i]" . $lang['NO_ANSVER'] . "[/i]";
+					$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]<br> [i]" . $english['NO_ANSVER'] . "[/i]";
 					continue;
 				}
 
-				$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]: {$_answers[$question['name']]}";
+				$_template[] = "[color=#cc6600][b]{$question_string}[/b][/color]<br> {$_answers[$question['name']]}";
 			}
 		}
 
 		// Footer
-		$_template[] = '<br />[size=80]' . $lang['BY_SRT_GENERATOR'] . '[/size]';
+		$_template[] = '<br />[size=80]' . sprintf($english['BY_SRT_GENERATOR'], STK_VERSION) . '[/size]';
 
 		// Output
 		$user->add_lang('viewtopic');
@@ -454,6 +459,8 @@ class srt_generator
 	function _format_options(&$options, $name = '')
 	{
 		global $lang;
+
+		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
 
 		$_option_list = array();
 
@@ -499,18 +506,18 @@ class srt_generator
 	/**
 	 * Try to determine whether the user has EXTs installed.
 	 */
-	function _prefill_has_mods_installed()
+	function _prefill_has_exts_installed()
 	{
 		global $db;
 
 		$sql = 'SELECT ext_name
 			FROM ' . EXT_TABLE;
 		$result	= $db->sql_query_limit($sql, 1);
-		$mod	= $db->sql_fetchfield('ext_name', false, $result);
+		$ext	= $db->sql_fetchfield('ext_name', false, $result);
 
 		$db->sql_freeresult($result);
 
-		if ($mod !== false)
+		if ($ext !== false)
 		{
 			return true;
 		}
@@ -544,7 +551,7 @@ class srt_generator
 		return implode("\n", $_languages);
 	}
 
-	function _prefill_installed_mods()
+	function _prefill_installed_exts()
 	{
 		global $db;
 
@@ -614,7 +621,7 @@ class srt_generator
 	 */
 	function _prefill_phpbb_version()
 	{
-		global $config, $lang;
+		global $config;
 
 		if (version_compare(strtolower($config['version']), strtolower(PHPBB_VERSION), 'eq'))	// use strtolower as my local php installation seems to think that x.y.z-PL1 != x.y.z-pl1
 		{
@@ -629,7 +636,9 @@ class srt_generator
 	{
 		global $config, $lang;
 
-		return ($config['gzip_compress']) ? $lang['YES'] : $lang['NO'];
+		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+
+		return ($config['gzip_compress']) ? $english['YES'] : $english['NO'];
 
 	}
 

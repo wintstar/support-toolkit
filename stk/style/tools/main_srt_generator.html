@@ -3,18 +3,18 @@
 
 <!-- IF S_STEP1 -->
 <form action="{U_ACTION}" name="support-toolkit-srt-generator" method="post">
-	<!-- IF S_PHP7 -->
 	<fieldset>
 		<p>{L_SRT_GENERATOR_LANDING_CONFIRM}</p>
 	</fieldset>
-	<!-- ENDIF -->
 	<fieldset>
 		<legend>{L_LEGEND}</legend>
 
 		<dl>
-			<dt><label for="srt[mod_related]">{L_STEP1_MOD}:</label><br /><span>{L_STEP1_MOD_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" name="mod_related" value="1" class="radio" /> {L_YES}</label>
-				<label><input type="radio" name="mod_related" value="0" class="radio" checked="checked" /> {L_NO}</label></dd>
+			<dt><label for="srt[ext_related]">{L_STEP1_EXT}:</label><br /><span>{L_STEP1_EXT_EXPLAIN}</span></dt>
+			<dd>
+				<label><input type="radio" name="ext_related" value="1" class="radio" /> {L_YES}</label>
+				<label><input type="radio" name="ext_related" value="0" class="radio" checked="checked" /> {L_NO}</label>
+			</dd>
 		</dl>
 		<dl>
 			<dt><label for="srt[hacked]">{L_STEP1_HACKED}:</label><br /><span>{L_STEP1_HACKED_EXPLAIN}</span></dt>
@@ -33,13 +33,14 @@
 	<dt>{L_CODE}: <a href="#" onclick="selectCode(this); return false;">{L_SELECT_ALL_CODE}</a></dt>
 	<dd><code>{COMPILED_TEMPLATE}</code></dd>
 </dl>
+<p><strong>{L_INFO_LINK_STK}</strong></p>
 <!-- ELSE -->
-<form action="{U_ACTION}" name="support-toolkit-srt-generator" method="post">
+<form name="toolkit" action="{U_ACTION}" name="support-toolkit-srt-generator" method="post">
 	<fieldset>
 		<legend>{L_LEGEND}</legend>
 	<!-- BEGIN questionrow -->
 		<dl>
-			<dt><label for="{questionrow.NAME}">{questionrow.QUESTION}</label><!-- IF questionrow.EXPLAIN --><br /><span>{questionrow.EXPLAIN}</span><!-- ENDIF --></dt>
+			<dt><label for="{questionrow.NAME}">{questionrow.QUESTION_LABEL}</label><!-- IF questionrow.EXPLAIN --><br /><span>{questionrow.EXPLAIN}</span><!-- ENDIF --></dt>
 			<dd>
 				<!-- IF questionrow.TYPE == 'boolean' -->
 				<label for="{questionrow.NAME}1"><input type="radio" id="{questionrow.NAME}1" name="{questionrow.NAME}" value="yes" /> {L_YES}</label> &nbsp;
@@ -47,9 +48,9 @@
 				<!-- ELSEIF questionrow.TYPE == 'dropdown' -->
 				<select name="{questionrow.NAME}" id="{questionrow.NAME}">{questionrow.OPTIONS}</select>
 				<!-- ELSEIF questionrow.TYPE == 'text' -->
-				<input name="{questionrow.NAME}" id="{questionrow.NAME}" type="text" size="40" maxlength="255" value="" />
+				<input name="{questionrow.NAME}" id="{questionrow.ID_COUNT}" type="text" size="40" maxlength="255" value="" placeholder="{L_FIELD_REQUIRED}" /><br /><span>{L_FIELD_REQUIRED_EXPLAIN}</span>
 				<!-- ELSEIF questionrow.TYPE == 'textarea' -->
-				<textarea rows="6" class="inputbox" style="width: 94%;" name="{questionrow.NAME}"><!-- IF questionrow.PREFILL -->{questionrow.PREFILL}<!-- ENDIF --></textarea>
+				<textarea rows="6" class="inputbox" style="width: 94%;" name="{questionrow.NAME}"  id="{questionrow.ID_COUNT}"><!-- IF questionrow.PREFILL -->{questionrow.PREFILL}<!-- ELSE --> {L_FIELD_REQUIRED}<!-- ENDIF --></textarea><br /><span>{L_FIELD_REQUIRED_EXPLAIN}</span>
 				<!-- ENDIF -->
 			</dd>
 		</dl>

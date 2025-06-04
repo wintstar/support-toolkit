@@ -16,9 +16,9 @@ if (!defined('IN_PHPBB'))
    exit;
 }
 
-if (empty($lang) || !is_array($lang))
+if (empty($english) || !is_array($english))
 {
-   $lang = array();
+   $english = array();
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,7 +40,9 @@ if (empty($lang) || !is_array($lang))
 // English version when the "Support Request Generator" is ran.
 //
 
-$lang = array_merge($lang, array(
+// !!!!!!!! Translator do not change anything from here  !!!!!!!!!
+
+$english = array_merge($english, array(
 	'COMPILED_TEMPLATE_EXPLAIN'		=> 'Below is your copy of the Support Request Template. Click below to copy it to your clipboard, then create a new post in the <a href="http://www.phpbb.com/community/viewforum.php?f=556">Support forum</a> with this information. If you already have an existing support topic regarding your issue, please copy the template into a reply to your existing topic instead of creating a new one.',
 	'COULDNT_LOAD_SRT_ANSWERS'		=> 'The Support Request Template Generator couldn’t load the answers. Make sure that you’ve correctly started the tool.',
 	'SRT_GENERATOR'					=> 'Support Request Template Generator',
@@ -53,10 +55,12 @@ $lang = array_merge($lang, array(
 	'FIELD_REQUIRED_EXPLAIN'		=> '100% information results in 100% possible support. Less % information results in less % possible support.',
 	'BY_SRT_GENERATOR'				=> 'Created by [url= https://github.com/wintstar/support-toolkit/discussions]Support-Toolkit v%s[/url]',
 	'INFO_LINK_STK'					=> 'Please appreciate the work the developers put into this tool and don\'t remove the link to the support toolkit. Thank you!',
+	'YES'							=> 'Yes',
+	'NO'							=> 'No',
 ));
 
 // Step 1 strings
-$lang = array_merge($lang, array(
+$english = array_merge($english, array(
 //	'STEP1_CONVERT'			=> '',
 //	'STEP1_CONVERT_EXPLAIN'	=> '',
 	'STEP1_EXT'				=> 'Is your problem extensions related?',
@@ -68,13 +72,14 @@ $lang = array_merge($lang, array(
 ));
 
 // The questions
-$lang = array_merge($lang, array(
+$english = array_merge($english, array(
 	'SRT_QUESTIONS'			=> array(
 		'step2'	=> array(
 			'phpbb_version'		=> 'What version of phpBB are you using?',
 			'board_url'			=> 'What is your board’s URL?',
 			'dbms'				=> 'Which database type/version are you using?',
 			'php'				=> 'Which PHP version are you using?',
+			'gzip'				=> 'Is gzip compression enabled in your board configuration?',
 			'host_name'			=> 'Who do you host your board with?',
 			'install_type'		=> 'How did you install your board?',
 			'inst_converse'		=> 'Is your board a fresh install or a conversion?',
@@ -95,18 +100,17 @@ $lang = array_merge($lang, array(
 ));
 
 // Explain lines for the questions
-$lang = array_merge($lang, array(
+$english = array_merge($english, array(
 	'SRT_QUESTIONS_EXPLAIN'	=> array(
 		'step2'	=> array(
 			'phpbb_version'		=> 'The SRT Generator couldn’t determine which phpBB version you are using, please select the correct version. To find this information, login to your board and scroll down to the bottom of the page. Click "Administration Control Panel". Click the "System" tab.',
 			'board_url'			=> 'Your board URL is the address that you use to access your board. Most problems are more easily fixed when one can view your board. If you do not want to give out this information, please enter "n/a".',
 			'dbms'				=> 'To determine which database version and type you are using, go to the Administration Control Panel. On the "General" tab, locate "Database server:" in the statistics table.',
 			'php'				=> 'To determine which PHP version you are using, go to the Administration Control Panel. On the "General" tab, click on "PHP Information", here you’ll find "PHP Version x.y.z"',
-			'gzip'				=> 'GZip enabled',
 			'host_name'			=> 'Some problems experienced with phpBB boards can be attributed to particular hosts. This field should be filled with the company that is providing your webhosting package (like GoDaddy, Yahoo!, 1&1, etc.). If you are hosting the board yourself, please indicate this. Likewise, if you do not know who is hosting your board, please indicate this as well.',
 			'install_type'		=> 'If you installed your board by downloading the phpBB files, uploading them to your host, then browsing to the installer, select "I installed the board by myself." If you had someone do the installation for you, select "Someone else installed my board for me." If you used an automated tool like Fantastico, select "I used a tool provided by my host."',
 			'inst_converse'		=> 'If your board was a fresh install, this means your board did not exist prior to installing phpBB. If you recently updated your board from an older version of phpBB prior to your problem beginning, then selected "Update from a previous version of phpBB". If it is a conversion, this means your board was installed previously as another piece of software then later converted to phpBB.',
-			'exts_installed'	=> 'Exts are often the cause of many problems with phpBB. This information can help to determine the exact cause of your issue.',
+			'ext_installed'		=> 'Exts are often the cause of many problems with phpBB. This information can help to determine the exact cause of your issue.',
 			'registration_req'	=> 'Select "Yes" if one must be registered and logged in to experience this problem.',
 		),
 		'step3'	=> array(
@@ -123,7 +127,7 @@ $lang = array_merge($lang, array(
 ));
 
 // Langauge strings that are used for building dropdown boxes
-$lang = array_merge($lang, array(
+$english = array_merge($english, array(
 	'SRT_DROPDOWN_OPTIONS'	=> array(
 		'step2'	=> array(
 			'install_type'	=> array(

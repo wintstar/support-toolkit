@@ -3,8 +3,8 @@
 *
 * @package Support Toolkit - Plugin handler
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -153,7 +153,7 @@ class plugin
 		if ($tool_name != 'erk')
 		{
 			// SRT Generator gets handled a bit different
-			$force_lang = ($tool_name == 'srt_generator') ? $user->data['user_lang'] : false;
+			$force_lang = $user->data['user_lang'];
 			stk_add_lang('tools/' . $tool_cat . '/' . $tool_name, $force_lang);
 		}
 
