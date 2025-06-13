@@ -3,20 +3,14 @@
 *
 * @package Support Toolkit
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace core\repair;
 
-class erk_config_repair
+class config_repair
 {
 	function run()
 	{
@@ -35,8 +29,12 @@ class erk_config_repair
 	{
 		global $stk_root_path, $phpbb_root_path, $phpEx, $critical_repair, $user, $lang;
 
-		$critical_repair->user_setup($user);
-
+		/*
+		*
+		* Fatal error, continuous loop, still needs to be solved
+		* $critical_repair->user_setup($user);
+		*
+		*/
 		include($stk_root_path . 'includes/functions.' . $phpEx);
 		include($stk_root_path . 'language/' . $user->data['user_lang'] . '/common.' . $phpEx);
 		include($phpbb_root_path . 'language/' . $user->data['user_lang'] . '/install.' . $phpEx);

@@ -1264,6 +1264,18 @@ function check_json($dir, $file_name)
 	}
 }
 
+function delete_directory_recursiv($path)
+{
+	$files = array_diff(scandir($path), array('.','..'));
+
+	foreach($files as $file)
+	{
+		is_dir("$path/$file") ? delete_directory_recursiv("$path/$file") : unlink("$path/$file");
+	}
+
+	return rmdir($path);
+}
+
 /**
 * Wrapper for version_compare() that allows using uppercase A and B
 * for alpha and beta releases.

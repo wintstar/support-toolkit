@@ -124,7 +124,7 @@ class restore_deleted_users
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $db, $umil, $request;
+		global $config, $db, $phpbb_root_path, $request;
 
 		$post		= $request->variable('post', array(0));
 		$conflicted	= $request->variable('conflicted', array(0 => 0));
@@ -212,11 +212,9 @@ class restore_deleted_users
 			}
 		}
 
-		// Clear the cache
-		$umil->cache_purge(array(
-			array('auth'),
-			array('data'),
-		));
+		// Purge teh caches
+		$path = $phpbb_root_path . 'cache/production';
+		delete_directory_recursiv($path);
 
 		trigger_error(((sizeof($non_conflicted) > 1) ? user_lang('USERS_RESTORED_SUCCESSFULLY') : user_lang('USER_RESTORED_SUCCESSFULLY')));
 	}

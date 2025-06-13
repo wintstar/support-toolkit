@@ -227,10 +227,11 @@ class database_cleaner
 
 	function quit()
 	{
-		global $umil, $lang, $config;
+		global $phpbb_root_path, $lang, $config;
 
-		$umil->cache_purge();
-		$umil->cache_purge('auth');
+		// Purge teh caches
+		$path = $phpbb_root_path . 'cache/production';
+		delete_directory_recursiv($path);
 
 		$config->set('board_disable', 0);
 		$config->set('board_disable_msg', '');

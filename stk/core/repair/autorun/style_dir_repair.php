@@ -3,20 +3,14 @@
 *
 * @package Support Toolkit
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace core\repair\autorun;
 
-class erk_style_dir_repair
+class style_dir_repair
 {
 	/**
 	 * Instance of the acp_styles module
@@ -27,7 +21,7 @@ class erk_style_dir_repair
 
 	function run()
 	{
-		global $phpbb_root_path, $config, $db;
+		global $phpbb_root_path, $phpEx, $config, $db;
 
 		$config['default_style'] = (!isset($config['default_style']) || !$config['default_style']) ? 1 : $config['default_style'];
 		$sql = 'SELECT style_path
@@ -42,8 +36,6 @@ class erk_style_dir_repair
 			// Load the ac class
 			if (!class_exists('acp_styles'))
 			{
-				global $phpEx;
-
 				include $phpbb_root_path . 'includes/acp/acp_styles.' . $phpEx;
 			}
 			$this->ac = new acp_styles();
@@ -124,8 +116,8 @@ class erk_style_dir_repair
 		}
 
 		echo 'The support toolkit couldn\'t find an available style. Please seek further assistance in the support forums on <a href="http://www.phpbb.com/community/viewforum.php?f=46" title="phpBB.com Support forum">phpbb.com</a>';
-		garbage_collection();
-		exit_handler();
+		stk_garbage_collection();
+		stk_exit_handler();
 	}
 
 	/**

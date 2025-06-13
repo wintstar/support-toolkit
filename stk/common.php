@@ -57,8 +57,7 @@ $phpbb_dispatcher->disable();
 // and load UML.
 if (!defined('IN_ERK'))
 {
-	require $stk_root_path . 'includes/critical_repair.' . $phpEx;
-	$critical_repair = new critical_repair();
+	$critical_repair = new \core\erk\erk();
 
 	$user->session_begin();
 	$auth->acl($user->data);

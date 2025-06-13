@@ -19,7 +19,7 @@ class erk
 	*/
 	function display_options()
 	{
-		global $stk_root_path, $template, $user;
+		global $stk_root_path, $phpEx, $template, $user;
 
 		// This is kinda like the main page
 		// Output the main page
@@ -28,7 +28,7 @@ class erk
 		// Category title and desc if available
 		$template->assign_vars(array(
 			'L_TITLE'			=> user_lang('CAT_ERK'),
-			'L_TITLE_EXPLAIN'	=> user_lang('CAT_ERK_EXPLAIN', append_sid($stk_root_path . 'erk.' . PHP_EXT)),
+			'L_TITLE_EXPLAIN'	=> user_lang('CAT_ERK_EXPLAIN', append_sid($stk_root_path . 'erk.' . $phpEx)),
 		));
 
 		$template->set_filenames(array(

@@ -4,24 +4,17 @@
 * @package Support Toolkit
 * @version $Id$
 * @copyright (c) 2015 Sheer
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace core\repair\autorun;
 
-class erk_anonimous_repair
+class anonimous_repair
 {
 	function run()
 	{
 		global $config, $db;
-
 
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
@@ -83,6 +76,7 @@ class erk_anonimous_repair
 			'user_newpasswd'			=> '',
 			'user_allow_massemail'		=> 0,
 		);
+
 		// Lets re-create the anonymous user
 		$sql = 'INSERT INTO ' . USERS_TABLE . '
 			' . $db->sql_build_array('INSERT', $clean_data);

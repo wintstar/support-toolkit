@@ -11,6 +11,7 @@ define('IN_PHPBB', true);
 
 $stk_root_path = (defined('STK_ROOT_PATH')) ? STK_ROOT_PATH : './';
 $stk_dir_name = substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1);
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 
 require $stk_root_path . 'common.' . $phpEx;

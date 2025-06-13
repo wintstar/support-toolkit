@@ -3,20 +3,14 @@
 *
 * @package Support Toolkit
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace core\repair\autorun;
 
-class erk_files_repair
+class files_repair
 {
 	function run()
 	{

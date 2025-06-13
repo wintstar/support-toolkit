@@ -11,6 +11,7 @@ define('IN_PHPBB', true);
 
 $stk_root_path = (defined('STK_ROOT_PATH')) ? STK_ROOT_PATH : './';
 $stk_dir_name = substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1);
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 
 require $stk_root_path . 'common.' . $phpEx;
@@ -108,7 +109,7 @@ if (!$extra_data)
 				$table_extra = $column_extra = $config_extra = $module_extra = $permissions_extra = array();
 				foreach($migrations as $file)
 				{
-					$file = str_replace('.' . PHP_EXT . '', '', $file);
+					$file = str_replace('.' . $phpEx . '', '', $file);
 					$sub_dir = '' . $phpbb_root_path . 'ext/' . $vendor . '/' . $extension . '/migrations/' . $file . '';
 					if (is_dir($sub_dir))
 					{
@@ -124,7 +125,7 @@ if (!$extra_data)
 				foreach($migrations as $file)
 				{
 					$configs = $module_names = $permissions = array();
-					$file = str_replace('.' . PHP_EXT . '', '', $file);
+					$file = str_replace('.' . $phpEx . '', '', $file);
 					$class = '' . $vendor . '\\' . $extension . '\\migrations\\' . $file . '';
 					$phpbb_ext = new $class($config, $db, $db_tools, $table_prefix, $phpEx, $errors);
 					if (!empty($phpbb_ext))

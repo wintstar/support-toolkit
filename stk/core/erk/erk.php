@@ -3,28 +3,14 @@
 *
 * @package Support Toolkit
 * @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace core\erk;
 
-// Load functions_admin.php if required
-if (!function_exists('filelist'))
-{
-	global $phpEx, $phpEx;
-
-	include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
-}
-
-class critical_repair
+class erk
 {
 	/**
 	* @var Array Tools that are autoran
@@ -48,9 +34,17 @@ class critical_repair
 	*/
 	function initialise()
 	{
-		global $stk_root_path, $phpEx;
+		global $stk_root_path, $phpbb_root_path, $phpEx;
 
-		$this->tool_path = $stk_root_path . 'includes/critical_repair/';
+		// Load functions_admin.php if required
+		if (!function_exists('filelist'))
+		{
+			include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+		}
+
+		// Set the path
+		$this->tool_path = $stk_root_path . 'core/repair/';
+
 		$filelist = filelist($this->tool_path, '', $phpEx);
 
 		foreach ($filelist as $directory => $tools)
@@ -87,18 +81,22 @@ class critical_repair
 	*/
 	function run_tool($tool)
 	{
-		global $phpEx;
+		static $tools_loaded = array();
 
-		if (!(in_array($tool, $this->manual_tools)))
+		if (isset($tools_loaded[$tool]))
 		{
-			return false;
+			return ($return) ? $tools_loaded[$tool] : true;
 		}
 
-		include($this->tool_path . $tool . '.' . $phpEx);
+		try {
+			// Construct the class
+			$class = new \ReflectionClass("\\core\\repair\\{$tool}");
+			$tools_loaded[$tool] = $class->newInstance();
+		} catch (Exception $e) {
+			trigger_error(sprintf($lang['INCORRECT_CLASS'], $e), E_USER_ERROR);
+		}
 
-		$tool_name = 'erk_' . $tool;
-		$run_tool = new $tool_name();
-		return $run_tool->run();
+		return $tools_loaded[$tool];
 	}
 
 	/**
@@ -107,19 +105,25 @@ class critical_repair
 	*/
 	function autorun_tools()
 	{
-		global $phpEx;
+		static $tools_loaded = array();
 
 		foreach ($this->autorun_tools as $tool)
 		{
-			include($this->tool_path . 'autorun/' . $tool . '.' . $phpEx);
+			if (isset($tools_loaded[$tool]))
+			{
+				return ($return) ? $tools_loaded[$tool] : true;
+			}
 
-			$tool_name = 'erk_' . $tool;
-			$run_tool = new $tool_name();
-			$run_tool->run();
-			unset($run_tool);
+			try {
+				// Construct the class
+				$class = new \ReflectionClass("\\core\\repair\\autorun\\{$tool}");
+				$tools_loaded[$tool] = $class->newInstance();
+			} catch (Exception $e) {
+				trigger_error(sprintf($lang['INCORRECT_CLASS'], $e), E_USER_ERROR);
+			}
+
+			return $tools_loaded[$tool];
 		}
-
-		return true;
 	}
 
 	/**
@@ -189,7 +193,6 @@ class critical_repair
 										echo $msg;
 										?><hr><?php
 									}
-
 								}
 								?>
 								<p>
