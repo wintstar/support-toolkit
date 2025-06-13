@@ -151,7 +151,7 @@ class database_cleaner
 	*/
 	function display_options()
 	{
-		global $phpEx, $template, $user;
+		global $stk_root_path, $phpEx, $template, $user;
 
 		// Setup
 		$this->_setup();
