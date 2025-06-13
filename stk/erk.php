@@ -11,11 +11,9 @@
 define('IN_PHPBB', true);
 define('IN_ERK', true);
 
-if (!defined('PHPBB_ROOT_PATH')) { define('PHPBB_ROOT_PATH', './../'); }
-if (!defined('PHP_EXT')) { define('PHP_EXT', substr(strrchr(__FILE__, '.'), 1)); }
-if (!defined('STK_DIR_NAME')) { define('STK_DIR_NAME', substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1)); }	// Get the name of the stk directory
-if (!defined('STK_ROOT_PATH')) { define('STK_ROOT_PATH', './'); }
-if (!defined('STK_INDEX')) { define('STK_INDEX', STK_ROOT_PATH . 'index.' . PHP_EXT); }
+$stk_root_path = (defined('STK_ROOT_PATH')) ? STK_ROOT_PATH : './';
+$stk_dir_name = substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1);
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
 
 // Try to override some limits - maybe it helps some...
 @set_time_limit(0);
@@ -46,13 +44,13 @@ else
 @ini_set('memory_limit', $mem_limit);
 
 // Init critical repair and run the tools that *must* be ran before initing anything else
-include STK_ROOT_PATH . 'includes/critical_repair.' . PHP_EXT;
+include $stk_root_path . 'includes/critical_repair.' . PHP_EXT;
 $critical_repair = new critical_repair();
 $critical_repair->initialise();
 $critical_repair->run_tool('bom_sniffer');
 $critical_repair->run_tool('config_repair');
 
-require STK_ROOT_PATH . 'common.' . PHP_EXT;
+require $stk_root_path . 'common.' . PHP_EXT;
 
 // We'll run the rest of the critical repair tools automatically now
 $critical_repair->autorun_tools();
@@ -69,6 +67,3 @@ $umil = new umil(true);
 $umil->cache_purge(array(
 	'data',
 ));
-
-// Let's tell the user all is okay :)
-$critical_repair->trigger_error(user_lang('ERK_OK'), true);

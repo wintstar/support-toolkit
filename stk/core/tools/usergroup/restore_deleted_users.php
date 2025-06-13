@@ -254,11 +254,11 @@ class restore_deleted_users
 	*/
 	function _add_user_and_update_data($oldname, $newname)
 	{
-		global $db, $config, $user;
+		global $phpbb_root_path, $phpEx, $db, $config, $user;
 
 		if (!function_exists('user_add'))
 		{
-			include PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 		}
 
 		// Registered users group?
@@ -327,10 +327,12 @@ class restore_deleted_users
 	*/
 	function _redirect_conflicted($conflicted)
 	{
+		global $stk_root_path, $phpEx;
+
 		$conflicted_params = array_flip($conflicted);
 		$conflicted_params = implode('&amp;conflicted%5B%5D', $conflicted_params);
 
-		redirect(append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=restore_deleted_users&amp;conflicted%5B%5D=' . $conflicted_params));
+		redirect(append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=restore_deleted_users&amp;conflicted%5B%5D=' . $conflicted_params));
 		exit;
 	}
 }

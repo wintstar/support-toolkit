@@ -14,7 +14,7 @@ class profile_list
 {
 	function display_options()
 	{
-		global $db, $template, $user, $phpbb_container, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template, $user, $phpbb_container, $request, $lang;
 
 		$submit = $request->variable('sa', false);
 
@@ -30,7 +30,7 @@ class profile_list
 			{
 				if (!function_exists('user_delete'))
 				{
-					require PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT;
+					require $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 				}
 
 				// Delete them all
@@ -44,7 +44,7 @@ class profile_list
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_user_id' => $uids));
-				stk_confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=profile_list&amp;sa=' . true);
+				stk_confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=profile_list&amp;sa=' . true);
 			}
 		}
 
@@ -64,7 +64,7 @@ class profile_list
 		$base_url .= ($limit != 20) ? '&amp;limit=' . $limit : '';
 		$base_url .= ($order_by) ? '&amp;order=' . $order_by : '';
 		$base_url .= ($order_dir != 'DESC') ? '&amp;dir=ASC' : '';
-		$base_url = append_sid(STK_INDEX, $base_url);
+		$base_url = append_sid($stk_root_path . 'index.' . $phpEx, $base_url);
 
 		/*
 		* Filter stuff
@@ -245,7 +245,7 @@ class profile_list
 				'ORDER_SECTION'			=> (in_array($order_by, $timestamps)) ? (($row[$order_by]) ? $user->format_date($row[$order_by]) : $user->lang['NEVER']) : $row[$order_by],
 				'USER_INACTIVE_REASON'	=> $inactive_reason,
 
-				'U_USER_ADMIN'		=> append_sid(PHPBB_ROOT_PATH . 'adm/index.' . PHP_EXT, 'i=users&amp;mode=overview&amp;u=' . $row['uid'], true, $user->session_id),
+				'U_USER_ADMIN'		=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx, 'i=users&amp;mode=overview&amp;u=' . $row['uid'], true, $user->session_id),
 
 				'S_USER_INACTIVE'	=> ($row['user_inactive_reason']) ? true : false,
 			);
@@ -265,8 +265,8 @@ class profile_list
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $count, $limit, $start);
 
 		$template->assign_vars(array(
-			'U_DISPLAY_ACTION'		=> append_sid(STK_INDEX, 't=profile_list&amp;go=1'),
-			'U_SELECTED_ACTION'		=> append_sid(STK_INDEX, array('c' => 'admin', 't' => 'profile_list', 'sa' => true)),
+			'U_DISPLAY_ACTION'		=> append_sid($stk_root_path . 'index.' . $phpEx, 't=profile_list&amp;go=1'),
+			'U_SELECTED_ACTION'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'profile_list', 'sa' => true)),
 
 			'LIMIT'					=> $limit,
 			'OPTION_SECTION'		=> (isset($options[$display]) && $display != 'user_sig') ? $user->lang[$options[$display]] : '',
@@ -277,7 +277,7 @@ class profile_list
 			'S_DISPLAY_ALL'			=> (!isset($options[$display])) ? true : false,
 			'S_DISPLAY_SIG'			=> ($display == 'user_sig') ? true : false,
 			'S_EMPTY_CHECKED'		=> $empty_only,
-			'A_BASE_URL'			=> append_sid(STK_INDEX, array('c' => 'admin', 't' => 'profile_list', 'limit' => '' . $limit . '', 'go' => 1)),
+			'A_BASE_URL'			=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'profile_list', 'limit' => '' . $limit . '', 'go' => 1)),
 		));
 
 		$template->set_filenames(array(

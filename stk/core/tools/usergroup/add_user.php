@@ -180,11 +180,11 @@ class add_user
 	*/
 	function validate_data($data, &$error)
 	{
-		global $config, $user, $lang;
+		global $phpbb_root_path, $phpEx, $config, $user, $lang;
 
 		if (!function_exists('validate_data'))
 		{
-			include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 		}
 
 		$error = validate_data($data, array(

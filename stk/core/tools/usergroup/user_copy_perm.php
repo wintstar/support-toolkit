@@ -14,7 +14,7 @@ class user_copy_perm
 {
 	function display_options()
 	{
-		global $template, $user, $db, $request;
+		global $phpbb_root_path, $phpEx, $template, $user, $db, $request;
 
 		$submit = $request->variable('sa', false);
 		$source_name = $request->variable('source_name', '', true);
@@ -41,7 +41,7 @@ class user_copy_perm
 				// Get the correct user data and make sure that he exists
 				if (!function_exists('user_get_id_name'))
 				{
-					include (PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+					include ($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 				}
 				$result = user_get_id_name($source_id, $source_name);
 				// Was a user_id found?
@@ -118,8 +118,8 @@ class user_copy_perm
 			'SOURCE_ID'			=> $source_id,
 			'TARGET_NAME'		=> $target_name,
 			'TARGED_ID'			=> $target_id,
-			'U_FIND_USER'		=> append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'searchuser', 'form' => 'stk', 'field' => 'source_name')),
-			'U_FIND_TO_USER'	=> append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'searchuser', 'form' => 'stk', 'field' => 'target_name')),
+			'U_FIND_USER'		=> append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'searchuser', 'form' => 'stk', 'field' => 'source_name')),
+			'U_FIND_TO_USER'	=> append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'searchuser', 'form' => 'stk', 'field' => 'target_name')),
 		));
 
 		$template->set_filenames(array(

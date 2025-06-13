@@ -116,11 +116,11 @@ $lang = array_merge($lang, array(
 	'ERK_ISSUE_FOUND'					=> 'Als Teil des "Notfall-Reparatur-Kits" des Support-Toolkits hat das ERK Ihre phpBB-Dateien überprüft und festgestellt, dass einige Dateien ungültige Inhalte enthalten, die möglicherweise den Betrieb deines Boards behindern könnten.Das Support-Toolkit hat versucht, diese Probleme zu beheben und erstellt ein Paket mit den korrigierten Dateien <em>(die Backup Versionen findest Du unter <c>store/bom_sniffer_backup/</c>)</em>. Das Paket mit den neuen Dateien findest Du im <c>store/bom_sniffer/</c> Verzeichnis. Um die geänderten Dateien auf Dein Board zu übertragen, <strong>verschiebe</strong> die Dateien aus dem "store" an die richtige Stelle und lade das Support Toolkit erneut. Das Toolkit überprüft diese Dateien erneut und leitet Dich zum ERK zurück, wenn keine Fehler aufgetreten sind. .<br /><br /><strong style="color: #ff0000;">Bevor Du die erzeugten Dateien verschiebst, stelle bitte sicher, dass Die generierten Dateien korrekt sind!</strong>  Im Zweifelsfall wende Dich bitte an den Support im <a href="https://www.phpbb.com/community/viewforum.php?f=46">Support Forum</a>.',
 	'ERK_STORE_WRITE'					=> 'Der BOM-Sniffer benötigt ein bestehendes und beschreibbares <c>store</c> Verzeichnis!',
 	'ERK_REMOVE_DIR'					=> 'Das Support Toolkit versuchte, das reparierte Dateispeicherverzeichnis dieses Tools zu entfernen, war aber nicht in der Lage, dies zu tun. Damit dieses Tool korrekt ausgeführt wird, muss \'<c>%s</c>\' vom Server entfernt werden. Bitte entferne dieses Verzeichnis manuell und gib das Support-Toolkit frei.',
-	'BOM_SNIFFER_WRITABLE'				=> 'Der BOM-Sniffer benötigt das existierende und beschreibbare ' . STK_ROOT_PATH . 'cache Verzeichnis!',
+	'BOM_SNIFFER_WRITABLE'				=> 'Der BOM-Sniffer benötigt das existierende und beschreibbare %scache Verzeichnis!',
 	'STK_FATAL_ERROR'					=> '<strong style="color: #ff0000;">Das Support-Toolkit hat einen schwerwiegenden Fehler festgestellt.</strong><br /><br />
 											 Das Support-Toolkit enthält ein Notfall-Reparatur-Kit (ERK), ein Tool, das entworfen wurde, um bestimmte Fehler zu beheben, die verhindern, dass phpBB funktioniert.
 											 Es wird empfohlen, dass Du das ERK jetzt startest, damit es versuchen kann, den Fehler zu reparieren, den es entdeckt hat.<br />
-											 Um das ERK auszuführen, klicke bitte <a href="' . STK_ROOT_PATH . 'erk.' . PHP_EXT . '"><b>hier</b></a>.',
+											 Um das ERK auszuführen, klicke bitte <a href="%serk.%s"><b>hier</b></a>.',
 	'CONFIG_REPAIR'						=> 'Repariere die config.php',
 	'CONFIG_REPAIR_EXPLAIN'				=> 'Mit diesem Tool kannst Du Deine Konfigurationsdatei regenerieren lassen.',
 	'CONFIG_REPAIR_NO_TABLES'			=> 'Es konnten keine phpBB Tabellen mit diesem Tabellenpräfix in dieser Datenbank gefunden werden.',
@@ -162,7 +162,7 @@ $lang = array_merge($lang, array(
 	'STK_VERSION_UP_TO_DATE_ACP'		=> 'Dein Support Toolkit ist aktuell. Zurzeit sind keine Updates verfügbar.',
 	'STK_HTTP_HANDLER_NOT_FOUND'		=> 'Dieser Vorgang konnte konnte nicht abgeschlossen werden, weil die cURL-PHP-Erweiterung und die allow_url_fopen-PHP-ini-Einstellung deaktiviert wurden und kein anderer Dienst (HTTP-Handler) zum Aufruf von externen URLs gefunden werden konnte.',
 	'STK_UPGRADE_INSTRUCTIONS'			=> 'Ein neues Feature-Release <strong>%1$s</strong> ist verfügbar. Bitte lies <a href="%2$s" title="%2$s"><strong>die Release-Bekanntmachung</strong></a>, um die Neuerungen zu erfahren und eine Anleitung zum Upgrade zu erhalten.',
-	'STK_FILE_NOT_FOUND'				=> 'Die angegebene Datei konnte nicht gefunden werden: %s',
+	'STK_FILE_NOT_FOUND'				=> 'Die angegebene Datei konnte nicht auf dem Server gefunden werden: %s',
 	'STK_FSOCK_DISABLED'				=> 'Dieser Vorgang kann nicht abgeschlossen werden, da die <var>fsockopen</var>-Funktion deaktiviert wurde oder weil der angegebene Server nicht gefunden werden konnte.',
 	'STK_FSOCK_TIMEOUT'					=> 'Beim Lesen des Datenstroms ist eine Zeitüberschreitung aufgetreten.',
 ));

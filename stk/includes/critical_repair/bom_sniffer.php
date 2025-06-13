@@ -79,46 +79,46 @@ class erk_bom_sniffer
 	*/
 	function __construct()
 	{
-		global $critical_repair, $stk_config, $user, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $critical_repair, $stk_config, $user, $lang;
 
 		// "Store" must be writable
-		if (@is_writable(PHPBB_ROOT_PATH . 'store') !== true)
+		if (@is_writable($phpbb_root_path . 'store') !== true)
 		{
 			$critical_repair->trigger_error($lang['ERK_STORE_WRITE']);
 		}
 
 		// Make sure the BOM sniffer dir store dir doesn't exist
-		if (file_exists(PHPBB_ROOT_PATH . 'store/bom_sniffer'))
+		if (file_exists($phpbb_root_path . 'store/bom_sniffer'))
 		{
 			// Empty dir is okay
-			if (array("" => array()) !== filelist(PHPBB_ROOT_PATH . 'store/bom_sniffer', '', PHP_EXT))	// Rather nasty, but don't know a better php 4 way atm
+			if (array("" => array()) !== filelist($phpbb_root_path . 'store/bom_sniffer', '', $phpEx))	// Rather nasty, but don't know a better php 4 way atm
 			{
 				// Not empty try to remove the store dir
-				if ($this->recursively_remove_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer') === false)
+				if ($this->recursively_remove_dir($phpbb_root_path . 'store/bom_sniffer') === false)
 				{
-					$critical_repair->trigger_error(sprintf($lang['ERK_REMOVE_DIR'], PHPBB_ROOT_PATH . "store/bom_sniffer/"));
+					$critical_repair->trigger_error(sprintf($lang['ERK_REMOVE_DIR'], $phpbb_root_path . "store/bom_sniffer/"));
 				}
 			}
 		}
 
 		// Read the whitelist
-		if (!file_exists(STK_ROOT_PATH . 'includes/critical_repair/whitelist.txt'))
+		if (!file_exists($stk_root_path . 'includes/critical_repair/whitelist.txt'))
 		{
 			$critical_repair->trigger_error(sprintf($lang['ERK_NO_WHITELIST'], 'https://www.phpbb.com/community/viewforum.php?f=46'));
 		}
-		$this->whitelist = file(STK_ROOT_PATH . 'includes/critical_repair/whitelist.txt', FILE_IGNORE_NEW_LINES);
+		$this->whitelist = file($stk_root_path . 'includes/critical_repair/whitelist.txt', FILE_IGNORE_NEW_LINES);
 
 		// Set the timestamp
 		$this->backuptime = time();
 
 		// Correct paths to the stk directory, when the STK isn't located in 'stk/'
-		if (STK_DIR_NAME != 'stk')
+		if ($stk_dir_name != 'stk')
 		{
 			foreach ($this->whitelist as $dir => $files)
 			{
 				if (strpos($dir, 'stk') !== false)
 				{
-					$this->whitelist[str_replace('stk', STK_DIR_NAME, $dir)] = $files;
+					$this->whitelist[str_replace('stk', $stk_dir_name, $dir)] = $files;
 					unset($this->whitelist[$dir]);
 				}
 			}
@@ -126,22 +126,24 @@ class erk_bom_sniffer
 		ksort($this->whitelist);
 
 		// Re-append extensions
-		array_walk($this->whitelist, array($this, 'readd_extensions'), PHP_EXT);
+		array_walk($this->whitelist, array($this, 'readd_extensions'), $phpEx);
 
 		// Init the internal cache
 		$this->cache = new _erk_bom_sniffer_cache($this);
 
 		// Here we test the stk config.php, when no issues found we'll include it
-		$this->sniff(STK_DIR_NAME, 'config.' . PHP_EXT);
+		$this->sniff($stk_dir_name, 'config.' . $phpEx);
 		$stk_config['bom_sniffer_force_full_scan'] = true;
-		if (!file_exists(PHPBB_ROOT_PATH . 'store/bom_sniffer/stk/config.' . PHP_EXT))
+		if (!file_exists($phpbb_root_path . 'store/bom_sniffer/stk/config.' . $phpEx))
 		{
-			include STK_ROOT_PATH . 'config.' . PHP_EXT;
+			include $stk_root_path . 'config.' . $phpEx;
 		}
 	}
 
 	function readd_extensions(&$file, $key, $phpEx)
 	{
+		global $phpEx;
+
 		$file .= ".{$phpEx}";
 	}
 
@@ -153,16 +155,16 @@ class erk_bom_sniffer
 	*/
 	function run()
 	{
-		global $critical_repair, $stk_config, $user, $lang;
+		global $phpbb_root_path, $phpEx, $critical_repair, $stk_config, $user, $lang;
 
 		// Get all the files
-		$filelist = filelist(PHPBB_ROOT_PATH, '', PHP_EXT);
+		$filelist = filelist($phpbb_root_path, '', $phpEx);
 
 		foreach ($filelist as $directory => $files)
 		{
 			// As the install dir can be renamed, we need to check here whether this
 			// is an install directory
-			if(in_array('convert_phpbb20.' . PHP_EXT, $files) || in_array('new_normalizer.' . PHP_EXT, $files) || in_array('database_update.' . PHP_EXT, $files))
+			if(in_array('convert_phpbb20.' . $phpEx, $files) || in_array('new_normalizer.' . $phpEx, $files) || in_array('database_update.' . $phpEx, $files))
 			{
 				// It is and we're not forcing a full scan, skip it
 				if (!$stk_config['bom_sniffer_force_full_scan'])
@@ -198,7 +200,7 @@ class erk_bom_sniffer
 						continue;
 					}
 					// File never checked or was changed after the last run
-					else if (!isset($this->cache->cache_data[$directory. $file]) || filectime(PHPBB_ROOT_PATH . $directory . $file) != $this->cache->cache_data[$directory . $file] || !$stk_config['bom_sniffer_force_full_scan'])
+					else if (!isset($this->cache->cache_data[$directory. $file]) || filectime($phpbb_root_path . $directory . $file) != $this->cache->cache_data[$directory . $file] || !$stk_config['bom_sniffer_force_full_scan'])
 					{
 						$this->sniff($directory, $file);
 					}
@@ -210,7 +212,7 @@ class erk_bom_sniffer
 		$this->cache->storedata();
 
 		// Inform the user what to do if we've created files
-		if (is_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer'))
+		if (is_dir($phpbb_root_path . 'store/bom_sniffer'))
 		{
 			$critical_repair->trigger_error($lang['ERK_ISSUE_FOUND']);
 		}
@@ -221,11 +223,11 @@ class erk_bom_sniffer
 	*/
 	function sniff($directory, $file)
 	{
-		global $stk_config;
+		global $phpbb_root_path, $stk_config;
 
 		// Read the file
 		$directory = ($directory && substr($directory, -1) != '/') ? $directory . '/' : $directory;
-		$content = fopen(PHPBB_ROOT_PATH . $directory . $file, 'r');
+		$content = fopen($phpbb_root_path . $directory . $file, 'r');
 
 		// Loop through it
 		$php_open = $php_close = false;
@@ -300,20 +302,20 @@ class erk_bom_sniffer
 		if ($this->file_changed === true)
 		{
 			// The main dir exists?
-			if (!is_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer'))
+			if (!is_dir($phpbb_root_path . 'store/bom_sniffer'))
 			{
-				mkdir(PHPBB_ROOT_PATH . 'store/bom_sniffer');
-				$this->phpbb_chmod(PHPBB_ROOT_PATH . 'store/bom_sniffer', CHMOD_ALL);
+				mkdir($phpbb_root_path . 'store/bom_sniffer');
+				$this->phpbb_chmod($phpbb_root_path . 'store/bom_sniffer', CHMOD_ALL);
 			}
 
 			// Dir in the package?
-			if (!is_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer/' . $directory))
+			if (!is_dir($phpbb_root_path . 'store/bom_sniffer/' . $directory))
 			{
-				mkdir(PHPBB_ROOT_PATH . 'store/bom_sniffer/' . $directory, 0777, true);
-				$this->phpbb_chmod(PHPBB_ROOT_PATH . 'store/bom_sniffer' . $directory, CHMOD_ALL);
+				mkdir($phpbb_root_path . 'store/bom_sniffer/' . $directory, 0777, true);
+				$this->phpbb_chmod($phpbb_root_path . 'store/bom_sniffer' . $directory, CHMOD_ALL);
 			}
 
-			$writefile = fopen(PHPBB_ROOT_PATH . 'store/bom_sniffer/' . $directory . $file, 'wb');
+			$writefile = fopen($phpbb_root_path . 'store/bom_sniffer/' . $directory . $file, 'wb');
 			foreach ($this->write_buffer as $buffer)
 			{
 				// When not the last line add a new line to the buffer
@@ -330,27 +332,27 @@ class erk_bom_sniffer
 			{
 				// Also create a backup of the original file
 				// The backup dir exists?
-				if (!is_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime))
+				if (!is_dir($phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime))
 				{
-					mkdir(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime);
-					$this->phpbb_chmod(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime, CHMOD_ALL);
+					mkdir($phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime);
+					$this->phpbb_chmod($phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime, CHMOD_ALL);
 				}
 
 				// Dest dir
-				if (!is_dir(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory))
+				if (!is_dir($phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory))
 				{
-					mkdir(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory, 0777, true);
-					$this->phpbb_chmod(PHPBB_ROOT_PATH . 'store/bom_sniffer_backup/_' . $this->backuptime . '/' . $directory, CHMOD_ALL);
+					mkdir($phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory, 0777, true);
+					$this->phpbb_chmod($phpbb_root_path . 'store/bom_sniffer_backup/_' . $this->backuptime . '/' . $directory, CHMOD_ALL);
 				}
 
 				// Copy the file
-				copy(PHPBB_ROOT_PATH . $directory . $file, PHPBB_ROOT_PATH . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory . $file);
+				copy($phpbb_root_path . $directory . $file, $phpbb_root_path . 'store/bom_sniffer_backup_' . $this->backuptime . '/' . $directory . $file);
 			}
 		}
 		// else set the file as unchanged
 		else
 		{
-			$this->cache->cache_data[$directory. $file] = filectime(PHPBB_ROOT_PATH . $directory . $file);
+			$this->cache->cache_data[$directory. $file] = filectime($phpbb_root_path . $directory . $file);
 		}
 
 		// Reset the sniffer
@@ -439,6 +441,8 @@ class erk_bom_sniffer
 	*/
 	function ifItLooksLikeADuckWalksLikeADuckAndSoundsLikeADuckItIsntADuck($buffer, $directory, $file)
 	{
+		global $phpEx;
+
 		// When it is only an end tag it is a Duck
 		if ($buffer == $this->php_close)
 		{
@@ -450,26 +454,26 @@ class erk_bom_sniffer
 		switch ($directory)
 		{
 			case '' :
-				if ($file == 'feed.' . PHP_EXT)
+				if ($file == 'feed.' . $phpEx)
 				{
 					$match = '<\?xml version="1.0" encoding="UTF-8"\?>';
 				}
-				else if ($file == 'search.' . PHP_EXT || $file == 'viewtopic.' . PHP_EXT)
+				else if ($file == 'search.' . $phpEx || $file == 'viewtopic.' . $phpEx)
 				{
 					$match = "</s\(\?:cript\|tyle\)\)\?>";
 				}
 			break;
 
 			case 'includes/' :
-				if ($file == 'functions.' . PHP_EXT)
+				if ($file == 'functions.' . $phpEx)
 				{
 					$match = "\?>#s',";
 				}
-				else if ($file == 'functions_messenger.' . PHP_EXT)
+				else if ($file == 'functions_messenger.' . $phpEx)
 				{
 					$match = 'var_export\(';
 				}
-				else if ($file == 'functions_template.' . PHP_EXT)
+				else if ($file == 'functions_template.' . $phpEx)
 				{
 					// This should match all occurances here. I *might* missed some :/
 					/*$match = "\?\\\?>#s'|\?>'(;| :)|' \?>(<\?php ){0,1}'|'\?\\1'|#\\\?\\>|; \?>";*/
@@ -477,52 +481,52 @@ class erk_bom_sniffer
 					// Most of them contain the opening tag or preg_replace or part of a regex
 					$match = 'preg_replace|<\?php|\?>#s';
 				}
-				else if ($file == 'message_parser.' . PHP_EXT)
+				else if ($file == 'message_parser.' . $phpEx)
 				{
 					$match = '\?>";';
 				}
-				else if ($file == 'template.' . PHP_EXT)
+				else if ($file == 'template.' . $phpEx)
 				{
 					$match = "eval\('";
 				}
 			break;
 
 			case 'includes/acm/' :
-				if ($file == 'acm_file.' . PHP_EXT)
+				if ($file == 'acm_file.' . $phpEx)
 				{
 					$match = '\n?>"\)|\* <\?php';
 				}
 
 			case 'includes/acp/' :
-				if ($file == 'acp_language.' . PHP_EXT)
+				if ($file == 'acp_language.' . $phpEx)
 				{
 					$match = "\\\$footer";
 				}
 			break;
 
 			case 'includes/db/' :
-				if ($file == 'oracle.' . PHP_EXT)
+				if ($file == 'oracle.' . $phpEx)
 				{
 					$match = "preg_match(_all)?|preg_replace";
 				}
 			break;
 
 			case 'includes/ucp/' :
-				if ($file == 'ucp_pm_viewfolder.' . PHP_EXT)
+				if ($file == 'ucp_pm_viewfolder.' . $phpEx)
 				{
 					$match = '<\?xml version="1.0"\?>';
 				}
 			break;
 
 			case 'stk/includes/' :
-				if ($file == 'functions.' . PHP_EXT)
+				if ($file == 'functions.' . $phpEx)
 				{
 					$match = '\?>";';
 				}
 			break;
 
 			case 'stk/includes/critical_repair/' :
-				if ($file == 'config_repair.' . PHP_EXT)
+				if ($file == 'config_repair.' . $phpEx)
 				{
 					$match = '(\s|{)\?>';
 				}
@@ -989,20 +993,20 @@ class _erk_bom_sniffer_cache
 	*/
 	function __construct($bom_sniffer)
 	{
-		global $critical_repair, $lang, $user;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $critical_repair, $lang, $user;
 
 		$this->bom_sniffer = $bom_sniffer;
 
-		$this->_cache_path = PHPBB_ROOT_PATH . 'cache/';
+		$this->_cache_path = $phpbb_root_path . 'cache/';
 
 		// Dir exists and is writable
 		if (@is_writable($this->_cache_path) !== true)
 		{
-			$critical_repair->trigger_error($lang['BOM_SNIFFER_WRITABLE']);
+			$critical_repair->trigger_error(user_lang('BOM_SNIFFER_WRITABLE', $stk_root_path, $phpEx));
 		}
 
 		// If we've got data cached for this load it.
-		if (file_exists($this->_cache_path . 'data_stk_bom_sniffer.' . PHP_EXT))
+		if (file_exists($this->_cache_path . 'data_stk_bom_sniffer.' . $phpEx))
 		{
 			$this->cache_data = $this->_readdata();
 		}
@@ -1015,7 +1019,9 @@ class _erk_bom_sniffer_cache
 	*/
 	function _readdata()
 	{
-		$file = $this->_cache_path . 'data_stk_bom_sniffer.' . PHP_EXT;
+		global $phpEx;
+
+		$file = $this->_cache_path . 'data_stk_bom_sniffer.' . $phpEx;
 
 		if (!file_exists($file))
 		{
@@ -1099,7 +1105,9 @@ class _erk_bom_sniffer_cache
 	*/
 	function storedata()
 	{
-		$file = $this->_cache_path . 'data_stk_bom_sniffer.' . PHP_EXT;
+		global $phpEx;
+
+		$file = $this->_cache_path . 'data_stk_bom_sniffer.' . $phpEx;
 
 		if ($handle = @fopen($file, 'wb'))
 		{

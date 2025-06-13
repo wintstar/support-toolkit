@@ -99,7 +99,9 @@ class resync_registered
 
 		if (!function_exists('group_memberships'))
 		{
-			require PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT;
+			global $phpbb_root_path, $phpEx;
+
+			require $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 		}
 
 		// Get teh group IDs

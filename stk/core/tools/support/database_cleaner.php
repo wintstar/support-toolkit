@@ -63,7 +63,7 @@ class database_cleaner
 	*/
 	function tool_active()
 	{
-		global $config;
+		global $stk_root_path, $phpEx, $config;
 
 		// Correctly format the version number. Only RC releases are in uppercase
 		if (!defined('PHPBB_VERSION_NUMBER'))
@@ -88,7 +88,7 @@ class database_cleaner
 		}
 
 		// Data file exists?
-		if (file_exists(STK_ROOT_PATH . 'includes/database_cleaner/data/' . $this->phpbb_version . '.' . PHP_EXT) === false)
+		if (file_exists($stk_root_path . 'includes/database_cleaner/data/' . $this->phpbb_version . '.' . $phpEx) === false)
 		{
 			return 'DATAFILE_NOT_FOUND';
 		}
@@ -101,7 +101,7 @@ class database_cleaner
 	*/
 	function _setup()
 	{
-		global $db, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $request;
 
 		$next = $request->variable('next', false);
 		$next_step = $request->variable('next_step', 0);
@@ -113,7 +113,7 @@ class database_cleaner
 		// Skip next step & redirect to specified step
 		if ($next)
 		{
-			redirect(append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $next_step)));
+			redirect(append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => $next_step)));
 		}
 
 		// Get the step.
@@ -127,17 +127,17 @@ class database_cleaner
 		// include the required file for this version
 		if (!function_exists('fetch_cleaner_data'))
 		{
-			include STK_ROOT_PATH . 'includes/database_cleaner/functions_database_cleaner.' . PHP_EXT;
+			include $stk_root_path . 'includes/database_cleaner/functions_database_cleaner.' . $phpEx;
 		}
 
 		if (!class_exists('database_cleaner_data'))
 		{
-			include STK_ROOT_PATH . 'includes/database_cleaner/database_cleaner_data.' . PHP_EXT;
+			include $stk_root_path . 'includes/database_cleaner/database_cleaner_data.' . $phpEx;
 		}
 
 		if (!class_exists('phpbb\db\tools\tools'))
 		{
-			include PHPBB_ROOT_PATH . 'phpbb/db/tools/tools.' . PHP_EXT;
+			include $phpbb_root_path . 'phpbb/db/tools/tools.' . $phpEx;
 		}
 		$db_tools = new \phpbb\db\tools\tools($db);
 
@@ -151,7 +151,7 @@ class database_cleaner
 	*/
 	function display_options()
 	{
-		global $template, $user;
+		global $phpEx, $template, $user;
 
 		// Setup
 		$this->_setup();
@@ -160,7 +160,7 @@ class database_cleaner
 		// Setup $this->object
 		if (!class_exists('database_cleaner_views'))
 		{
-			include STK_ROOT_PATH . 'includes/database_cleaner/database_cleaner_views.' . PHP_EXT;
+			include $stk_root_path . 'includes/database_cleaner/database_cleaner_views.' . $phpEx;
 		}
 		$this->object = new \database_cleaner_views($this);
 
@@ -178,7 +178,7 @@ class database_cleaner
 	*/
 	function run_tool(&$error)
 	{
-		global $request;
+		global $stk_root_path, $phpEx, $request;
 
 		// Setup
 		$this->_setup();
@@ -186,7 +186,7 @@ class database_cleaner
 		$skip = $request->variable('skip', false);
 		if ($skip)
 		{
-			redirect(append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->step + 1)));
+			redirect(append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->step + 1)));
 		}
 
 		$selected = $request->variable('items', array('' => ''), true);
@@ -201,7 +201,7 @@ class database_cleaner
 		// Setup $this->object
 		if (!class_exists('database_cleaner_controller'))
 		{
-			include STK_ROOT_PATH . 'includes/database_cleaner/database_cleaner_controller.' . PHP_EXT;
+			include $stk_root_path . 'includes/database_cleaner/database_cleaner_controller.' . $phpEx;
 		}
 		$this->object = new \database_cleaner_controller($this);
 
@@ -222,7 +222,7 @@ class database_cleaner
 		}
 
 		// Redirect to the next step
-		redirect(append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->step + 1, 'did_run' => $did_run)));
+		redirect(append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->step + 1, 'did_run' => $did_run)));
 	}
 
 	function quit()

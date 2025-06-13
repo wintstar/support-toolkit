@@ -121,7 +121,7 @@ class readd_module_management
 
 	function module_add($lang_name, $class, $parent, $module_data)
 	{
-		global $db, $phpbb_root_path, $phpEx, $user;
+		global $stk_root_path, $db, $phpbb_root_path, $phpEx, $user;
 
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . '
@@ -143,7 +143,7 @@ class readd_module_management
 
 		if (!class_exists('acp_modules'))
 		{
-			include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
+			include($stk_root_path . 'includes/acp_modules.' . $phpEx);
 			$user->add_lang('acp/modules');
 		}
 		$acp_modules = new acp_modules();

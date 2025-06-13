@@ -9,13 +9,11 @@
 
 define('IN_PHPBB', true);
 
-if (!defined('PHPBB_ROOT_PATH')) { define('PHPBB_ROOT_PATH', './../'); }
-if (!defined('PHP_EXT')) { define('PHP_EXT', substr(strrchr(__FILE__, '.'), 1)); }
-if (!defined('STK_DIR_NAME')) { define('STK_DIR_NAME', substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1)); }	// Get the name of the stk directory
-if (!defined('STK_ROOT_PATH')) { define('STK_ROOT_PATH', './'); }
-if (!defined('STK_INDEX')) { define('STK_INDEX', STK_ROOT_PATH . 'index.' . PHP_EXT); }
+$stk_root_path = (defined('STK_ROOT_PATH')) ? STK_ROOT_PATH : './';
+$stk_dir_name = substr(strrchr(dirname(__FILE__), DIRECTORY_SEPARATOR), 1);
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
 
-require STK_ROOT_PATH . 'common.' . PHP_EXT;
+require $stk_root_path . 'common.' . $phpEx;
 
 // Setup the user
 $user->session_begin();
@@ -38,7 +36,7 @@ stk_add_lang('common');
 stk_add_lang('tools/ext/ext_finder');
 
 // Do not use the normal template path (to prevent issues with boards using alternate styles)
-$template->set_custom_style('stk', STK_ROOT_PATH . 'style');
+$template->set_custom_style('stk', $stk_root_path . 'style');
 
 $table		= $request->variable('t', '');
 $column		= $request->variable('col', '');
@@ -86,16 +84,16 @@ if (!$extra_data)
 	$db_tools = new \phpbb\db\tools\tools($db);
 
 	// Get migrations schema
-	$dir = '' . PHPBB_ROOT_PATH . 'ext';
+	$dir = '' . $phpbb_root_path . 'ext';
 	$files = $extensions = $vendors = array();
 	$files = array_diff(scandir($dir), array('..', '.'));
 
 	foreach($files as $key => $dir)
 	{
-		if (is_dir('' . PHPBB_ROOT_PATH . 'ext/' . $dir . ''))
+		if (is_dir('' . $phpbb_root_path . 'ext/' . $dir . ''))
 		{
 			$vendors[] = $dir;
-			$extensions[$dir] = array_diff(scandir('' . PHPBB_ROOT_PATH . 'ext/' . $dir . ''), array('..', '.'));
+			$extensions[$dir] = array_diff(scandir('' . $phpbb_root_path . 'ext/' . $dir . ''), array('..', '.'));
 		}
 	}
 
@@ -248,9 +246,9 @@ else if($permission)
 if ($info)
 {
 	$path = 'ext/' . $info['vendor'] . '/' . $info['ext'] . '';
-	if (file_exists('' . PHPBB_ROOT_PATH . '' . $path . '/composer.json'))
+	if (file_exists('' . $phpbb_root_path . '' . $path . '/composer.json'))
 	{
-		$buffer =  file_get_contents('' . PHPBB_ROOT_PATH . '' . $path . '/composer.json');
+		$buffer =  file_get_contents('' . $phpbb_root_path . '' . $path . '/composer.json');
 		if ($buffer)
 		{
 			$obj = json_decode($buffer);

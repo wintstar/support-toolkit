@@ -19,7 +19,9 @@ if (!defined('IN_PHPBB'))
 // Load functions_admin.php if required
 if (!function_exists('filelist'))
 {
-	include(PHPBB_ROOT_PATH . 'includes/functions_admin.' . PHP_EXT);
+	global $phpEx, $phpEx;
+
+	include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 }
 
 class critical_repair
@@ -46,8 +48,10 @@ class critical_repair
 	*/
 	function initialise()
 	{
-		$this->tool_path = STK_ROOT_PATH . 'includes/critical_repair/';
-		$filelist = filelist($this->tool_path, '', PHP_EXT);
+		global $stk_root_path, $phpEx;
+
+		$this->tool_path = $stk_root_path . 'includes/critical_repair/';
+		$filelist = filelist($this->tool_path, '', $phpEx);
 
 		foreach ($filelist as $directory => $tools)
 		{
@@ -83,12 +87,14 @@ class critical_repair
 	*/
 	function run_tool($tool)
 	{
+		global $phpEx;
+
 		if (!(in_array($tool, $this->manual_tools)))
 		{
 			return false;
 		}
 
-		include($this->tool_path . $tool . '.' . PHP_EXT);
+		include($this->tool_path . $tool . '.' . $phpEx);
 
 		$tool_name = 'erk_' . $tool;
 		$run_tool = new $tool_name();
@@ -101,9 +107,11 @@ class critical_repair
 	*/
 	function autorun_tools()
 	{
+		global $phpEx;
+
 		foreach ($this->autorun_tools as $tool)
 		{
-			include($this->tool_path . 'autorun/' . $tool . '.' . PHP_EXT);
+			include($this->tool_path . 'autorun/' . $tool . '.' . $phpEx);
 
 			$tool_name = 'erk_' . $tool;
 			$run_tool = new $tool_name();
@@ -123,7 +131,7 @@ class critical_repair
 	 */
 	function trigger_error($msg, $redirect_stk = false)
 	{
-		global $user, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $user, $lang;
 
 		if (!is_array($msg))
 		{
@@ -143,8 +151,8 @@ class critical_repair
 		<meta http-equiv="content-style-type" content="text/css" />
 		<meta http-equiv="imagetoolbar" content="no" />
 		<title>Support Toolkit :: Emergency Repair Kit</title>
-		<link href="<?php echo STK_ROOT_PATH; ?>style/style.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href="<?php echo STK_ROOT_PATH; ?>style/erk_style.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="<?php echo $stk_root_path; ?>style/style.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="<?php echo $stk_root_path; ?>style/erk_style.css" rel="stylesheet" type="text/css" media="screen" />
 	</head>
 	<body id="errorpage">
 		<div id="wrap">
@@ -153,14 +161,14 @@ class critical_repair
 					<?php
 					if ($redirect_stk)
 					{
-						echo '<a href="' . STK_ROOT_PATH . '">' . $lang['SUPPORT_TOOL_KIT_INDEX'] . '</a> &bull; ';
+						echo '<a href="' . $stk_root_path . '">' . $lang['SUPPORT_TOOL_KIT_INDEX'] . '</a> &bull; ';
 					}
 					else
 					{
-						echo '<a href="' . STK_ROOT_PATH . 'erk.'.PHP_EXT.'">' . $lang['CAT_ERK'] . '</a> &bull; ';
+						echo '<a href="' . $stk_root_path . 'erk.'.$phpEx.'">' . $lang['CAT_ERK'] . '</a> &bull; ';
 					}
 					?>
-					<a href="<?php echo PHPBB_ROOT_PATH; ?>"><?php echo $lang['FORUM_INDEX'] ?></a>
+					<a href="<?php echo $phpbb_root_path; ?>"><?php echo $lang['FORUM_INDEX'] ?></a>
 				</p>
 			</div>
 			<div id="page-body">
@@ -176,7 +184,7 @@ class critical_repair
 									$pos = strripos($m, 'Undefined index: user_id');
 									if($pos)
 									{
-										$msg = sprintf($lang['ANONYMOUS_MISSING'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
+										$msg = sprintf($lang['ANONYMOUS_MISSING'], ''.$stk_root_path.'erk.'.$phpEx.'');
 										?><hr><?php
 										echo $msg;
 										?><hr><?php
@@ -188,12 +196,12 @@ class critical_repair
 									<?php
 									if ($redirect_stk)
 									{
-										$msg = sprintf($lang['RELOAD_STK'], STK_ROOT_PATH);
+										$msg = sprintf($lang['RELOAD_STK'], $stk_root_path);
 										echo $msg;
 									}
 									else
 									{
-										$msg = sprintf($lang['RELOAD_ARK'], ''.STK_ROOT_PATH.'erk.'.PHP_EXT.'');
+										$msg = sprintf($lang['RELOAD_ARK'], ''.$stk_root_path.'erk.'.$phpEx.'');
 										echo $msg;
 									}
 									?>

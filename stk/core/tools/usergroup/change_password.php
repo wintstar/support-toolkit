@@ -38,7 +38,7 @@ class change_password
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $db, $user, $request;
+		global $phpbb_root_path, $phpEx, $config, $db, $user, $request;
 
 		$user->add_lang('ucp');
 
@@ -68,7 +68,7 @@ class change_password
 		// Get the correct user data and make sure that he exists
 		if (!function_exists('user_get_id_name'))
 		{
-			include (PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+			include ($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 		}
 
 		$user_id = array();
@@ -129,6 +129,6 @@ class change_password
 
 		add_log('admin', 'LOG_USER_NEW_PASSWORD', $username);
 
-		trigger_error(user_lang('CHANGE_PASSWORD_SUCCESS', append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, 'mode=viewprofile&amp;u=' . $user_id), $username));
+		trigger_error(user_lang('CHANGE_PASSWORD_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, 'mode=viewprofile&amp;u=' . $user_id), $username));
 	}
 }

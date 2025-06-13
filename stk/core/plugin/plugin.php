@@ -49,19 +49,19 @@ class plugin
 	 */
 	function __construct()
 	{
-		global $request, $user;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $request, $user;
 
 		// Load functions_admin.php if required
 		if (!function_exists('filelist'))
 		{
-			include(PHPBB_ROOT_PATH . 'includes/functions_admin.' . PHP_EXT);
+			include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 		}
 
 		// Set the path
-		$this->tool_box_path = STK_ROOT_PATH . 'core/tools/';
+		$this->tool_box_path = $stk_root_path . 'core/tools/';
 
 		// Create a list with tools
-		$filelist = filelist($this->tool_box_path, '', PHP_EXT);
+		$filelist = filelist($this->tool_box_path, '', $phpEx);
 
 		// Need to do some sanitization on the result of filelist
 		foreach ($filelist as $cat => $tools)
@@ -82,7 +82,7 @@ class plugin
 			// Don't want the extension
 			foreach ($tools as $key => $tool)
 			{
-				$tools[$key] = (($pos = strpos($tool, '.' . PHP_EXT)) !== false) ? substr($tool, 0, $pos) : $tool;
+				$tools[$key] = (($pos = strpos($tool, '.' . $phpEx)) !== false) ? substr($tool, 0, $pos) : $tool;
 			}
 
 			$this->plugin_list[$cat] = $tools;
@@ -109,7 +109,7 @@ class plugin
 		}
 
 		// Check if they want to use a tool or not, make sure that the tool name is legal, and make sure the tool exists
-		if (!$this->_parts['t'] || preg_match('#([^a-zA-Z0-9_])#', $this->_parts['t']) || !file_exists(STK_ROOT_PATH . 'core/tools/' . $this->_parts['c'] . '/' . $this->_parts['t'] . '.' . PHP_EXT))
+		if (!$this->_parts['t'] || preg_match('#([^a-zA-Z0-9_])#', $this->_parts['t']) || !file_exists($stk_root_path . 'core/tools/' . $this->_parts['c'] . '/' . $this->_parts['t'] . '.' . $phpEx))
 		{
 			$this->_parts['t'] = '';
 		}
@@ -217,7 +217,7 @@ class plugin
 	 */
 	function gen_top_nav()
 	{
-		global $template, $lang;
+		global $stk_root_path, $phpEx, $template, $lang;
 
 		// Loop through the plugin list. The first keys are the categories
 		$cats = array_keys($this->plugin_list);
@@ -236,7 +236,7 @@ class plugin
 			$template->assign_block_vars('top_nav', array(
 				'L_TITLE'		=> $lang['CAT_' . strtoupper($cat)],
 				'S_SELECTED'	=> $_s_active,
-				'U_TITLE'		=> append_sid(STK_INDEX, array('c' => $cat)),
+				'U_TITLE'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => $cat)),
 			));
 		}
 	}
@@ -247,7 +247,7 @@ class plugin
 	 */
 	function gen_left_nav()
 	{
-		global $template, $lang, $config;
+		global $stk_root_path, $phpEx, $template, $lang, $config;
 
 		// Grep the correct category
 		$tool_list = $this->plugin_list[$this->_parts['c']];
@@ -300,7 +300,7 @@ class plugin
 			$template->assign_block_vars('left_nav', array(
 				'L_TITLE'		=> $name,
 				'S_SELECTED'	=> $_s_active,
-				'U_TITLE'		=> append_sid(STK_INDEX, array('c' => $this->_parts['c'], 't' => $tool)),
+				'U_TITLE'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => $this->_parts['c'], 't' => $tool)),
 			));
 		}
 	}

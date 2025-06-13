@@ -11,7 +11,7 @@
 namespace core\tools\usergroup;
 
 /*
-* The class name MUST be the same as the filename (minus .PHP_EXT)
+* The class name MUST be the same as the filename (minus .$phpEx)
 */
 class users_nogroups
 {
@@ -22,7 +22,7 @@ class users_nogroups
 	*/
 	function display_options()
 	{
-		global $db, $template;
+		global $stk_root_path, $phpEx, $db, $template;
 
 		$sql = 'SELECT user_id, username, user_colour
 			FROM ' . USERS_TABLE . '
@@ -47,7 +47,7 @@ class users_nogroups
 
 		// Additional template stuff
 		$template->assign_vars(array(
-			'U_ASSIGHN_GROUPS'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'users_nogroups', 'mode' => 'demote', 'submit' => 1)),
+			'U_ASSIGHN_GROUPS'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'users_nogroups', 'mode' => 'demote', 'submit' => 1)),
 			'S_GROUPS'			=> get_groups(),
 		));
 
@@ -66,7 +66,7 @@ class users_nogroups
 
 	function run_tool()
 	{
-		global $lang, $request;
+		global $phpbb_root_path, $phpEx, $lang, $request;
 
 		$users = $request->variable('users', array(0));
 
@@ -75,7 +75,7 @@ class users_nogroups
 			trigger_error($lang['NO_USERS_SELECTED'], E_USER_WARNING);
 		}
 
-		include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
 		// Collect the groups data
 		$groups = array(

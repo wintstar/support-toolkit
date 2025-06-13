@@ -29,7 +29,7 @@ class reclean_usernames
 	*/
 	function run_tool()
 	{
-		global $db, $template, $user, $phpbb_root_path, $phpEx, $request, $lang;
+		global $db, $template, $user, $stk_root_path, $phpbb_root_path, $phpEx, $request, $lang;
 
 		$part = $request->variable('part', 0);
 		$limit = 500;
@@ -66,7 +66,7 @@ class reclean_usernames
 
 		if ($i == $limit)
 		{
-			meta_refresh(0, append_sid(STK_INDEX, 't=reclean_usernames&amp;submit=1&amp;part=' . (++$part)));
+			meta_refresh(0, append_sid($stk_root_path . 'index.' . $phpEx, 't=reclean_usernames&amp;submit=1&amp;part=' . (++$part)));
 			$template->assign_var('U_BACK_TOOL', false);
 
 			trigger_error(user_lang('RECLEAN_USERNAMES_NOT_COMPLETE'));

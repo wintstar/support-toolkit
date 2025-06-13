@@ -14,7 +14,7 @@ class clear_black_list
 {
 	function display_options()
 	{
-		global $db, $template, $user, $cache, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user, $cache, $request, $lang;
 
 		$user->add_lang(array('acp/ban', 'acp/users'));
 		$submit = $request->variable('sa', false);
@@ -32,7 +32,7 @@ class clear_black_list
 			}
 			if (!function_exists('user_ban'))
 			{
-				include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 			}
 			if ($ban)
 			{
@@ -127,7 +127,7 @@ class clear_black_list
 
 
 		$template->assign_vars(array(
-			'S_ACTION'		=> append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=clear_black_list'),
+			'S_ACTION'		=> append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=clear_black_list'),
 		));
 
 		$template->set_filenames(array(

@@ -111,7 +111,7 @@ class delete_bbcode
 	*/
 	function run_tool()
 	{
-		global $cache, $config, $db, $request, $language, $lang;
+		global $phpbb_root_path, $phpEx, $cache, $config, $db, $request, $language, $lang;
 		// Prevent some errors from missing language strings.
 		$language->add_lang(array('posting'));
 
@@ -175,14 +175,13 @@ class delete_bbcode
 		// The message parser
 		if (!class_exists('parse_message'))
 		{
-			global $phpbb_root_path, $phpEx; // required!
-			include PHPBB_ROOT_PATH . 'includes/message_parser.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/message_parser.' . $phpEx;
 		}
 
 		// Posting helper functions
 		if (!function_exists('submit_post'))
 		{
-			include PHPBB_ROOT_PATH . 'includes/functions_posting.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/functions_posting.' . $phpEx;
 		}
 
 		// First step? Prepare the backup
@@ -441,7 +440,7 @@ class delete_bbcode
 	*/
 	function _next_step($last_post_id)
 	{
-		global $template, $request;
+		global $stk_root_path, $phpEx, $template, $request;
 
 		$all = $request->variable('reparseall', false);
 		$create_backup = $request->variable('create_backup', false);
@@ -458,7 +457,7 @@ class delete_bbcode
 			'bbcode_select'	=> $request->variable('bbcode_select', ''),
 		);
 
-		meta_refresh(2, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, $params));
+		meta_refresh(2, append_sid($stk_root_path . 'index.' . $phpEx, $params));
 		$template->assign_var('U_BACK_TOOL', false);
 
 		trigger_error('' . user_lang('DELETE_BBCODES') . '<br />' . user_lang('DELETE_BBCODE_PROGRESS', ($this->step_size), $this->max) . '<br /><br />' . implode(', ', $this->pids));

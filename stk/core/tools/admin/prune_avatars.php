@@ -22,7 +22,7 @@ class prune_avatars
 
 	function display_options()
 	{
-		global $db, $template, $config, $cache, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request;
 		$list = '';
 
 		$submit = $request->variable('sa', false);
@@ -34,7 +34,7 @@ class prune_avatars
 			ignore_user_abort(true);
 			set_time_limit(0);
 
-			$dir = '' . PHPBB_ROOT_PATH . '' . $config['avatar_path'] . '/';
+			$dir = '' . $phpbb_root_path . '' . $config['avatar_path'] . '/';
 			$files = $cache->get('_stk_prune_avatar'); // Try get data from cache
 			if (!$files)
 			{
@@ -116,7 +116,7 @@ class prune_avatars
 			}
 			else
 			{
-				meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=prune_avatars&sa=true'));
+				meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=prune_avatars&sa=true'));
 				trigger_error('' . user_lang('PRUNE_AVATARS_PROGRESS') . '<br />' . $list . '');
 			}
 		}
@@ -124,7 +124,7 @@ class prune_avatars
 		page_header(user_lang('PRUNE_AVATARS'));
 
 		$template->assign_vars(array(
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_avatars&amp;go=1'),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=prune_avatars&amp;go=1'),
 
 			'L_PRUNE_AVATARS'			=> user_lang('PRUNE_AVATARS'),
 			'L_PRUNE_AVATARS_EXPLAIN'	=> user_lang('PRUNE_AVATARS_EXPLAIN'),

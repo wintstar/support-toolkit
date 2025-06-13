@@ -43,7 +43,7 @@ class merge_users
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $user, $db, $cache, $request;
+		global $phpbb_root_path, $phpEx, $config, $user, $db, $cache, $request;
 
 		$user->add_lang('ucp');
 
@@ -141,7 +141,7 @@ class merge_users
 		$target = (int) $target['user_id'];
 
 		// Needed for the merge
-		include PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT;
+		include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 
 		$result = $this->merge($source, $target);
 

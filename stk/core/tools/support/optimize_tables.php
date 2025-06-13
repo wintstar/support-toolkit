@@ -14,13 +14,13 @@ class optimize_tables
 {
 	function display_options()
 	{
-		global $user, $template, $db, $request;
+		global $stk_root_path, $phpEx, $user, $template, $db, $request;
 
 		$submit = $request->variable('sa', false);
 		$tables = $request->variable('tables_list', array(''));
 
 		$table_cout = $fragmented = 0;
-		$action = append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=suppor&amp;t=optimize_tables');
+		$action = append_sid($stk_root_path . 'index.' . $phpEx, 'c=suppor&amp;t=optimize_tables');
 
 		if ($submit)
 		{

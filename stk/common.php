@@ -19,6 +19,8 @@ if (!defined('IN_PHPBB'))
 $level = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
 error_reporting($level);
 
+require($stk_root_path . 'phpbb_common.' . $phpEx);
+
 define('ADMIN_START', true);
 
 // What version are we using?
@@ -30,25 +32,18 @@ define('STK_VERSION', '1.0.19-dev');
 // Reason for having it is that it allows us in the STK if we can not login and the board is disabled.
 define('IN_LOGIN', true);
 
-// Make that phpBB itself understands out paths
-$phpbb_root_path = PHPBB_ROOT_PATH;
-$stk_root_path = STK_ROOT_PATH;
-$phpEx = PHP_EXT;
-
 // Prepare some vars
 $stk_no_error = false;
 
-require(STK_ROOT_PATH . 'core/stk_class_loader.' . $phpEx);
+require($stk_root_path . 'core/stk_class_loader.' . $phpEx);
 
 $stk_class_loader = new \core\stk_class_loader('core\\', "{$stk_root_path}core/", $phpEx);
 $stk_class_loader->register();
 
 // Include all common stuff
-require(STK_ROOT_PATH . 'includes/fatal_error_handler.' . PHP_EXT);
-require(PHPBB_ROOT_PATH . 'common.' . PHP_EXT);
-require(STK_ROOT_PATH . 'includes/functions.' . PHP_EXT);
-define('PHPBB_MSG_HANDLER', 'stk_msg_handler');
-require STK_ROOT_PATH . 'includes/umil.' . PHP_EXT;
+require($stk_root_path . 'includes/fatal_error_handler.' . $phpEx);
+require($stk_root_path . 'includes/functions.' . $phpEx);
+require $stk_root_path . 'includes/umil.' . $phpEx;
 
 // phpBBs common.php registers hooks, these hooks tend to cause problems with the
 // support toolkit. Therefore we unset the `$phpbb_hook` object here
@@ -62,7 +57,7 @@ $phpbb_dispatcher->disable();
 // and load UML.
 if (!defined('IN_ERK'))
 {
-	include STK_ROOT_PATH . 'includes/critical_repair.' . PHP_EXT;
+	require $stk_root_path . 'includes/critical_repair.' . $phpEx;
 	$critical_repair = new critical_repair();
 
 	$user->session_begin();
@@ -82,7 +77,7 @@ if (!defined('IN_ERK'))
 if (!isset($stk_config))
 {
 	$stk_config = array();
-	include STK_ROOT_PATH . 'config.' . PHP_EXT;
+	require $stk_root_path . 'config.' . $phpEx;
 }
 
 // Setup some common variables

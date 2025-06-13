@@ -64,7 +64,7 @@ class sanitise_anonymous_user
 	*/
 	function run_tool()
 	{
-		global $config, $db, $plugin, $lang, $request, $action;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $plugin, $lang, $request, $action;
 
 		// Collect all the information a clean "Anonymous" should have
 		$sql = 'SELECT group_id, group_rank, group_colour
@@ -134,7 +134,7 @@ class sanitise_anonymous_user
 
 				if (!function_exists('group_user_del'))
 				{
-					include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 				}
 
 				// Loop through the others and remove this user from all these groups
@@ -175,18 +175,18 @@ class sanitise_anonymous_user
 		}
 
 		// Inform the user
-		meta_refresh(3, append_sid(STK_INDEX, $plugin->url_arg()));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, $plugin->url_arg()));
 		trigger_error($msg . '<br />' . $lang['REDIRECT_NEXT_STEP']);
 	}
 
 	function _anon_groups(&$_in_guests, &$_other_groups)
 	{
-		global $db;
+		global $phpbb_root_path, $phpEx, $db;
 
 		// Fetch the groups our user is in
 		if (!function_exists('group_memberships'))
 		{
-			include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 		}
 		$groups = group_memberships(false, ANONYMOUS);
 

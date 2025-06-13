@@ -19,7 +19,7 @@ class no_user_posts
 	*/
 	function display_options()
 	{
-		global $db, $template;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template;
 
 		$sql = 'SELECT post_id, post_subject, post_text, bbcode_uid, bbcode_bitfield, p.forum_id, f.forum_name, p.topic_id
 			FROM ' . POSTS_TABLE . ' p
@@ -41,15 +41,15 @@ class no_user_posts
 				'POST_SUBJECT'	=> $row['post_subject'],
 				'POST_TEXT'		=> $message,
 				'FORUM_NAME'	=> $row['forum_name'],
-				'U_TOPIC'		=> append_sid(PHPBB_ROOT_PATH . 'viewtopic.' . PHP_EXT, array('t' => ''.$row['topic_id'])),
-				'U_FORUM'		=> append_sid(PHPBB_ROOT_PATH . 'viewforum.' . PHP_EXT, array('f' => ''.$row['forum_id'])),
-				'U_FIND_USER'	=> append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'searchuser', 'form' => 'select_user', 'field' => 'username_' .$row['post_id'], 'select_single' => 'true', 'form' => 'stk_no_user_posts')),
+				'U_TOPIC'		=> append_sid($phpbb_root_path . 'viewtopic.' . $phpEx, array('t' => ''.$row['topic_id'])),
+				'U_FORUM'		=> append_sid($phpbb_root_path . 'viewforum.' . $phpEx, array('f' => ''.$row['forum_id'])),
+				'U_FIND_USER'	=> append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'searchuser', 'form' => 'select_user', 'field' => 'username_' .$row['post_id'], 'select_single' => 'true', 'form' => 'stk_no_user_posts')),
 			));
 		}
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
-			'U_NO_USER_POSTS'			=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'no_user_posts', 'submit' => 1)),
+			'U_NO_USER_POSTS'			=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'no_user_posts', 'submit' => 1)),
 		));
 
 		$template->set_filenames(array(

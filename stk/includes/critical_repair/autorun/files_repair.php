@@ -20,7 +20,7 @@ class erk_files_repair
 {
 	function run()
 	{
-		global $config, $db;
+		global $phpbb_root_path, $config, $db;
 
 		// Folders wich must contain file named .htaccess
 		$paths_htaccess = array('', 'cache', 'config', $config['upload_path'], 'includes', 'store', $config['avatar_path']);
@@ -32,7 +32,7 @@ class erk_files_repair
 		);
 
 		// Find style components folders
-		$styles_path = ''. PHPBB_ROOT_PATH .'styles/';
+		$styles_path = ''. $phpbb_root_path .'styles/';
 		$tyles = $this->find_style_dirs($styles_path);
 		$styles_cheched_path = array();
 		foreach($tyles as $style)
@@ -80,9 +80,11 @@ class erk_files_repair
 	 */
 	function find_file($paths, $searched_file)
 	{
+		global $phpbb_root_path;
+
 		foreach($paths as $path)
 		{
-			$file_path = '' . PHPBB_ROOT_PATH . '' . $path . '/' . $searched_file . '';
+			$file_path = '' . $phpbb_root_path . '' . $path . '/' . $searched_file . '';
 			if (file_exists($file_path))
 			{
 				continue;

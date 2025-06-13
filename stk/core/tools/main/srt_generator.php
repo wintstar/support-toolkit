@@ -185,9 +185,9 @@ class srt_generator
 	 */
 	function display_options()
 	{
-		global $cache, $template, $lang;
+		global $stk_root_path, $phpEx, $cache, $template, $lang;
 
-		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		// Step 0 is easy
 		if ($this->step == 0)
@@ -270,7 +270,7 @@ class srt_generator
 
 		$template->assign_vars(array(
 			'S_PREFILL'	=> (!empty($_prefilled)) ? htmlspecialchars(serialize($_prefilled)) : '',
-			'U_ACTION'	=> append_sid(STK_INDEX, array('c' => 'main', 't' => 'srt_generator', 'step' => $this->step)),
+			'U_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'main', 't' => 'srt_generator', 'step' => $this->step)),
 		));
 
 		// Spit out teh page
@@ -288,9 +288,9 @@ class srt_generator
 	 */
 	function run_tool()
 	{
-		global $cache, $lang, $request;
+		global $stk_root_path, $phpEx, $cache, $lang, $request;
 
-		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		// Step 0 is a special place to be, only available for special people
 		// this user isn't special so kick him to the user spot
@@ -381,7 +381,7 @@ class srt_generator
 		}
 
 		// Next one pleaze
-		redirect(append_sid(STK_INDEX, array('c' => 'main', 't' => 'srt_generator', 'step' => ++$this->step)));
+		redirect(append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'main', 't' => 'srt_generator', 'step' => ++$this->step)));
 	}
 
 	/**
@@ -392,9 +392,9 @@ class srt_generator
 	 */
 	function _build_srt()
 	{
-		global $cache, $template, $lang, $user;
+		global $stk_root_path, $phpEx, $cache, $template, $lang, $user;
 
-		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		$_template = array();
 
@@ -458,9 +458,9 @@ class srt_generator
 	 */
 	function _format_options(&$options, $name = '')
 	{
-		global $lang;
+		global $stk_root_path, $phpEx, $lang;
 
-		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		$_option_list = array();
 
@@ -553,10 +553,10 @@ class srt_generator
 
 	function _prefill_installed_exts()
 	{
-		global $db;
+		global $phpbb_root_path, $db;
 
 		$_extensions = array();
-		$dir = '' . PHPBB_ROOT_PATH . 'ext/';
+		$dir = '' . $phpbb_root_path . 'ext/';
 		$sql = 'SELECT ext_name
 			FROM ' . EXT_TABLE . '
 			WHERE ext_active = 1';
@@ -634,9 +634,9 @@ class srt_generator
 
 	function _prefill_gzip()
 	{
-		global $config, $lang;
+		global $stk_root_path, $phpEx, $config, $lang;
 
-		require STK_ROOT_PATH . 'includes/translate_srt_generator.' . PHP_EXT;
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		return ($config['gzip_compress']) ? $english['YES'] : $english['NO'];
 
@@ -644,8 +644,10 @@ class srt_generator
 
 	function get_ext_url($ext)
 	{
+		global $phpbb_root_path;
+
 		$url = false;
-		$dir = '' . PHPBB_ROOT_PATH . 'ext/';
+		$dir = '' . $phpbb_root_path . 'ext/';
 		$file = $dir . $ext . '/composer.json';
 		if (file_exists($file))
 		{

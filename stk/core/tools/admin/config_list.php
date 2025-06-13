@@ -14,7 +14,7 @@ class config_list
 {
 	function display_options()
 	{
-		global $db, $template, $config, $lang, $cache, $phpbb_container, $request, $user;
+		global $stk_root_path, $phpEx, $db, $template, $config, $lang, $cache, $phpbb_container, $request, $user;
 
 		$start = $request->variable('start', 0);
 		$limit = $request->variable('limit', $config['topics_per_page']);
@@ -43,7 +43,7 @@ class config_list
 			}
 			$cache->purge();
 
-			meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=config_list&amp;start=' . $start . ''));
+			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=config_list&amp;start=' . $start . ''));
 			trigger_error(user_lang('CONFIG_CHANGED_SUCCESS'));
 		}
 
@@ -392,7 +392,7 @@ class config_list
 
 		// Build Pagination URL
 		$pagination = $phpbb_container->get('pagination');
-		$base_url = append_sid(STK_INDEX, 't=config_list&amp;go=1&amp;limit=' . $limit . '&amp;display=' . $display . '');
+		$base_url = append_sid($stk_root_path . 'index.' . $phpEx, 't=config_list&amp;go=1&amp;limit=' . $limit . '&amp;display=' . $display . '');
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $count, $limit, $start);
 
 		$template->assign_vars(array(
@@ -405,9 +405,9 @@ class config_list
 
 			'TOTAL_ITEMS'		=> $count,
 			'LIMIT'				=> $limit,
-			'A_BASE_URL'		=> append_sid(STK_INDEX, array('c' => 'admin', 't' => 'config_list', 'limit' => '' . $limit . '&amp;display=' . $display . '', 'go' => 1)),
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=config_list&amp;go=1'),
-			'S_ACTION'			=> append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=config_list&amp;start=' . $start . '&amp;limit=' . $limit . '&amp;display=' . $display . ''),
+			'A_BASE_URL'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'config_list', 'limit' => '' . $limit . '&amp;display=' . $display . '', 'go' => 1)),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=config_list&amp;go=1'),
+			'S_ACTION'			=> append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=config_list&amp;start=' . $start . '&amp;limit=' . $limit . '&amp;display=' . $display . ''),
 		));
 
 		$template->set_filenames(array(

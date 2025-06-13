@@ -38,7 +38,7 @@ class resync_avatars
 
 	function run_tool()
 	{
-		global $config, $db, $template, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
 
 		$mode	= $request->variable('mode', RESYNC_USER_AVATARS);
 		$step	= $request->variable('step', 0);
@@ -69,7 +69,7 @@ class resync_avatars
 			if ($mode != RESYNC_GROUP_AVATARS)
 			{
 				$template->assign_var('U_BACK_TOOL', false);
-				meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_avatars', 'step' => 0, 'mode' => RESYNC_GROUP_AVATARS, 'submit' => true)));
+				meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_avatars', 'step' => 0, 'mode' => RESYNC_GROUP_AVATARS, 'submit' => true)));
 				trigger_error(user_lang('RESYNC_AVATARS_NEXT_MODE'));
 			}
 
@@ -89,11 +89,11 @@ class resync_avatars
 
 				$ext		= substr(strrchr($row['avatar'], '.'), 1);
 				$filename	= ($avatar_group) ? $row['group_id'] : $row['id'];
-				$path		= PHPBB_ROOT_PATH . $config['avatar_path'] . '/' . $config['avatar_salt'] . '_' . (($avatar_group) ? 'g' : '') . $filename . '.' . $ext;
+				$path		= $phpbb_root_path . $config['avatar_path'] . '/' . $config['avatar_salt'] . '_' . (($avatar_group) ? 'g' : '') . $filename . '.' . $ext;
 			}
 			else if ($row['avatar_type'] == AVATAR_GALLERY)
 			{
-				$path	= PHPBB_ROOT_PATH . $config['avatar_gallery_path'] . "/{$row['avatar']}";
+				$path	= $phpbb_root_path . $config['avatar_gallery_path'] . "/{$row['avatar']}";
 			}
 
 			if (file_exists($path))
@@ -136,7 +136,7 @@ class resync_avatars
 
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
-		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_avatars', 'step' => ++$step, 'mode' => $mode, 'submit' => true)));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_avatars', 'step' => ++$step, 'mode' => $mode, 'submit' => true)));
 		trigger_error(user_lang('RESYNC_AVATARS_PROGRESS'));
 	}
 }

@@ -13,7 +13,7 @@ class prune_styles
 {
 	function display_options()
 	{
-		global $db, $template, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $lang;
 
 		$submit = $request->variable('sa', false);
 		$list = '';
@@ -31,7 +31,7 @@ class prune_styles
 				$styles[] = array('style_id' => $data['style_id'], 'style_path' => $data['style_path'], 'style_name' => $data['style_name']);
 			}
 			$db->sql_freeresult($result);
-			$dir = '' . PHPBB_ROOT_PATH . 'styles/';
+			$dir = '' . $phpbb_root_path . 'styles/';
 			foreach ($styles as $key => $value)
 			{
 				if (!file_exists($dir . $value['style_path'] . '/style.cfg'))
@@ -50,12 +50,12 @@ class prune_styles
 
 			$message = ($list)? '' . user_lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : user_lang('PRUNE_STYLES_EMPTY');
 
-			meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin'));
+			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin'));
 			trigger_error($message);
 		}
 
 		$template->assign_vars(array(
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_styles&amp;go=1'),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=prune_styles&amp;go=1'),
 		));
 
 		$template->set_filenames(array(

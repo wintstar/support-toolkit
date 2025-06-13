@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'CLEAR_EXTENSIONS'				=> 'Control and management of extensions (emergency mode)',
 	'CLEAR_EXTENSIONS_EXPLAIN'		=> 'Here you can deactivate/activate or remove <strong>installed</strong> extensions.',
-	'EXT_PATH'						=> 'Path relative to the folder ' . PHPBB_ROOT_PATH . 'ext/',
+	'EXT_PATH'						=> 'Path relative to the folder %sext/',
 	'MISSING_PATH'					=> 'Missing folder',
 	'S_ACTIVE'						=> ' (active) ',
 	'S_OFF'							=> ' (disabled) ',
@@ -59,7 +59,6 @@ $lang = array_merge($lang, array(
 	'EXT_OFF'						=> 'Disable extensions',
 	'EXT_OFF_CONFIRM'				=> 'Are you sure you want to disable these extensions?',
 	'EXT_MISSING_PATH'				=> 'Extension «%s» is not compatible.<br />',
-	'NO_COMPOSER'					=> 'File not found: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
 	'NO_EXTENSIONS_TITLE'			=> 'Extensions',
 	'NO_EXTENSIONS_TEXT'			=> 'No any installed extensions',
 

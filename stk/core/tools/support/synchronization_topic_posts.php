@@ -14,7 +14,7 @@ class synchronization_topic_posts
 {
 	function display_options()
 	{
-		global $db, $template, $lang, $phpbb_root_path, $phpEx;
+		global $db, $template, $lang, $stk_root_path, $phpbb_root_path, $phpEx;
 
 		// Not synchronized topics
 		$sql = 'SELECT t.forum_id, topic_id, topic_title, topic_last_post_id, topic_last_poster_id, topic_last_poster_name, topic_last_post_time,
@@ -49,7 +49,7 @@ class synchronization_topic_posts
 			'L_POSTS_TOTAL_CAPTION'				=> sprintf($lang['POSTS_TOTAL'], POSTS_TABLE),
 			'L_FROM_TOPICS_TABLE'				=> sprintf($lang['FROM_TABLE'], TOPICS_TABLE),
 			'L_FROM_POSTS_TABLE'				=> sprintf($lang['FROM_TABLE'], POSTS_TABLE),
-			'U_SYNCHRONIZATION_TOPIC_POSTS'		=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'synchronization_topic_posts', 'submit' => 1)),
+			'U_SYNCHRONIZATION_TOPIC_POSTS'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'synchronization_topic_posts', 'submit' => 1)),
 		));
 
 		$template->set_filenames(array(
@@ -67,7 +67,7 @@ class synchronization_topic_posts
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $lang;
+		global $stk_root_path, $phpEx, $db, $lang;
 
 		if (!check_form_key('synchronization_topic_posts'))
 		{
@@ -119,7 +119,7 @@ class synchronization_topic_posts
 	 			}
 		    }
 		}
-		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'support', 't' => 'synchronization_topic_posts')));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'synchronization_topic_posts')));
 		trigger_error(sprintf($lang['TOPICS_SINCRONIZED'], sizeof($topic_ids)));
 	}
 }

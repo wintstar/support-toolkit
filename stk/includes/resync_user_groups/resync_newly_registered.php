@@ -61,7 +61,7 @@ class resync_newly_registered
 	 */
 	function resync()
 	{
-		global $config, $template, $request;
+		global $stk_root_path, $config, $template, $request;
 
 		// Get global variables
 		$last = $request->variable('last', 0); // The user_id of the last user in this batch
@@ -82,7 +82,7 @@ class resync_newly_registered
 			}
 			else
 			{
-				meta_refresh(3, append_sid(STK_ROOT_PATH, array('c' => 'user_group', 't' => 'resync_user_groups', 'step' => ++$step, 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
+				meta_refresh(3, append_sid($stk_root_path, array('c' => 'user_group', 't' => 'resync_user_groups', 'step' => ++$step, 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 				$template->assign_var('U_BACK_TOOL', false);
 				trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
 			}
@@ -118,7 +118,9 @@ class resync_newly_registered
 		// Call the function
 		if (!function_exists('group_user_add'))
 		{
-			include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+			global $phpbb_root_path, $phpEx;
+
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 		}
 
 		if (($error = call_user_func_array($function, $args)) !== false)
@@ -134,7 +136,7 @@ class resync_newly_registered
 		$this->_fix_new_flag($users, $group_name);
 
 		// Next batch
-		meta_refresh(3, append_sid(STK_ROOT_PATH, array('c' => 'usergroup', 't' => 'resync_user_groups', 'step' => $step, 'last' => array_pop($users), 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
+		meta_refresh(3, append_sid($stk_root_path, array('c' => 'usergroup', 't' => 'resync_user_groups', 'step' => $step, 'last' => array_pop($users), 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 		$template->assign_var('U_BACK_TOOL', false);
 		trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
 	}
@@ -166,7 +168,8 @@ class resync_newly_registered
 			WHERE ' . $db->sql_in_set('group_name', array('GLOBAL_MODERATORS', 'ADMINISTRATORS')) .'';
 		$result	= $db->sql_query($sql);
 		while($row = $db->sql_fetchrow($result))
-		{			$admin_gid[] = $row['group_id'];
+		{
+			$admin_gid[] = $row['group_id'];
 		}
 		$db->sql_freeresult($result);
 		$sql_where_not = ' AND ' . $db->sql_in_set('u.group_id', $admin_gid, true) . '';

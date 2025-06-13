@@ -22,7 +22,7 @@ class prune_attachments
 
 	function display_options()
 	{
-		global $db, $template, $config, $cache, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request, $lang;
 		$list = '';
 		// For further use if make extension "Attachments in subfolders"
 		$subfolders = false;
@@ -37,7 +37,7 @@ class prune_attachments
 			ignore_user_abort(true);
 			set_time_limit(0);
 
-			$dir = '' . PHPBB_ROOT_PATH . '' . $config['upload_path'];
+			$dir = '' . $phpbb_root_path . '' . $config['upload_path'];
 			$files_list = $cache->get('_stk_prune_attachments'); // Try get data from cache
 			if (!$files_list)
 			{
@@ -133,7 +133,7 @@ class prune_attachments
 			}
 			else
 			{
-				meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=prune_attachments&sa=true'));
+				meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=prune_attachments&sa=true'));
 				trigger_error('' . $lang['PRUNE_ATTACHMENTS_PROGRESS'] . '<br />' . $list . '');
 			}
 		}
@@ -141,7 +141,7 @@ class prune_attachments
 		page_header(user_lang('PRUNE_ATTACHMENTS'));
 
 		$template->assign_vars(array(
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=prune_attachments&amp;go=1'),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=prune_attachments&amp;go=1'),
 		));
 
 		$template->set_filenames(array(
@@ -154,11 +154,11 @@ class prune_attachments
 
 function scan($path,&$res)
 {
-	global $config;
+	global $phpbb_root_path, $config;
 
 	$mass = scandir($path);
 
-	if ($path == '' . PHPBB_ROOT_PATH . '' . $config['upload_path'] .'/phpbbgallery')
+	if ($path == '' . $phpbb_root_path . '' . $config['upload_path'] .'/phpbbgallery')
 	{
 		return;
 	}

@@ -14,7 +14,7 @@ class user_set_lang
 {
 	function display_options()
 	{
-		global $template, $lang, $db, $request, $config;
+		global $stk_root_path, $phpEx, $template, $lang, $db, $request, $config;
 
 		$groups = $request->variable('user_groups', array(0));
 		$all_groups = $request->variable('all_groups', 0);
@@ -36,7 +36,7 @@ class user_set_lang
 		$template->assign_vars(array(
 			'S_OPTIONS'			=> $s_options,
 			'S_LANG_OPTIONS'	=> language_select($config['default_lang']),
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'user_set_lang')),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'user_set_lang')),
 		));
 
 		$template->set_filenames(array(
@@ -69,7 +69,7 @@ class user_set_lang
 			$sql = 'UPDATE ' . USERS_TABLE . ' SET user_lang = \'' . $user_lang . '\' WHERE ' . $db->sql_in_set('user_id', $users);
 			$db->sql_query($sql);
 
-			meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=user_set_lang'));
+			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_set_lang'));
 			trigger_error(user_lang('USER_LANG_OK'));
 		}
 

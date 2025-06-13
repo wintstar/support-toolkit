@@ -123,11 +123,13 @@ class resync_user_groups
 	 */
 	function _load_classes()
 	{
+		global $stk_root_path, $phpEx;
+
 		foreach (array('resync_registered', 'resync_newly_registered') as $class)
 		{
 			if (!class_exists($class))
 			{
-				require STK_ROOT_PATH . "includes/resync_user_groups/{$class}." . PHP_EXT;
+				require $stk_root_path . "includes/resync_user_groups/{$class}." . $phpEx;
 			}
 		}
 	}

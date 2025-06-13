@@ -14,7 +14,7 @@ class user_notifications
 {
 	function display_options()
 	{
-		global $template, $lang, $db, $request, $language, $user, $phpbb_container;
+		global $stk_root_path, $phpEx, $template, $lang, $db, $request, $language, $user, $phpbb_container;
 
 		$user->add_lang(array('ucp'));
 
@@ -63,7 +63,7 @@ class user_notifications
 
 		$template->assign_vars(array(
 			'S_PERIOD_SELECT'			=> $s_options,
-			'U_DISPLAY_ACTION'			=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'user_notifications')),
+			'U_DISPLAY_ACTION'			=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'user_notifications')),
 		));
 
 		$this->output_notification_methods($phpbb_notifications, $template, $user, 'notification_methods');
@@ -210,7 +210,7 @@ class user_notifications
 					}
 				}
 			}
-			meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=user_notifications'));
+			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_notifications'));
 			trigger_error($lang['USER_NORIFY_OK']);
 		}
 

@@ -274,7 +274,7 @@ class resync_report_flags
 	 */
 	function _next_mode()
 	{
-		global $template;
+		global $stk_root_path, $phpEx, $template;
 
 		// These modes define the order in which the different checks
 		// are ran. These *must* remain ordered this way as the different
@@ -294,7 +294,7 @@ class resync_report_flags
 		$next = $modes[$this->mode];
 
 		// Build the link
-		$redirect = append_sid(STK_INDEX, array('c' => 'support', 't' => 'resync_report_flags', 'm' => $next, 'submit' => true));
+		$redirect = append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'resync_report_flags', 'm' => $next, 'submit' => true));
 		meta_refresh(3, $redirect);
 		$template->assign_var('U_BACK_TOOL', false);
 		trigger_error(user_lang('RESYNC_REPORT_FLAGS_NEXT'));

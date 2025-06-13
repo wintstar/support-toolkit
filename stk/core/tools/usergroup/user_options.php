@@ -14,7 +14,7 @@ class user_options
 {
 	function display_options()
 	{
-		global $template, $lang, $db, $request;
+		global $stk_root_path, $phpEx, $template, $lang, $db, $request;
 
 		$settings_value = $request->variable('settings', array('' => ''), true);
 		$groups = $request->variable('user_groups', array(0));
@@ -68,7 +68,7 @@ class user_options
 
 		$template->assign_vars(array(
 			'S_OPTIONS'			=> $s_options,
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'user_options')),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'user_options')),
 		));
 
 		$template->set_filenames(array(
@@ -105,7 +105,7 @@ class user_options
 				}
 			}
 
-			meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=user_options'));
+			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_options'));
 			trigger_error(user_lang('USER_OPTIONS_OK'));
 		}
 

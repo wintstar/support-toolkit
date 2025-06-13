@@ -13,7 +13,7 @@ class delete_styles
 {
 	function display_options()
 	{
-		global $db, $template, $request, $lang, $config;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $lang, $config;
 
 		$submit = $request->variable('sa', false);
 		$list = '';
@@ -35,7 +35,7 @@ class delete_styles
 				$style_name = $data['style_name'];
 			}
 			$db->sql_freeresult($result);
-			$dir = '' . PHPBB_ROOT_PATH . 'styles/';
+			$dir = '' . $phpbb_root_path . 'styles/';
 
 			if (!$style_id)
 			{
@@ -90,12 +90,12 @@ class delete_styles
 			}
 			$message = ($list)? '' . user_lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : user_lang('DELETE_STYLES_EMPTY');
 
-			meta_refresh(3, append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin'));
+			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin'));
 			trigger_error($message);
 		}
 
 		$template->assign_vars(array(
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 't=delete_styles&amp;go=1'),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=delete_styles&amp;go=1'),
 		));
 
 		$template->set_filenames(array(

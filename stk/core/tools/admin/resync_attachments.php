@@ -31,7 +31,7 @@ class resync_attachments
 
 	function run_tool()
 	{
-		global $config, $db, $template, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
 
 		$step	= $request->variable('step', 0);
 		$begin	= $this->_batch_size * $step;
@@ -53,7 +53,7 @@ class resync_attachments
 		foreach ($batch as $row)
 		{
 			// Does the file still exists?
-			$path = PHPBB_ROOT_PATH . $config['upload_path'] . "/{$row['physical_filename']}";
+			$path = $phpbb_root_path . $config['upload_path'] . "/{$row['physical_filename']}";
 			if (file_exists($path))
 			{
 				// Yes, next please!
@@ -71,7 +71,7 @@ class resync_attachments
 
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
-		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'resync_attachments', 'step' => ++$step, 'submit' => true)));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_attachments', 'step' => ++$step, 'submit' => true)));
 		trigger_error(user_lang('RESYNC_ATTACHMENTS_PROGRESS'));
 	}
 }

@@ -14,11 +14,12 @@ class clear_extensions
 {
 	function display_options()
 	{
-		global $db, $template,$phpbb_admin_path, $lang, $cache, $request, $phpbb_extension_manager, $config, $user;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template,$phpbb_admin_path, $lang;
+		global $cache, $request, $phpbb_extension_manager, $config, $user;
 		$this->ext_manager = $phpbb_extension_manager;
 
 		$user->add_lang('acp/extensions');
-		$u_action = append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=clear_extensions');
+		$u_action = append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=clear_extensions');
 		$off = $request->variable('off', false);
 		$on = $request->variable('on', false);
 
@@ -44,7 +45,7 @@ class clear_extensions
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_name' => $uids));
-				stk_confirm_box(false, $lang['EXT_OFF_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
+				stk_confirm_box(false, $lang['EXT_OFF_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
 			}
 		}
 
@@ -82,7 +83,7 @@ class clear_extensions
 		foreach ($row_set as $row)
 		{
 			$composer_check = check_json('ext/' . $row['ext_name'], 'composer');
-			$dir_exit = file_exists(PHPBB_ROOT_PATH . 'ext/' . $row['ext_name']) ? true : false;
+			$dir_exit = file_exists($phpbb_root_path . 'ext/' . $row['ext_name']) ? true : false;
 
 			$data = $row;
 
@@ -172,7 +173,7 @@ class clear_extensions
 				'COMPOSER_MESSAGE'		=> $data['composer_message'],
 				'EXT_NAME'				=> $data['ext_name'],
 				'META_ERROR'			=> $data['meta_error_msg'],
-				'EXT_DIR_PATH'			=> !empty($data['dir_exit']) ? PHPBB_REL_PATH . 'ext/' . $data['ext_name'] : '',
+				'EXT_DIR_PATH'			=> !empty($data['dir_exit']) ? realpath($phpbb_root_path) . '/ext/' . $data['ext_name'] : '',
 				'EXT_STATUS'			=> ($composer_check['error_type'] != 0) ? false : ($data['ext_active']),
 				'DISPLAY_NAME'			=> !empty($data['display_name']) ? $data['display_name'] : $data['ext_name'],
 
@@ -186,7 +187,7 @@ class clear_extensions
 		}
 
 		$template->assign_vars(array(
-			'S_ACTION'		=> append_sid("" . STK_ROOT_PATH . "index." . PHP_EXT . "", 'c=admin&amp;t=clear_extensions'),
+			'S_ACTION'		=> append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=clear_extensions'),
 			'L_UP_TO_DATE'	=> sprintf($user->lang['UP_TO_DATE'], ''),
 		));
 
@@ -199,7 +200,7 @@ class clear_extensions
 
 	function run_tool(&$error)
 	{
-		global $cache, $db, $template, $request, $lang, $config;
+		global $stk_dir_name, $phpEx, $cache, $db, $template, $request, $lang, $config;
 
 		$uids = $request->variable('marked_name', array('', ''));
 
@@ -237,7 +238,7 @@ class clear_extensions
 		else
 		{
 			$hidden = build_hidden_fields(array('marked_name' => $uids));
-			stk_confirm_box(false, $lang['EXT_DELETE_CONFIRM'], $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
+			stk_confirm_box(false, $lang['EXT_DELETE_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
 		}
 	}
 }

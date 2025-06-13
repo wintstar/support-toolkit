@@ -31,16 +31,16 @@ class reassign_thumbnails
 
 	function run_tool()
 	{
-		global $config, $db, $lang, $cache, $template, $phpEx;
+		global $config, $db, $lang, $cache, $template, $stk_root_path, $phpbb_root_path, $phpEx;
 
-		include_once(PHPBB_ROOT_PATH . 'includes/functions_posting.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 		ignore_user_abort(true);
 		set_time_limit(0);
 
 		$step			= request_var('step', 0);
 
 		$begin			= $this->_batch_size * $step;
-		$upload_path	= PHPBB_ROOT_PATH . $config['upload_path'] . '/';
+		$upload_path	= $phpbb_root_path . $config['upload_path'] . '/';
 
 		$total = $cache->get('_stk_reassign_thumbnails'); // Try get data from cache
 
@@ -106,7 +106,7 @@ class reassign_thumbnails
 		}
 		$cache->put('_stk_thumbnails', $thumbs);
 		$template->assign_var('U_BACK_TOOL', false);
-		meta_refresh(3, append_sid(STK_INDEX, array('c' => 'admin', 't' => 'reassign_thumbnails', 'step' => ++$step, 'submit' => true)));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reassign_thumbnails', 'step' => ++$step, 'submit' => true)));
 		trigger_error('' . $lang['REASSIGN_THUMBNAILS_PROGRESS'] . '<br />' . $list . implode("<br />", $output) . '');
 	}
 

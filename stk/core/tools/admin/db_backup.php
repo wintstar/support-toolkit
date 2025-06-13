@@ -16,7 +16,7 @@ class db_backup
 {
 	function display_options()
 	{
-		global $db, $template, $config, $user, $lang, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $user, $lang, $request;
 
 		$submit = $request->variable('sa', false);
 		$tables = $request->variable('table_select', array(''));
@@ -145,7 +145,7 @@ class db_backup
 				}
 				else
 				{
-					include PHPBB_ROOT_PATH . 'includes/acp/acp_database.' . PHP_EXT;
+					include $phpbb_root_path . 'includes/acp/acp_database.' . $phpEx;
 					switch ($db->get_sql_layer())
 					{
 						case 'sqlite':
@@ -220,7 +220,7 @@ class db_backup
 					exit;
 				}
 
-				meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=admin&amp;t=db_backup'));
+				meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=admin&amp;t=db_backup'));
 				trigger_error(user_lang('BACKUP_SUCCESS'));
 			}
 		}
@@ -230,7 +230,7 @@ class db_backup
 		$template->assign_vars(array(
 			'S_SELECT'			=> $option_list,
 			'SCREEN_ENABLE'		=> ($sql_layer == 'mysqli' || $sql_layer == 'mysql4' || $sql_layer == 'mysql') ? true : false,
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, 'c=admin&amp;t=db_backup&amp;go=1'),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 'c=admin&amp;t=db_backup&amp;go=1'),
 		));
 
 		$template->set_filenames(array(

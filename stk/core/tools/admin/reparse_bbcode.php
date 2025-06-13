@@ -128,7 +128,7 @@ class reparse_bbcode
 	*/
 	function run_tool()
 	{
-		global $cache, $config, $db, $user, $request, $lang, $language;
+		global $phpbb_root_path, $phpEx, $cache, $config, $db, $user, $request, $lang, $language;
 		// Prevent some errors from missing language strings.
 		$language->add_lang(array('posting'));
 
@@ -227,20 +227,19 @@ class reparse_bbcode
 		// The message parser
 		if (!class_exists('parse_message'))
 		{
-			global $phpbb_root_path, $phpEx; // required!
-			include PHPBB_ROOT_PATH . 'includes/message_parser.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/message_parser.' . $phpEx;
 		}
 
 		// Posting helper functions
 		if ($mode == BBCODE_REPARSE_POSTS && !function_exists('submit_post'))
 		{
-			include PHPBB_ROOT_PATH . 'includes/functions_posting.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/functions_posting.' . $phpEx;
 		}
 
 		// PM helper function
 		if ($mode == BBCODE_REPARSE_PMS && !function_exists('submit_pm'))
 		{
-			include PHPBB_ROOT_PATH . 'includes/functions_privmsgs.' . PHP_EXT;
+			include $phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx;
 		}
 
 		// First step? Prepare the backup
@@ -374,7 +373,7 @@ class reparse_bbcode
 		}
 
 		// User object used to store a second user object used when parsing signatures. (#62451)
-		$loader = new phpbb\language\language_file_loader(PHPBB_ROOT_PATH, 'php', $user->data['user_lang']);
+		$loader = new phpbb\language\language_file_loader($phpbb_root_path, 'php', $user->data['user_lang']);
 		$lng = new \phpbb\language\language($loader);
 		$_user2 = new \phpbb\user($lng, '\phpbb\datetime');
 
@@ -490,7 +489,7 @@ class reparse_bbcode
 	*/
 	function _next_step($step, $mode, $next_mode = false)
 	{
-		global $template, $user, $request;
+		global $stk_root_path, $phpEx, $template, $user, $request;
 
 		$all = $request->variable('reparseall', false);
 		$create_backup = $request->variable('create_backup', false);
@@ -511,7 +510,7 @@ class reparse_bbcode
 			'create_backup'	=> ($create_backup) ? true : false,
 		);
 
-		meta_refresh(1, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, $params));
+		meta_refresh(1, append_sid($stk_root_path . 'index.' . $phpEx, $params));
 		$template->assign_var('U_BACK_TOOL', false);
 
 		if ($next_mode === false)

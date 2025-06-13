@@ -29,9 +29,9 @@ class set_prosilver
 	*/
 	function run_tool()
 	{
-		global $db, $request, $config, $lang;
+		global $phpbb_root_path, $db, $request, $config, $lang;
 
-		if (!file_exists(PHPBB_ROOT_PATH . 'styles/prosilver/style.cfg'))
+		if (!file_exists($phpbb_root_path . 'styles/prosilver/style.cfg'))
 		{
 			trigger_error($lang['SET_PROSILVER_DOES_NOT_EXIST'], E_USER_WARNING);
 		}

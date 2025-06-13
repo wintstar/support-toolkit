@@ -36,7 +36,7 @@ class database_cleaner_controller
 	*/
 	function bots($error)
 	{
-		global $config, $db;
+		global $phpbb_root_path, $phpEx, $config, $db;
 
 		if (isset($_POST['yes']))
 		{
@@ -58,7 +58,7 @@ class database_cleaner_controller
 			{
 				if (!function_exists('user_add'))
 				{
-					include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 				}
 
 				// Remove existing bots
@@ -352,7 +352,7 @@ class database_cleaner_controller
 	*/
 	function groups($error, $selected)
 	{
-		global $db;
+		global $phpbb_root_path, $phpEx, $db;
 
 		$data = $group_rows = $existing_groups = array();
 		get_group_rows($data, $group_rows, $existing_groups);
@@ -374,7 +374,7 @@ class database_cleaner_controller
 					$group_id = false;
 					if (!function_exists('group_create'))
 					{
-						include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 					}
 					group_create($group_id, $this->db_cleaner->data->groups[$name]['group_type'], $name, $this->db_cleaner->data->groups[$name]['group_desc'], array('group_colour' => $this->db_cleaner->data->groups[$name]['group_colour'], 'group_legend' => $this->db_cleaner->data->groups[$name]['group_legend'], 'group_avatar' => $this->db_cleaner->data->groups[$name]['group_avatar'], 'group_max_recipients' => $this->db_cleaner->data->groups[$name]['group_max_recipients']));
 				}
@@ -382,7 +382,7 @@ class database_cleaner_controller
 				{
 					if (!function_exists('group_delete'))
 					{
-						include(PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 					}
 					// Remove it
 					$db->sql_query('SELECT group_id FROM ' . GROUPS_TABLE . ' WHERE group_name = \'' . $db->sql_escape($name) . '\'');
@@ -400,12 +400,12 @@ class database_cleaner_controller
 	*/
 	function introduction()
 	{
-		global $user, $config;
+		global $stk_root_path, $phpEx, $user, $config;
 
 		// Redirect if they selected quit
 		if (isset($_POST['quit']))
 		{
-			redirect(append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT));
+			redirect(append_sid($stk_root_path . 'index.' . $phpEx));
 		}
 
 		// Start by disabling the board
@@ -421,7 +421,7 @@ class database_cleaner_controller
 	*/
 	function modules($error)
 	{
-		global $db, $lang;
+		global $stk_root_path, $phpEx, $db, $lang;
 
 		if (isset($_POST['yes']))
 		{
@@ -431,7 +431,7 @@ class database_cleaner_controller
 			// Re-add the modules
 			if (!class_exists('acp_modules'))
 			{
-				include STK_ROOT_PATH . 'includes/acp_modules.' . PHP_EXT;
+				include $stk_root_path . 'includes/acp_modules.' . $phpEx;
 			}
 
 			$_module = new acp_modules();
@@ -793,7 +793,7 @@ class database_cleaner_controller
 	*/
 	function report_reasons($error)
 	{
-		global $db;
+		global $stk_root_path, $db;
 
 		if (isset($_POST['yes']))
 		{
@@ -868,11 +868,14 @@ class database_cleaner_controller
 			if (!empty($this->db_cleaner->data->report_reasons))
 			{
 				global $user;
+
 				$user->add_lang('install');
 
 				if (!function_exists('adjust_language_keys_callback'))
 				{
-					include STK_ROOT_PATH . 'includes/functions_install.' . PHP_EXT;
+					global $phpEx;
+
+					include $stk_root_path . 'includes/functions_install.' . $phpEx;
 				}
 
 				// The highest next order
@@ -1042,7 +1045,7 @@ class database_cleaner_controller
 	*/
 	function acp_modules($error, $selected)
 	{
-		global $db, $user, $phpbb_root_path, $phpEx, $umil, $lang;
+		global $stk_root_path, $db, $user, $phpbb_root_path, $phpEx, $umil, $lang;
 		$user->add_lang('ucp');
 		$user->add_lang('mcp');
 
@@ -1050,7 +1053,7 @@ class database_cleaner_controller
 		{
 			if (!class_exists('acp_modules'))
 			{
-				include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
+				include($stk_root_path . 'includes/acp_modules.' . $phpEx);
 			}
 
 			$acp_tools = new acp_modules();

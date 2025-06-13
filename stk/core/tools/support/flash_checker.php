@@ -38,13 +38,16 @@ class flash_checker
 	 */
 	function run_tool()
 	{
+		global $stk_root_path, $phpEx;
+
 		$this->check_table_flash_bbcodes(POSTS_TABLE, 'post_id', 'post_text', 'bbcode_uid', 'bbcode_bitfield');
 		$this->check_table_flash_bbcodes(PRIVMSGS_TABLE, 'msg_id', 'message_text', 'bbcode_uid', 'bbcode_bitfield');
 		$this->check_table_flash_bbcodes(USERS_TABLE, 'user_id', 'user_sig', 'user_sig_bbcode_uid', 'user_sig_bbcode_bitfield');
-// Not checked atm
-//		check_table_flash_bbcodes(FORUMS_TABLE, 'forum_id', 'forum_desc', 'forum_desc_uid', 'forum_desc_bitfield');
-//		check_table_flash_bbcodes(FORUMS_TABLE, 'forum_id', 'forum_rules', 'forum_rules_uid', 'forum_rules_bitfield');
-//		check_table_flash_bbcodes(GROUPS_TABLE, 'group_id', 'group_desc', 'group_desc_uid', 'group_desc_bitfield');
+
+		// Not checked atm
+		// check_table_flash_bbcodes(FORUMS_TABLE, 'forum_id', 'forum_desc', 'forum_desc_uid', 'forum_desc_bitfield');
+		// check_table_flash_bbcodes(FORUMS_TABLE, 'forum_id', 'forum_rules', 'forum_rules_uid', 'forum_rules_bitfield');
+		// check_table_flash_bbcodes(GROUPS_TABLE, 'group_id', 'group_desc', 'group_desc_uid', 'group_desc_bitfield');
 
 		// Nothing found
 		if (empty($this->_vulnerable))
@@ -54,22 +57,22 @@ class flash_checker
 
 		// Here we'll create the cache files the reparse BBCode tool expects so
 		// the tool can be run straight away
-		global $cache;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $cache;
 
 		$ids = implode(',', $this->_vulnerable[POSTS_TABLE]);
 		if ($ids)
 		{
 			$cache->put('_stk_reparse_posts', $ids);
 			$ids = implode(',', $this->_vulnerable[POSTS_TABLE]);
-			$message = user_lang('FLASH_CHECKER_FOUND', append_sid(STK_INDEX, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparseids' => $ids, 'submit' => true)));
-			$message .= '<br />' . user_lang('FLASH_CHECKER_POST', append_sid(PHPBB_ROOT_PATH . 'viewtopic.' . PHP_EXT . '?p='. $ids . '#' . $ids)) . '';
+			$message = user_lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparseids' => $ids, 'submit' => true)));
+			$message .= '<br />' . user_lang('FLASH_CHECKER_POST', append_sid($phpbb_root_path . 'viewtopic.' . $phpEx . '?p='. $ids . '#' . $ids)) . '';
 		}
 
 		if (!empty($this->_vulnerable[PRIVMSGS_TABLE]))
 		{
 			$cache->put('_stk_reparse_pms', implode(',', $this->_vulnerable[PRIVMSGS_TABLE]));
 			$privmsgs_ids = implode(',', $this->_vulnerable[PRIVMSGS_TABLE]);
-			$message = user_lang('FLASH_CHECKER_FOUND', append_sid(STK_INDEX, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparsepms' => $privmsgs_ids, 'submit' => true)));
+			$message = user_lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparsepms' => $privmsgs_ids, 'submit' => true)));
 		}
 		trigger_error($message, E_USER_WARNING);
 	}

@@ -251,7 +251,7 @@ function user_lang()
 */
 function stk_add_lang($lang_file)
 {
-	global $template, $lang, $user, $config;
+	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $lang, $user, $config;
 
 	if (empty($user->data) || !$user->data['user_lang'] || $user->data['user_id'] == 1)
 	{
@@ -262,8 +262,8 @@ function stk_add_lang($lang_file)
 		$default_lang = $user->data['user_lang'];
 	}
 
-	include(PHPBB_ROOT_PATH . 'language/' . $default_lang . '/common.' . PHP_EXT);
-	include(STK_ROOT_PATH . 'language/' . $default_lang . '/' . $lang_file . '.' . PHP_EXT);
+	include($phpbb_root_path . 'language/' . $default_lang . '/common.' . $phpEx);
+	include($stk_root_path . 'language/' . $default_lang . '/' . $lang_file . '.' . $phpEx);
 
 	if (!defined('IN_ERK') && isset($user->data['user_id']))
 	{
@@ -396,7 +396,7 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
  */
 function perform_unauthed_quick_tasks($action, $submit = false)
 {
-	global $template, $umil, $lang, $request, $user;
+	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $umil, $lang, $request, $user;
 
 	switch ($action)
 	{
@@ -404,7 +404,7 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 		case 'stklogout' :
 			setcookie('stk_token', '', (time() - 31536000));
 			$user->unset_admin();
-			meta_refresh(3, append_sid(PHPBB_ROOT_PATH . 'index.' . PHP_EXT));
+			meta_refresh(3, append_sid($phpbb_root_path . 'index.' . $phpEx));
 			trigger_error($lang['STK_LOGOUT_SUCCESS']);
 		break;
 
@@ -421,9 +421,9 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 
 			$template->assign_vars(array(
 				'PASS_GENERATED'			=> sprintf($lang['PASS_GENERATED'], $_pass_string, $user->format_date($_pass_exprire, false, true)),
-				'PASS_GENERATED_REDIRECT'	=> sprintf($lang['PASS_GENERATED_REDIRECT'], append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT)),
+				'PASS_GENERATED_REDIRECT'	=> sprintf($lang['PASS_GENERATED_REDIRECT'], append_sid($stk_root_path . 'index.' . $phpEx)),
 				'S_HIDDEN_FIELDS'			=> build_hidden_fields(array('pass_string' => $_pass_string, 'pass_exp' => $_pass_exprire)),
-				'U_ACTION'					=> append_sid(STK_INDEX, array('action' => 'downpasswdfile')),
+				'U_ACTION'					=> append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'downpasswdfile')),
 			));
 
 			$template->set_filenames(array(
@@ -444,8 +444,8 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			}
 
 			// Create the file and let the user download it
-			header('Content-Type: text/x-delimtext; name="passwd.' . PHP_EXT . '"');
-			header('Content-disposition: attachment; filename=passwd.' . PHP_EXT);
+			header('Content-Type: text/x-delimtext; name="passwd.' . $phpEx . '"');
+			header('Content-disposition: attachment; filename=passwd.' . $phpEx);
 
 			print ("<?php
 /**
@@ -474,7 +474,7 @@ if (!defined('IN_PHPBB') || !defined('STK_VERSION'))
  */
 function perform_authed_quick_tasks($action)
 {
-	global $user;
+	global $stk_root_path, $phpEx, $user;
 
 	$logout = false;
 
@@ -488,7 +488,7 @@ function perform_authed_quick_tasks($action)
 
 		// If the user wants to distroy the passwd file
 		case 'delpasswdfile' :
-			if (file_exists(STK_ROOT_PATH . 'passwd.' . PHP_EXT) && false === @unlink(STK_ROOT_PATH . 'passwd.' . PHP_EXT))
+			if (file_exists($stk_root_path . 'passwd.' . $phpEx) && false === @unlink($stk_root_path . 'passwd.' . $phpEx))
 			{
 				// Shouldn't happen. Kill the script
 				trigger_error($user->lang['FAIL_REMOVE_PASSWD'], E_USER_ERROR);
@@ -522,9 +522,9 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 {
 	// First and foremost handle the case where phpBB calls trigger error
 	// but the STK really needs to continue.
-	global $critical_repair, $stk_no_error, $user, $lang;
+	global $stk_root_path, $phpEx, $critical_repair, $stk_no_error, $user, $lang;
 
-	if (!isset($user->lang['STK_FATAL_ERROR']))
+	if (!isset($lang))
 	{
 		stk_add_lang('common');
 	}
@@ -582,12 +582,12 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 		// Set out own message if needed
 		if ($errno == E_USER_ERROR)
 		{
-			$msg_text = $user->lang['STK_FATAL_ERROR'];
+			$msg_text = user_lang('STK_FATAL_ERROR', $stk_root_path, $phpEx);
 		}
 
 		if (!isset($critical_repair))
 		{
-			include(STK_ROOT_PATH . 'includes/critical_repair.' . PHP_EXT);
+			include($stk_root_path . 'includes/critical_repair.' . $phpEx);
 			$critical_repair = new critical_repair();
 		}
 
@@ -787,7 +787,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 			}
 
 			// Do not use the normal template path (to prevent issues with boards using alternate styles)
-			$template->set_custom_style('stk', STK_ROOT_PATH . 'style');
+			$template->set_custom_style('stk', $stk_root_path . 'style');
 
 			$template->set_filenames(array(
 				'body' => 'message_body.html')
@@ -1143,7 +1143,9 @@ function delete_style($style)
 
 function delete_files($path, $dir = '')
 {
-	$styles_path = '' . PHPBB_ROOT_PATH . 'styles/';
+	global $phpbb_root_path;
+
+	$styles_path = '' . $phpbb_root_path . 'styles/';
 	$dirname = $styles_path . $path . $dir;
 	$result = true;
 
@@ -1193,13 +1195,13 @@ function output($msg)
 
 function check_json($dir, $file_name)
 {
-	global $lang, $default_lang, $user;
+	global $phpbb_root_path, $lang, $default_lang, $user;
 
 	stk_add_lang('ext_cleaner');
 
-	if (file_exists(PHPBB_ROOT_PATH . $dir . '/' . $file_name . '.json'))
+	if (file_exists($phpbb_root_path . $dir . '/' . $file_name . '.json'))
 	{
-		$string = file_get_contents(PHPBB_ROOT_PATH . $dir . '/' . $file_name . '.json');
+		$string = file_get_contents($phpbb_root_path . $dir . '/' . $file_name . '.json');
 
 		json_decode($string);
 

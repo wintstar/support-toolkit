@@ -14,7 +14,7 @@ class delete_users
 {
 	function run_tool(&$error)
 	{
-		global $user, $db, $request;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $user, $db, $request;
 
 		// Try to override some limits - maybe it helps some...
 		@set_time_limit(0);
@@ -76,7 +76,7 @@ class delete_users
 		{
 			if (!function_exists('user_delete'))
 			{
-				require PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT;
+				require $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 			}
 
 			// Delete them all
@@ -86,7 +86,7 @@ class delete_users
 			}
 			$message = user_lang('DELETE_USERS_SUCESS');
 		}
-		meta_refresh(3, append_sid(STK_ROOT_PATH . 'index.' . PHP_EXT, 'c=usergroup&amp;t=delete_users'));
+		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=delete_users'));
 		trigger_error($message);
 	}
 
@@ -97,7 +97,7 @@ class delete_users
 	*/
 	function display_options()
 	{
-		global $template, $lang, $request, $language;
+		global $stk_root_path, $phpEx, $stk_dir_name, $template, $lang, $request, $language;
 
 		$language->add_lang(array('memberlist'));
 
@@ -116,7 +116,7 @@ class delete_users
 
 		$template->assign_vars(array(
 			'S_PERIOD_SELECT'	=> $s_options,
-			'U_DISPLAY_ACTION'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'delete_users')),
+			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'delete_users')),
 		));
 
 		if ($delete)
@@ -127,7 +127,7 @@ class delete_users
 			else
 			{
 				$hidden = build_hidden_fields(array('period' => $period));
-				stk_confirm_box(false, user_lang('DELETE_USERS_CONFIRM'), $hidden, 'confirm_body.html', STK_DIR_NAME . '/index.' . PHP_EXT . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
+				stk_confirm_box(false, user_lang('DELETE_USERS_CONFIRM'), $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=user_group&amp;t=delete_users&amp;submit=' . true);
 			}
 		}
 		page_header(user_lang('DELETE_USERS'));

@@ -151,7 +151,9 @@ class umil
 		// Setup $this->db_tools
 		if (!class_exists('phpbb\db\tools\tools'))
 		{
-			include PHPBB_ROOT_PATH . 'phpbb/db/tools/tools.' . PHP_EXT;
+			global $phpbb_root_path, $phpEx;
+
+			include $phpbb_root_path . 'phpbb/db/tools/tools.' . $phpEx;
 		}
 
 		$this->db_tools = new phpbb\db\tools\tools($this->db);
@@ -1121,7 +1123,7 @@ class umil
 	*/
 	function module_add($class, $parent = 0, $data = array(), $include_path = false)
 	{
-		global $cache, $lang, $phpbb_root_path, $phpEx;
+		global $stk_root_path, $cache, $lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1228,7 +1230,7 @@ class umil
 
 		if (!class_exists('acp_modules'))
 		{
-			include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
+			include($stk_root_path . 'includes/acp_modules.' . $phpEx);
 			$user->add_lang('acp/modules');
 		}
 
@@ -1649,7 +1651,7 @@ class umil
 	*/
 	function module_remove($class, $parent = 0, $module = '', $include_path = false)
 	{
-		global $cache, $lang, $phpbb_root_path, $phpEx;
+		global $stk_root_path, $cache, $lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1776,7 +1778,7 @@ class umil
 
 			if (!class_exists('acp_modules'))
 			{
-				include(STK_ROOT_PATH . 'includes/acp_modules.' . $phpEx);
+				include($stk_root_path . 'includes/acp_modules.' . $phpEx);
 				$user->add_lang('acp/modules');
 			}
 			$acp_modules = new acp_modules();

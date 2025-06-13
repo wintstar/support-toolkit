@@ -70,7 +70,7 @@ class database_cleaner_views
 	*/
 	function display()
 	{
-		global $error, $template, $request, $config, $lang;
+		global $stk_root_path, $phpEx, $error, $template, $request, $config, $lang;
 
 		$did_run = $request->variable('did_run', false);
 
@@ -144,11 +144,11 @@ class database_cleaner_views
 			}
 			if ($this->_has_changes || !empty($this->_confirm_box))
 			{
-				$_u_next_step = append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->db_cleaner->step, 'submit' => true));
+				$_u_next_step = append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->db_cleaner->step, 'submit' => true));
 			}
 			else
 			{
-				$_u_next_step = append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => ($this->db_cleaner->step + 1)));
+				$_u_next_step = append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => ($this->db_cleaner->step + 1)));
 			}
 		}
 		else
@@ -198,7 +198,7 @@ class database_cleaner_views
 			'U_NEXT_STEP'	=> $_u_next_step,
 
 			// Skip next step & go to spcified step
-			'U_SKIP_STEP'	=> append_sid(STK_INDEX, 'c=support&t=database_cleaner'),
+			'U_SKIP_STEP'	=> append_sid($stk_root_path . 'index.' . $phpEx, 'c=support&t=database_cleaner'),
  			'S_SKIP'		=> ($this->db_cleaner->step > 0 && $this->db_cleaner->step_to_action[$this->db_cleaner->step] != 'final_step') ? true : false,
  			'S_SELECT'		=> $s_options,
 		));
@@ -233,7 +233,8 @@ class database_cleaner_views
 	*/
 	function columns()
 	{
-		global $umil;
+		global $stk_root_path, $phpEx, $umil;
+
 		// Time to start going through the database and listing any extra/missing fields
 		$last_output_table = '';
 		foreach ($this->db_cleaner->data->tables as $table_name => $data)
@@ -279,7 +280,7 @@ class database_cleaner_views
 						'NAME'			=> $column,
 						'FIELD_NAME'	=> $table_name . '_' . $column,
 						'MISSING'		=> (!in_array($column, $existing_columns)) ? true : false,
-						'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'col=' . $column . ''),
+						'FIND'			=> append_sid("" . $stk_root_path . "finder." . $phpEx . "", 'col=' . $column . ''),
 					);
 
 					if ($this->_has_changes === false)
@@ -298,7 +299,7 @@ class database_cleaner_views
 	*/
 	function config()
 	{
-		global $db, $lang, $template;
+		global $stk_root_path, $phpEx, $db, $lang, $template;
 
 		// display extra config variables and let them check/uncheck the ones they want to add/remove
 		$this->_section_data['config'] = array(
@@ -330,7 +331,7 @@ class database_cleaner_views
 				'NAME'			=> $name,
 				'FIELD_NAME'	=> $name,
 				'MISSING'		=> (!in_array($name, $existing_config)) ? true : false,
-				'FIND'		=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'c=' . $name . ''),
+				'FIND'		=> append_sid("" . $stk_root_path . "finder." . $phpEx . "", 'c=' . $name . ''),
 			);
 
 			if ($this->_has_changes === false)
@@ -529,7 +530,7 @@ class database_cleaner_views
 	*/
 	function permissions()
 	{
-		global $template, $lang;
+		global $stk_root_path, $phpEx, $template, $lang;
 
 		$this->_section_data['permissions'] = array(
 			'NAME'		=> 'PERMISSION_SETTINGS',
@@ -550,7 +551,7 @@ class database_cleaner_views
 				'NAME'			=> $name,
 				'FIELD_NAME'	=> $name,
 				'MISSING'		=> (!in_array($name, $existing_permissions)) ? true : false,
-				'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'p=' . $name . ''),
+				'FIND'			=> append_sid("" . $stk_root_path . "finder." . $phpEx . "", 'p=' . $name . ''),
 			);
 
 			if ($this->_has_changes === false)
@@ -643,7 +644,7 @@ class database_cleaner_views
 	*/
 	function tables()
 	{
-		global $table_prefix, $template, $lang, $request;
+		global $stk_root_path, $phpEx, $table_prefix, $template, $lang, $request;
 
 		$tables_confirm = $request->variable('tables_confirm', false);
 
@@ -674,7 +675,7 @@ class database_cleaner_views
 						'NAME'			=> $table,
 						'FIELD_NAME'	=> $table,
 						'MISSING'		=> isset($req_tables[$table]) ? true : false,
-						'FIND'		=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 't=' . $table . ''),
+						'FIND'		=> append_sid("" . $stk_root_path . "finder." . $phpEx . "", 't=' . $table . ''),
 					);
 
 					if ($this->_has_changes === false)
@@ -692,7 +693,7 @@ class database_cleaner_views
 			// A bit nasty but the only real work around at this moment
 			if (empty($table_prefix) && $this->_has_changes)
 			{
-				$this->_u_next_step = append_sid(STK_INDEX, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->db_cleaner->step, 'submit' => false, 'tables_confirm' => true));
+				$this->_u_next_step = append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'database_cleaner', 'step' => $this->db_cleaner->step, 'submit' => false, 'tables_confirm' => true));
 			}
 
 			$this->success_message = 'BOARD_DISABLE_SUCCESS';
@@ -723,7 +724,7 @@ class database_cleaner_views
 	*/
 	function acp_modules()
 	{
-		global $db, $lang, $template, $phpEx, $phpbb_root_path, $user, $language;
+		global $stk_root_path, $db, $lang, $template, $phpEx, $phpbb_root_path, $user, $language;
 		$language->add_lang(array('ucp', 'mcp', 'acp/common'));
 
 		$this->_section_data['acp_modules'] = array(
@@ -782,7 +783,7 @@ class database_cleaner_views
 				'NAME'			=> $name,
 				'FIELD_NAME'	=> $module_id,
 				'MISSING'		=> false,
-				'FIND'			=> append_sid("" . STK_ROOT_PATH . "finder." . PHP_EXT . "", 'm=' . $module . ''),
+				'FIND'			=> append_sid("" . $stk_root_path . "finder." . $phpEx . "", 'm=' . $module . ''),
 			);
 
 			if ($this->_has_changes === false)

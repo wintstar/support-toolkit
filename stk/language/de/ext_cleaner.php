@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'EXT_PATH'					=> 'Pfad relativ zum Ordner ' . PHPBB_ROOT_PATH . 'ext/',
+	'EXT_PATH'					=> 'Pfad relativ zum Ordner %sext/',
 	'MISSING_PATH'				=> 'Fehlender Ordner ',
 	'S_ACTIVE'					=> ' (enabled) ',
 	'S_OFF'						=> ' (disabled) ',
@@ -53,7 +53,6 @@ $lang = array_merge($lang, array(
 	'EXT_DELETE'				=> 'Extensions entfernen',
 	'EXT_OFF'					=> 'Extensions deaktivieren',
 	'EXT_MISSING_PATH'			=> 'Die “%s” Extension ist nicht gültig.<br />',
-	'NO_COMPOSER'				=> 'Die angeforderte Datei konnte nicht gefunden werden: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
 	'NO_EXTENSIONS_TITLE'		=> 'Extensions',
 	'NO_EXTENSIONS_TEXT'		=> 'Keine installierten Extensions gefunden',
 	'OFF_EXT'					=> 'Deaktivieren',

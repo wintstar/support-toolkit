@@ -19,7 +19,7 @@ class manage_founders
 	*/
 	function display_options()
 	{
-		global $db, $template, $user;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user;
 
 		// Generate a list of founders
 		$sql = 'SELECT user_id, username, user_colour
@@ -38,9 +38,9 @@ class manage_founders
 
 		// Additional template stuff
 		$template->assign_vars(array(
-			'U_DEMOTE_FOUNDERS'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'manage_founders', 'mode' => 'demote', 'submit' => 1)),
-			'U_FIND_USER'		=> append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'searchuser', 'form' => 'select_user', 'field' => 'username', 'select_single' => 'true', 'form' => 'stk_promote_founder', 'field' => 'username')),
-			'U_PROMOTE_FOUNDER'	=> append_sid(STK_INDEX, array('c' => 'user_group', 't' => 'manage_founders', 'mode' => 'promote', 'submit' => 1)),
+			'U_DEMOTE_FOUNDERS'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'manage_founders', 'mode' => 'demote', 'submit' => 1)),
+			'U_FIND_USER'		=> append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'searchuser', 'form' => 'select_user', 'field' => 'username', 'select_single' => 'true', 'form' => 'stk_promote_founder', 'field' => 'username')),
+			'U_PROMOTE_FOUNDER'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'user_group', 't' => 'manage_founders', 'mode' => 'promote', 'submit' => 1)),
 		));
 
 		$template->set_filenames(array(
@@ -58,7 +58,7 @@ class manage_founders
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $user, $request;
+		global $phpbb_root_path, $phpEx, $db, $user, $request;
 
 		if (!check_form_key('manage_founders'))
 		{
@@ -127,7 +127,7 @@ class manage_founders
 				// Get the correct user data and make sure that he exists
 				if (!function_exists('user_get_id_name'))
 				{
-					include (PHPBB_ROOT_PATH . 'includes/functions_user.' . PHP_EXT);
+					include ($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 				}
 
 				$user_id = $username = $user_type = array();
@@ -173,7 +173,7 @@ class manage_founders
 				// Success?
 				if ($db->sql_affectedrows() == 1)
 				{
-					trigger_error(user_lang('MAKE_FOUNDER_SUCCESS', append_sid(PHPBB_ROOT_PATH . 'memberlist.' . PHP_EXT, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
+					trigger_error(user_lang('MAKE_FOUNDER_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
 				}
 				trigger_error($user->lang['MAKE_FOUNDER_FAILED']);
 			break;

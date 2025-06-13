@@ -27,7 +27,7 @@ class erk_style_dir_repair
 
 	function run()
 	{
-		global $config, $db;
+		global $phpbb_root_path, $config, $db;
 
 		$config['default_style'] = (!isset($config['default_style']) || !$config['default_style']) ? 1 : $config['default_style'];
 		$sql = 'SELECT style_path
@@ -37,12 +37,14 @@ class erk_style_dir_repair
 		$t_path	= $db->sql_fetchfield('style_path', false, $result);
 		$db->sql_freeresult($result);
 
-		if (empty($t_path) || !is_dir(PHPBB_ROOT_PATH . 'styles/' . $t_path))
+		if (empty($t_path) || !is_dir($phpbb_root_path . 'styles/' . $t_path))
 		{
 			// Load the ac class
 			if (!class_exists('acp_styles'))
 			{
-				include PHPBB_ROOT_PATH . 'includes/acp/acp_styles.' . PHP_EXT;
+				global $phpEx;
+
+				include $phpbb_root_path . 'includes/acp/acp_styles.' . $phpEx;
 			}
 			$this->ac = new acp_styles();
 			$this->ac->main('', 'default');	// Bit hacky
@@ -57,9 +59,9 @@ class erk_style_dir_repair
 
 	function repair()
 	{
-		global $db;
+		global $phpbb_root_path, $db;
 
-		$stylelist = filelist(PHPBB_ROOT_PATH . 'styles/', '', 'cfg');
+		$stylelist = filelist($phpbb_root_path . 'styles/', '', 'cfg');
 		ksort($stylelist);
 
 		// Loop throught the files and try to find a style we can use.
@@ -72,7 +74,7 @@ class erk_style_dir_repair
 			}
 
 			// Read the cfg, should always be index 0
-			$items = parse_cfg_file(PHPBB_ROOT_PATH . 'styles/' . $styledirname . 'style.cfg');
+			$items = parse_cfg_file($phpbb_root_path . 'styles/' . $styledirname . 'style.cfg');
 
 			// Unify the name in the cfg to something used as a directory
 			// Spaces -> '_'
@@ -132,11 +134,11 @@ class erk_style_dir_repair
 	 */
 	function refresh()
 	{
-		global $db, $stk_no_error;
+		global $phpbb_root_path, $db, $stk_no_error;
 
 		// Fetch all the style dirs
 		$style_dirs = array();
-		if ($handle = opendir(PHPBB_ROOT_PATH . 'styles/'))
+		if ($handle = opendir($phpbb_root_path . 'styles/'))
 		{
 			while (false !== ($file = readdir($handle)))
 			{

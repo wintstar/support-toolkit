@@ -14,7 +14,7 @@ class orphaned_posts
 {
 	function display_options()
 	{
-		global $db, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $user, $stk_root_path, $phpbb_root_path, $phpEx;
 
 		//
 		// Orphaned topics
@@ -159,11 +159,11 @@ class orphaned_posts
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
-			'U_EMPTY_TOPICS'			=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'empty_topics')),
-			'U_ORPHANED_POSTS'			=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'orphaned_posts', 'submit' => 1)),
-			'U_ORPHANED_SHADOWS'		=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'orphaned_shadows')),
-			'U_FORUM_ORPHANED_POSTS'	=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'forum_orphaned_posts', 'submit' => 1)),
-			'U_FORUM_ORPHANED_TOPICS'	=> append_sid(STK_INDEX, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'forum_orphaned_topics', 'submit' => 1)),
+			'U_EMPTY_TOPICS'			=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'empty_topics')),
+			'U_ORPHANED_POSTS'			=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'orphaned_posts', 'submit' => 1)),
+			'U_ORPHANED_SHADOWS'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'orphaned_shadows')),
+			'U_FORUM_ORPHANED_POSTS'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'forum_orphaned_posts', 'submit' => 1)),
+			'U_FORUM_ORPHANED_TOPICS'	=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'orphaned_posts', 'mode' => 'forum_orphaned_topics', 'submit' => 1)),
 		));
 
 		$template->set_filenames(array(

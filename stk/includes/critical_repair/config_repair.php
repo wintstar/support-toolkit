@@ -20,10 +20,12 @@ class erk_config_repair
 {
 	function run()
 	{
-		if (!file_exists(PHPBB_ROOT_PATH . 'config.' . PHP_EXT))
+		global $stk_root_path, $phpbb_root_path, $phpEx;
+
+		if (!file_exists($phpbb_root_path . 'config.' . $phpEx))
 		{
 			$this->repair();
-			header('Location: ' . STK_INDEX);
+			header('Location: ' . $stk_root_path . 'index.' . $phpEx);
 			exit;
 		}
 		return true;
@@ -31,13 +33,13 @@ class erk_config_repair
 
 	function repair()
 	{
-		global $critical_repair, $user, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $critical_repair, $user, $lang;
 
 		$critical_repair->user_setup($user);
 
-		include(STK_ROOT_PATH . 'includes/functions.' . PHP_EXT);
-		include(STK_ROOT_PATH . 'language/' . $user->data['user_lang'] . '/common.' . PHP_EXT);
-		include(PHPBB_ROOT_PATH . 'language/' . $user->data['user_lang'] . '/install.' . PHP_EXT);
+		include($stk_root_path . 'includes/functions.' . $phpEx);
+		include($stk_root_path . 'language/' . $user->data['user_lang'] . '/common.' . $phpEx);
+		include($phpbb_root_path . 'language/' . $user->data['user_lang'] . '/install.' . $phpEx);
 
 		$available_dbms = $this->get_available_dbms();
 
@@ -102,7 +104,7 @@ class erk_config_repair
 			// Assume it will work ... if nothing goes wrong below
 			$written = true;
 
-			if (!($fp = @fopen(PHPBB_ROOT_PATH . 'config.' . PHP_EXT, 'w')))
+			if (!($fp = @fopen($phpbb_root_path . 'config.' . $phpEx, 'w')))
 			{
 				// Something went wrong ... so let's try another method
 				$written = false;
@@ -119,7 +121,7 @@ class erk_config_repair
 			if ($written)
 			{
 				// We may revert back to chmod() if we see problems with users not able to change their config.php file directly
-				chmod(PHPBB_ROOT_PATH . 'config.' . PHP_EXT, CHMOD_READ);
+				chmod($phpbb_root_path . 'config.' . $phpEx, CHMOD_READ);
 			}
 			else
 			{
@@ -140,8 +142,8 @@ class erk_config_repair
 					<meta http-equiv="content-style-type" content="text/css" />
 					<meta http-equiv="imagetoolbar" content="no" />
 					<title><?php echo $lang['CONFIG_REPAIR']; ?> - Support Toolkit</title>
-					<link href="<?php echo STK_ROOT_PATH; ?>style/style.css" rel="stylesheet" type="text/css" media="screen" />
-					<link href="<?php echo STK_ROOT_PATH; ?>style/erk_style.css" rel="stylesheet" type="text/css" media="screen" />
+					<link href="<?php echo $stk_root_path; ?>style/style.css" rel="stylesheet" type="text/css" media="screen" />
+					<link href="<?php echo $stk_root_path; ?>style/erk_style.css" rel="stylesheet" type="text/css" media="screen" />
 				</head>
 				<body id="errorpage">
 					<div id="wrap">
@@ -157,7 +159,7 @@ class erk_config_repair
 										<p>
 											<?php echo $lang['CONFIG_REPAIR_EXPLAIN']; ?>
 										</p>
-										<form id="stk" method="post" action="<?php echo STK_ROOT_PATH . 'erk.' . PHP_EXT; ?>" name="support_tool_kit">
+										<form id="stk" method="post" action="<?php echo $stk_root_path . 'erk.' . $phpEx; ?>" name="support_tool_kit">
 											<fieldset>
 												<?php if (!empty($error)) {?>
 													<div class="errorbox">
@@ -241,8 +243,8 @@ class erk_config_repair
 		if ($load_dbal)
 		{
 			// Include the DB layer
-			include(PHPBB_ROOT_PATH . 'phpbb/db/driver/driver_interface.' . PHP_EXT);
-			include(PHPBB_ROOT_PATH . 'phpbb/db/driver/driver.' . PHP_EXT);
+			include($phpbb_root_path . 'phpbb/db/driver/driver_interface.' . $phpEx);
+			include($phpbb_root_path . 'phpbb/db/driver/driver.' . $phpEx);
 			if ($dbms === 'mysqli' || $dbms === 'mysql' || $dbms === 'mssql' || $dbms === 'mssqlnative')
 			{
 				$dbms_base = $dbms;
@@ -254,11 +256,11 @@ class erk_config_repair
 				{
 					$dbms_base = 'mssql';
 				}
-				include(PHPBB_ROOT_PATH . 'phpbb/db/driver/' . $dbms_base . '_base.' . PHP_EXT);
+				include($phpbb_root_path . 'phpbb/db/driver/' . $dbms_base . '_base.' . $phpEx);
 			}
-			include(PHPBB_ROOT_PATH . 'phpbb/db/driver/' . $dbms . '.' . PHP_EXT);
-			include(PHPBB_ROOT_PATH . 'phpbb/db/tools/tools_interface.' . PHP_EXT);
-			include(PHPBB_ROOT_PATH . 'phpbb/db/tools/tools.' . PHP_EXT);
+			include($phpbb_root_path . 'phpbb/db/driver/' . $dbms . '.' . $phpEx);
+			include($phpbb_root_path . 'phpbb/db/tools/tools_interface.' . $phpEx);
+			include($phpbb_root_path . 'phpbb/db/tools/tools.' . $phpEx);
 		}
 
 		// Instantiate it and set return on error true
