@@ -1,13 +1,12 @@
 <?php
 /**
 *
-* @package Support Toolkit - SQL Query
+* @package Support Toolkit - Test English language Sheer
 * @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-
 /**
 * DO NOT CHANGE
 */
@@ -16,6 +15,9 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+* DO NOT CHANGE
+*/
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
@@ -38,17 +40,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ERROR_QUERY'					=> 'Fehlerhafte Abfrage',
-
-	'NO_RESULTS'					=> 'Kein Ergebnis',
-	'NO_SQL_QUERY'					=> 'Du musst eine Abfrage angeben, die ausgeführt werden soll.',
-
-	'QUERY_RESULT'					=> 'Abfrage-Ergebnis',
-
-	'SHOW_RESULTS'					=> 'Ergebnis anzeigen',
-	'SQL_QUERY'						=> 'SQL-Befehl ausführen',
-	'SQL_QUERY_EXPLAIN'				=> 'Gebe den SQL-Befehl ein, den du ausführen möchtest. Das Tool ersetzt „phpbb_“ mit dem Tabellen-Präfix deiner Installation.<br />Wenn die Option „Ergebnis anzeigen“ aktiviert ist, wird das Tool die Ergebnisse <em>(sofern vorhanden)</em> der Abfrage anzeigen.',
-
-	'SQL_QUERY_LEGEND'				=> 'SQL-Befehl',
-	'SQL_QUERY_SUCCESS'				=> 'Der SQL-Befehl wurde erfolgreich ausgeführt.',
+	'DATABASE_MANAGER'				=> 'Datenbank Verwaltung',
+	'DATABASE_MANAGER_EXPLAIN'		=> 'Auf dieser Seite kannst du deine Datenbank verwalten, Backups erstellen und Backups importieren.',
 ));
