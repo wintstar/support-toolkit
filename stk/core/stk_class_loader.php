@@ -29,15 +29,6 @@ class stk_class_loader
 	private $namespace;
 	private $path;
 	private $php_ext;
-	private $cache;
-
-	/**
-	* A map of looked up class names to paths relative to $this->path.
-	* This map is stored in cache and looked up if the cache is available.
-	*
-	* @var array
-	*/
-	private $cached_paths = array();
 
 	/**
 	* Creates a new \core\stk_class_loader, which loads files with the given
@@ -48,7 +39,7 @@ class stk_class_loader
 	* @param string $php_ext The file extension for PHP files
 	* @param \phpbb\cache\driver\driver_interface $cache An implementation of the phpBB cache interface.
 	*/
-	public function __construct($namespace, $path, $php_ext = 'php', \phpbb\cache\driver\driver_interface|null $cache = null)
+	public function __construct($namespace, $path, $php_ext = 'php')
 	{
 		if ($namespace[0] !== '\\')
 		{
@@ -58,30 +49,6 @@ class stk_class_loader
 		$this->namespace = $namespace;
 		$this->path = $path;
 		$this->php_ext = $php_ext;
-
-		$this->set_cache($cache);
-	}
-
-	/**
-	* Provide the class loader with a cache to store paths. If set to null, the
-	* the class loader will resolve paths by checking for the existence of every
-	* directory in the class name every time.
-	*
-	* @param \phpbb\cache\driver\driver_interface $cache An implementation of the phpBB cache interface.
-	*/
-	public function set_cache(\phpbb\cache\driver\driver_interface|null $cache = null)
-	{
-		if ($cache)
-		{
-			$this->cached_paths = $cache->get('class_loader_' . str_replace('\\', '__', $this->namespace));
-
-			if ($this->cached_paths === false)
-			{
-				$this->cached_paths = array();
-			}
-		}
-
-		$this->cache = $cache;
 	}
 
 	/**
@@ -111,11 +78,6 @@ class stk_class_loader
 	*/
 	public function resolve_path($class)
 	{
-		if (isset($this->cached_paths[$class]))
-		{
-			return $this->path . $this->cached_paths[$class] . '.' . $this->php_ext;
-		}
-
 		if (!preg_match('/^' . preg_quote($this->namespace, '/') . '[a-zA-Z0-9_\\\\]+$/', $class))
 		{
 			return false;
@@ -126,12 +88,6 @@ class stk_class_loader
 		if (!file_exists($this->path . $relative_path . '.' . $this->php_ext))
 		{
 			return false;
-		}
-
-		if ($this->cache)
-		{
-			$this->cached_paths[$class] = $relative_path;
-			$this->cache->put('class_loader_' . str_replace('\\', '__', $this->namespace), $this->cached_paths);
 		}
 
 		return $this->path . $relative_path . '.' . $this->php_ext;
