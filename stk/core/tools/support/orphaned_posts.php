@@ -246,7 +246,7 @@ class orphaned_posts
 
 					if (!function_exists('delete_topics'))
 					{
-						include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+						include $phpbb_root_path . 'includes/functions_admin.' . $phpEx;
 					}
 
 					$return = delete_topics('topic_id', $topic_ids);
@@ -326,7 +326,7 @@ class orphaned_posts
 
 					if (!function_exists('delete_posts'))
 					{
-						include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+						include $phpbb_root_path . 'includes/functions_admin.' . $phpEx;
 					}
 
 					$return = delete_posts('post_id', $post_ids);

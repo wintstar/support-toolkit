@@ -526,7 +526,7 @@ function phpbb_check_installation_exists($phpbb_root_path, $php_ext)
 	// Try opening config file
 	if (file_exists($phpbb_root_path . 'config.' . $php_ext))
 	{
-		include($phpbb_root_path . 'config.' . $php_ext);
+		include $phpbb_root_path . 'config.' . $php_ext;
 	}
 
 	return defined('PHPBB_INSTALLED');

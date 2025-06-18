@@ -117,7 +117,7 @@ class no_user_posts
 
 			if (!function_exists('delete_posts'))
 			{
-				include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+				include $phpbb_root_path . 'includes/functions_admin.' . $phpEx;
 			}
 
 			$return = delete_posts('post_id', $post_ids);

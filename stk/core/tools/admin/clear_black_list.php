@@ -32,7 +32,7 @@ class clear_black_list
 			}
 			if (!function_exists('user_ban'))
 			{
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 			}
 			if ($ban)
 			{

@@ -33,7 +33,7 @@ class reassign_thumbnails
 	{
 		global $config, $db, $lang, $cache, $template, $stk_root_path, $phpbb_root_path, $phpEx;
 
-		include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+		include_once $phpbb_root_path . 'includes/functions_posting.' . $phpEx;
 		ignore_user_abort(true);
 		set_time_limit(0);
 

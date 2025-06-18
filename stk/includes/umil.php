@@ -1166,7 +1166,7 @@ class umil
 
 			if (!class_exists($classname))
 			{
-				include((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file);
+				include (($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file;
 			}
 
 			$info = new $classname;
@@ -1230,7 +1230,7 @@ class umil
 
 		if (!class_exists('acp_modules'))
 		{
-			include($stk_root_path . 'includes/acp_modules.' . $phpEx);
+			include $stk_root_path . 'includes/acp_modules.' . $phpEx;
 			$user->add_lang('acp/modules');
 		}
 
@@ -1537,7 +1537,7 @@ class umil
 
 					if (!class_exists($classname))
 					{
-						include((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file);
+						include (($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file;
 					}
 
 					$info = new $classname;
@@ -1690,7 +1690,7 @@ class umil
 
 			if (!class_exists($classname))
 			{
-				include((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file);
+				include (($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file;
 			}
 
 			$info = new $classname;
@@ -1778,7 +1778,7 @@ class umil
 
 			if (!class_exists('acp_modules'))
 			{
-				include($stk_root_path . 'includes/acp_modules.' . $phpEx);
+				include $stk_root_path . 'includes/acp_modules.' . $phpEx;
 				$user->add_lang('acp/modules');
 			}
 			$acp_modules = new acp_modules();
@@ -1888,7 +1888,7 @@ class umil
 		{
 			global $phpbb_root_path, $phpEx;
 
-			include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
+			include $phpbb_root_path . 'includes/acp/auth.' . $phpEx;
 		}
 		$auth_admin = new auth_admin();
 
@@ -2395,7 +2395,7 @@ class umil
 		if (!function_exists('get_tables'))
 		{
 			global $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . 'includes/functions_compatibility.' . $phpEx);
+			include $phpbb_root_path . 'includes/functions_compatibility.' . $phpEx;
 		}
 
 		$tables = get_tables($this->db);
@@ -2451,7 +2451,7 @@ class umil
 		if (!function_exists('get_available_dbms'))
 		{
 			global $phpbb_root_path, $phpEx;
-			include("functions_install.$phpEx");
+			include "functions_install.$phpEx";
 		}
 
 		/*

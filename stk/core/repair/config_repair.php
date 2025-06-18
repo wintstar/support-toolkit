@@ -35,9 +35,9 @@ class config_repair
 		* $critical_repair->user_setup($user);
 		*
 		*/
-		include($stk_root_path . 'includes/functions.' . $phpEx);
-		include($stk_root_path . 'language/' . $user->data['user_lang'] . '/common.' . $phpEx);
-		include($phpbb_root_path . 'language/' . $user->data['user_lang'] . '/install.' . $phpEx);
+		include $stk_root_path . 'includes/functions.' . $phpEx;
+		include $stk_root_path . 'language/' . $user->data['user_lang'] . '/common.' . $phpEx;
+		include $phpbb_root_path . 'language/' . $user->data['user_lang'] . '/install.' . $phpEx;
 
 		$available_dbms = $this->get_available_dbms();
 
@@ -241,8 +241,8 @@ class config_repair
 		if ($load_dbal)
 		{
 			// Include the DB layer
-			include($phpbb_root_path . 'phpbb/db/driver/driver_interface.' . $phpEx);
-			include($phpbb_root_path . 'phpbb/db/driver/driver.' . $phpEx);
+			include $phpbb_root_path . 'phpbb/db/driver/driver_interface.' . $phpEx;
+			include $phpbb_root_path . 'phpbb/db/driver/driver.' . $phpEx;
 			if ($dbms === 'mysqli' || $dbms === 'mysql' || $dbms === 'mssql' || $dbms === 'mssqlnative')
 			{
 				$dbms_base = $dbms;
@@ -254,11 +254,11 @@ class config_repair
 				{
 					$dbms_base = 'mssql';
 				}
-				include($phpbb_root_path . 'phpbb/db/driver/' . $dbms_base . '_base.' . $phpEx);
+				include $phpbb_root_path . 'phpbb/db/driver/' . $dbms_base . '_base.' . $phpEx;
 			}
-			include($phpbb_root_path . 'phpbb/db/driver/' . $dbms . '.' . $phpEx);
-			include($phpbb_root_path . 'phpbb/db/tools/tools_interface.' . $phpEx);
-			include($phpbb_root_path . 'phpbb/db/tools/tools.' . $phpEx);
+			include $phpbb_root_path . 'phpbb/db/driver/' . $dbms . '.' . $phpEx;
+			include $phpbb_root_path . 'phpbb/db/tools/tools_interface.' . $phpEx;
+			include $phpbb_root_path . 'phpbb/db/tools/tools.' . $phpEx;
 		}
 
 		// Instantiate it and set return on error true

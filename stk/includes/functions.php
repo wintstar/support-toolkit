@@ -262,8 +262,8 @@ function stk_add_lang($lang_file)
 		$default_lang = $user->data['user_lang'];
 	}
 
-	include($phpbb_root_path . 'language/' . $default_lang . '/common.' . $phpEx);
-	include($stk_root_path . 'language/' . $default_lang . '/' . $lang_file . '.' . $phpEx);
+	include $phpbb_root_path . 'language/' . $default_lang . '/common.' . $phpEx;
+	include $stk_root_path . 'language/' . $default_lang . '/' . $lang_file . '.' . $phpEx;
 
 	if (!defined('IN_ERK') && isset($user->data['user_id']))
 	{
@@ -587,7 +587,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 		if (!isset($critical_repair))
 		{
-			include($stk_root_path . 'includes/critical_repair.' . $phpEx);
+			include $stk_root_path . 'includes/critical_repair.' . $phpEx;
 			$critical_repair = new critical_repair();
 		}
 

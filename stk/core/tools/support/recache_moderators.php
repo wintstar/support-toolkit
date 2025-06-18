@@ -33,7 +33,7 @@ class recache_moderators
 		{
 			global $phpbb_root_path, $phpEx;
 
-			include("{$phpbb_root_path}includes/functions_admin.$phpEx");
+			include "{$phpbb_root_path}includes/functions_admin.$phpEx";
 		}
 
 		cache_moderators();

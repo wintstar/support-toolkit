@@ -113,7 +113,7 @@ class acp_modules
 				// need to check class exists again because previous checks triggered autoloading
 				if (!class_exists($info_class) && file_exists($directory . $old_info_class_file . '.' . $phpEx))
 				{
-					include($directory . $old_info_class_file . '.' . $phpEx);
+					include $directory . $old_info_class_file . '.' . $phpEx;
 				}
 			}
 

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 $level = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
 error_reporting($level);
 
-require($stk_root_path . 'phpbb_common.' . $phpEx);
+require $stk_root_path . 'phpbb_common.' . $phpEx;
 
 define('ADMIN_START', true);
 
@@ -35,14 +35,14 @@ define('IN_LOGIN', true);
 // Prepare some vars
 $stk_no_error = false;
 
-require($stk_root_path . 'core/stk_class_loader.' . $phpEx);
+require $stk_root_path . 'core/stk_class_loader.' . $phpEx;
 
 $stk_class_loader = new \core\stk_class_loader('core\\', "{$stk_root_path}core/", $phpEx);
 $stk_class_loader->register();
 
 // Include all common stuff
-require($stk_root_path . 'includes/fatal_error_handler.' . $phpEx);
-require($stk_root_path . 'includes/functions.' . $phpEx);
+require $stk_root_path . 'includes/fatal_error_handler.' . $phpEx;
+require $stk_root_path . 'includes/functions.' . $phpEx;
 require $stk_root_path . 'includes/umil.' . $phpEx;
 
 // phpBBs common.php registers hooks, these hooks tend to cause problems with the

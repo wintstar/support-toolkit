@@ -127,7 +127,7 @@ class manage_founders
 				// Get the correct user data and make sure that he exists
 				if (!function_exists('user_get_id_name'))
 				{
-					include ($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+					include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 				}
 
 				$user_id = $username = $user_type = array();

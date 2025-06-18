@@ -75,7 +75,7 @@ class users_nogroups
 			trigger_error($lang['NO_USERS_SELECTED'], E_USER_WARNING);
 		}
 
-		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 
 		// Collect the groups data
 		$groups = array(

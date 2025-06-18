@@ -184,7 +184,7 @@ class add_user
 
 		if (!function_exists('validate_data'))
 		{
-			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+			include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 		}
 
 		$error = validate_data($data, array(

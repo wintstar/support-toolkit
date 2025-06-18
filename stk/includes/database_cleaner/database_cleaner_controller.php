@@ -58,7 +58,7 @@ class database_cleaner_controller
 			{
 				if (!function_exists('user_add'))
 				{
-					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+					include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 				}
 
 				// Remove existing bots
@@ -376,7 +376,7 @@ class database_cleaner_controller
 					$group_id = false;
 					if (!function_exists('group_create'))
 					{
-						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+						include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 					}
 					group_create($group_id, $this->db_cleaner->data->groups[$name]['group_type'], $name, $this->db_cleaner->data->groups[$name]['group_desc'], array('group_colour' => $this->db_cleaner->data->groups[$name]['group_colour'], 'group_legend' => $this->db_cleaner->data->groups[$name]['group_legend'], 'group_avatar' => $this->db_cleaner->data->groups[$name]['group_avatar'], 'group_max_recipients' => $this->db_cleaner->data->groups[$name]['group_max_recipients']));
 				}
@@ -384,7 +384,7 @@ class database_cleaner_controller
 				{
 					if (!function_exists('group_delete'))
 					{
-						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+						include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 					}
 					// Remove it
 					$db->sql_query('SELECT group_id FROM ' . GROUPS_TABLE . ' WHERE group_name = \'' . $db->sql_escape($name) . '\'');
@@ -1055,7 +1055,7 @@ class database_cleaner_controller
 		{
 			if (!class_exists('acp_modules'))
 			{
-				include($stk_root_path . 'includes/acp_modules.' . $phpEx);
+				include $stk_root_path . 'includes/acp_modules.' . $phpEx;
 			}
 
 			$acp_tools = new acp_modules();
@@ -1116,7 +1116,7 @@ class database_cleaner_controller
 
 						if (file_exists($phpbb_root_path . 'includes/'. $info_file))
 						{
-							include_once($phpbb_root_path . 'includes/'. $info_file);
+							include_once $phpbb_root_path . 'includes/'. $info_file;
 							$classname = '' . $base_name . '_info';
 							$info = new $classname;
 							$module = $info->module();

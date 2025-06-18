@@ -134,7 +134,7 @@ class sanitise_anonymous_user
 
 				if (!function_exists('group_user_del'))
 				{
-					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+					include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 				}
 
 				// Loop through the others and remove this user from all these groups
@@ -186,7 +186,7 @@ class sanitise_anonymous_user
 		// Fetch the groups our user is in
 		if (!function_exists('group_memberships'))
 		{
-			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+			include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 		}
 		$groups = group_memberships(false, ANONYMOUS);
 

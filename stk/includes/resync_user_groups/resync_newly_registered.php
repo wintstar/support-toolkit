@@ -120,7 +120,7 @@ class resync_newly_registered
 		{
 			global $phpbb_root_path, $phpEx;
 
-			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+			include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
 		}
 
 		if (($error = call_user_func_array($function, $args)) !== false)

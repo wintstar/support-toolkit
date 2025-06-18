@@ -20,8 +20,8 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-require($phpbb_root_path . 'includes/startup.' . $phpEx);
-require($phpbb_root_path . 'phpbb/class_loader.' . $phpEx);
+require $phpbb_root_path . 'includes/startup.' . $phpEx;
+require $phpbb_root_path . 'phpbb/class_loader.' . $phpEx;
 
 $phpbb_class_loader = new \phpbb\class_loader('phpbb\\', "{$phpbb_root_path}phpbb/", $phpEx);
 $phpbb_class_loader->register();
@@ -39,12 +39,12 @@ $phpbb_adm_relative_path = (isset($phpbb_adm_relative_path)) ? $phpbb_adm_relati
 $phpbb_admin_path = (defined('PHPBB_ADMIN_PATH')) ? PHPBB_ADMIN_PATH : $phpbb_root_path . $phpbb_adm_relative_path;
 
 // Include files
-require($phpbb_root_path . 'includes/functions.' . $phpEx);
-require($phpbb_root_path . 'includes/functions_content.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_compatibility.' . $phpEx);
+require $phpbb_root_path . 'includes/functions.' . $phpEx;
+require $phpbb_root_path . 'includes/functions_content.' . $phpEx;
+include $phpbb_root_path . 'includes/functions_compatibility.' . $phpEx;
 
-require($phpbb_root_path . 'includes/constants.' . $phpEx);
-require($phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx);
+require $phpbb_root_path . 'includes/constants.' . $phpEx;
+require $phpbb_root_path . 'includes/utf/utf_tools.' . $phpEx;
 
 // Registered before building the container so the development environment stay capable of intercepting
 // the container builder exceptions.
@@ -112,7 +112,7 @@ $phpbb_hook_finder = $phpbb_container->get('hook_finder');
 
 foreach ($phpbb_hook_finder->find() as $hook)
 {
-	@include($phpbb_root_path . 'includes/hooks/' . $hook . '.' . $phpEx);
+	@include $phpbb_root_path . 'includes/hooks/' . $hook . '.' . $phpEx;
 }
 
 /**

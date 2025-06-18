@@ -60,7 +60,7 @@ $stk_passwd = $stk_passwd_expiration = false;
 if (file_exists($stk_root_path . 'passwd.' . $phpEx) && $user->data['user_type'] != USER_FOUNDER)
 {
 	// Include the file
-	include($stk_root_path . 'passwd.' . $phpEx);
+	include $stk_root_path . 'passwd.' . $phpEx;
 
 	// Can we use trust this password
 	if ($stk_passwd_expiration === false || time() > $stk_passwd_expiration)

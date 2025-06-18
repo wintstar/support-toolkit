@@ -39,7 +39,7 @@ class erk
 		// Load functions_admin.php if required
 		if (!function_exists('filelist'))
 		{
-			include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+			include $phpbb_root_path . 'includes/functions_admin.' . $phpEx;
 		}
 
 		// Set the path

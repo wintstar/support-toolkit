@@ -3,7 +3,7 @@
 *
 * @package Support Toolkit - Clear Extensions
 * @version $Id$
-* @copyright (c) 2014 Sheer
+* @copyright (c) 2025 wintstar, St. Frank www.stephan-frank.de
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -188,7 +188,6 @@ class clear_extensions
 
 		$template->assign_vars(array(
 			'S_ACTION'		=> append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=clear_extensions'),
-			'L_UP_TO_DATE'	=> sprintf($user->lang['UP_TO_DATE'], ''),
 		));
 
 		$template->set_filenames(array(
