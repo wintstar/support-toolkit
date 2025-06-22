@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Duplicate Permission Remover
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,7 +18,8 @@ class remove_orphaned_permissions
 
 	function run_tool()
 	{
-		global $stk_root_path, $phpEx, $db, $cache;
+		global $stk_lang, $stk_root_path, $phpEx, $db, $cache;
+
 		$orphaned_permissions = $orphaned_users_permissions = array();
 
 		// Find orphaned_permissions from groups
@@ -86,11 +86,11 @@ class remove_orphaned_permissions
 			}
 
 			$cache->purge();
-			$message = user_lang('ORPHANED_PERMISSIONS_DELETED');
+			$message = $stk_lang->lang('ORPHANED_PERMISSIONS_DELETED');
 		}
 		else
 		{
-			$message = user_lang('ORPHANED_PERMISSIONS_NOT_FIND');
+			$message = $stk_lang->lang('ORPHANED_PERMISSIONS_NOT_FIND');
 		}
 
 		meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=support'));

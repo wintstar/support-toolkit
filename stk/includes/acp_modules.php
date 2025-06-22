@@ -40,7 +40,7 @@ class acp_modules
 	*/
 	function get_module_row($module_id)
 	{
-		global $db, $user;
+		global $db, $stk_lang;
 
 		$sql = 'SELECT *
 			FROM ' . MODULES_TABLE . "
@@ -52,7 +52,7 @@ class acp_modules
 
 		if (!$row)
 		{
-			trigger_error($user->lang['NO_MODULE'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_MODULE') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 		}
 
 		return $row;
@@ -138,7 +138,7 @@ class acp_modules
 	*/
 	function make_module_select($select_id = false, $ignore_id = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $ignore_noncat = false)
 	{
-		global $db, $user, $auth, $config;
+		global $db, $auth, $config;
 
 		$sql = 'SELECT module_id, module_enabled, module_basename, parent_id, module_langname, left_id, right_id, module_auth
 			FROM ' . MODULES_TABLE . "
@@ -273,9 +273,9 @@ class acp_modules
 	*/
 	function lang_name($module_langname)
 	{
-		global $user;
+		global $stk_lang;
 
-		return (!empty($user->lang[$module_langname])) ? $user->lang[$module_langname] : $module_langname;
+		return (!is_null($stk_lang->lang($module_langname))) ? $stk_lang->lang($module_langname) : $module_langname;
 	}
 
 	/**
@@ -286,7 +286,7 @@ class acp_modules
 	*/
 	function update_module_data(&$module_data, $run_inline = false)
 	{
-		global $db, $user;
+		global $db, $stk_lang;
 
 		if (!isset($module_data['module_id']))
 		{
@@ -308,7 +308,7 @@ class acp_modules
 						return 'PARENT_NO_EXIST';
 					}
 
-					trigger_error($user->lang['PARENT_NO_EXIST'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+					trigger_error($stk_lang->lang('PARENT_NO_EXIST') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
 
 				// Workaround
@@ -364,7 +364,7 @@ class acp_modules
 
 				if (sizeof($branch))
 				{
-					return array($user->lang['NO_CATEGORY_TO_MODULE']);
+					return array($stk_lang->lang('NO_CATEGORY_TO_MODULE'));
 				}
 			}
 
@@ -479,7 +479,7 @@ class acp_modules
 	*/
 	function delete_module($module_id)
 	{
-		global $db, $user;
+		global $db, $stk_lang;
 
 		$row = $this->get_module_row($module_id);
 
@@ -487,7 +487,7 @@ class acp_modules
 
 		if (sizeof($branch))
 		{
-			return array($user->lang['CANNOT_REMOVE_MODULE']);
+			return array($stk_lang->lang('CANNOT_REMOVE_MODULE'));
 		}
 
 		// If not move

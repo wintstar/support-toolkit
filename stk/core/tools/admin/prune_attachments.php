@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Prune Attachments
- * @copyright (c) 2015 phpBBGuru Sheer
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) 2015 phpBBGuru Sheer
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 namespace core\tools\admin;
 
@@ -22,7 +22,7 @@ class prune_attachments
 
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request, $stk_lang;
 		$list = '';
 		// For further use if make extension "Attachments in subfolders"
 		$subfolders = false;
@@ -110,13 +110,13 @@ class prune_attachments
 			}
 			else
 			{
-				$list = (sizeof($unsuccess)) ? '' : user_lang('PRUNE_ATTACHMENTS_FINISHED');
+				$list = (sizeof($unsuccess)) ? '' : $stk_lang->lang('PRUNE_ATTACHMENTS_FINISHED');
 				$exit = true;
 			}
 
 			if (sizeof($unsuccess))
 			{
-				$list .= '' . user_lang('PRUNE_ATTACHMENTS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
+				$list .= '' . $stk_lang->lang('PRUNE_ATTACHMENTS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
 			}
 
 			if ($exit)
@@ -134,11 +134,11 @@ class prune_attachments
 			else
 			{
 				meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=prune_attachments&sa=true'));
-				trigger_error('' . $lang['PRUNE_ATTACHMENTS_PROGRESS'] . '<br />' . $list . '');
+				trigger_error('' . $stk_lang->lang('PRUNE_ATTACHMENTS_PROGRESS') . '<br />' . $list . '');
 			}
 		}
 
-		page_header(user_lang('PRUNE_ATTACHMENTS'));
+		page_header($stk_lang->lang('PRUNE_ATTACHMENTS'));
 
 		$template->assign_vars(array(
 			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=prune_attachments&amp;go=1'),

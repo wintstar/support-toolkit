@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Test
-* @version $Id$
-* @copyright (c) 2010 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,11 +18,11 @@ class php_info
 	*/
 	function display_options()
 	{
-		global $template, $user, $db, $config, $lang;
+		global $template, $user, $db, $config, $stk_lang;
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header($lang['PHP_INFO']);
+		page_header($stk_lang->lang('PHP_INFO'));
 
 		ob_start();
 		phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_VARIABLES);

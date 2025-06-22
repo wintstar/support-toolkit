@@ -2,9 +2,8 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -23,7 +22,7 @@ if (!defined('IN_PHPBB'))
 */
 function build_cfg_template($tpl_type, $name, $vars)
 {
-	global $lang, $request;
+	global $request, $stk_lang;
 
 	$tpl = array();
 
@@ -66,8 +65,8 @@ function build_cfg_template($tpl_type, $name, $vars)
 			$tpl_type_cond = explode('_', $tpl_type[1]);
 			$type_no = ($tpl_type_cond[0] == 'disabled' || $tpl_type_cond[0] == 'enabled') ? false : true;
 
-			$tpl_no = '<label><input type="radio" name="' . $name . '" value="0"' . $name_no . ' class="radio" /> ' . (($type_no) ? $lang['NO'] : $lang['DISABLED']) . '</label>';
-			$tpl_yes = '<label><input type="radio" id="' . $name . '" name="' . $name . '" value="1"' . $name_yes . ' class="radio" /> ' . (($type_no) ? $lang['YES'] : $lang['ENABLED']) . '</label>';
+			$tpl_no = '<label><input type="radio" name="' . $name . '" value="0"' . $name_no . ' class="radio" /> ' . (($type_no) ? $stk_lang->lang('NO') : $stk_lang->lang('DISABLED')) . '</label>';
+			$tpl_yes = '<label><input type="radio" id="' . $name . '" name="' . $name . '" value="1"' . $name_yes . ' class="radio" /> ' . (($type_no) ? $stk_lang->lang('YES') : $stk_lang->lang('ENABLED')) . '</label>';
 
 			$tpl['tpl'] = ($tpl_type_cond[0] == 'yes' || $tpl_type_cond[0] == 'enabled') ? $tpl_yes . $tpl_no : $tpl_no . $tpl_yes;
 		break;
@@ -165,82 +164,9 @@ function build_cfg_template($tpl_type, $name, $vars)
 */
 function use_lang(&$lang_key)
 {
-	global $user;
+	global $stk_lang;
 
-	$lang_key = user_lang($lang_key);
-}
-
-/**
-* A wrapper function for the phpBB $user->lang() call. This method was introduced
-* in phpBB 3.0.3. In all versions > 3.0.3 this function will simply call the method
-* for the other versions this method will imitate the method as seen in 3.0.3.
-*
-* More advanced language substitution
-* Function to mimic sprintf() with the possibility of using phpBB's language system to substitute nullar/singular/plural forms.
-* Params are the language key and the parameters to be substituted.
-* This function/functionality is inspired by SHS` and Ashe.
-*
-* Example call: <samp>$user->lang('NUM_POSTS_IN_QUEUE', 1);</samp>
-*/
-function user_lang()
-{
-	global $user, $lang;
-
-	$args = func_get_args();
-
-	$key = $args[0];
-
-	// Return if language string does not exist
-	if (!isset($lang[$key]) || (!is_string($lang[$key]) && !is_array($lang[$key])))
-	{
-		return $key;
-	}
-
-	// If the language entry is a string, we simply mimic sprintf() behaviour
-	if (is_string($lang[$key]))
-	{
-		if (sizeof($args) == 1)
-		{
-			return $lang[$key];
-		}
-
-		// Replace key with language entry and simply pass along...
-		$args[0] = $lang[$key];
-		return call_user_func_array('sprintf', $args);
-	}
-
-	// It is an array... now handle different nullar/singular/plural forms
-	$key_found = false;
-
-	// We now get the first number passed and will select the key based upon this number
-	for ($i = 1, $num_args = sizeof($args); $i < $num_args; $i++)
-	{
-		if (is_int($args[$i]))
-		{
-			$numbers = array_keys($lang[$key]);
-
-			foreach ($numbers as $num)
-			{
-				if ($num > $args[$i])
-				{
-					break;
-				}
-
-				$key_found = $num;
-			}
-		}
-	}
-
-	// Ok, let's check if the key was found, else use the last entry (because it is mostly the plural form)
-	if ($key_found === false)
-	{
-		$numbers = array_keys($lang[$key]);
-		$key_found = end($numbers);
-	}
-
-	// Use the language string we determined and pass it to sprintf()
-	$args[0] = $lang[$key][$key_found];
-	return call_user_func_array('sprintf', $args);
+	$lang_key = $stk_lang->lang($lang_key);
 }
 
 /**
@@ -249,25 +175,13 @@ function user_lang()
 * @param	String	$lang_file	the name of the language file
 
 */
-function stk_add_lang($lang_file)
+function template_convert_lang()
 {
-	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $lang, $user, $config;
+	global $template, $stk_lang;
 
-	if (empty($user->data) || !$user->data['user_lang'] || $user->data['user_id'] == 1)
+	if (!defined('IN_ERK'))
 	{
-		$default_lang = $config['default_lang'];
-	}
-	else
-	{
-		$default_lang = $user->data['user_lang'];
-	}
-
-	include $phpbb_root_path . 'language/' . $default_lang . '/common.' . $phpEx;
-	include $stk_root_path . 'language/' . $default_lang . '/' . $lang_file . '.' . $phpEx;
-
-	if (!defined('IN_ERK') && isset($user->data['user_id']))
-	{
-		foreach($lang as $key => $value)
+		foreach($stk_lang->get_lang_array() as $key => $value)
 		{
 			$template->assign_var('L_' . $key, $value);
 		}
@@ -293,7 +207,7 @@ function stk_add_lang($lang_file)
 */
 function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
 {
-	global $user, $template, $db, $request, $lang;
+	global $user, $template, $db, $request, $stk_lang;
 	global $config, $phpbb_path_helper;
 
 	if (isset($_POST['cancel']))
@@ -301,7 +215,7 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
 		return false;
 	}
 
-	$confirm = ($lang['YES'] === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
+	$confirm = ($stk_lang->lang('YES') === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
 
 	if ($check && $confirm)
 	{
@@ -335,16 +249,13 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
 	// generate activation key
 	$confirm_key = gen_rand_string(10);
 
-	$confirm_title	= (!isset($lang[$title])) ? $lang['CONFIRM'] : $lang[$title];
-	$confirm_text 	= (!isset($lang[$title . '_CONFIRM'])) ? $title : $lang[$title . '_CONFIRM'];
-
 	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 	{
-		adm_page_header($confirm_title);
+		adm_page_header(is_null($stk_lang->lang($title)) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
 	}
 	else
 	{
-		page_header($confirm_title);
+		page_header(is_null($stk_lang->lang($title)) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
 	}
 
 	$template->set_filenames(array(
@@ -364,10 +275,10 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
 	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
 
 	$template->assign_vars(array(
-		'MESSAGE_TITLE'		=> $confirm_title,
-		'MESSAGE_TEXT'		=> $confirm_text,
+		'MESSAGE_TITLE'		=> (is_null($stk_lang->lang($title))) ? $user->lang['CONFIRM'] : $stk_lang->lang($title),
+		'MESSAGE_TEXT'		=> (is_null($stk_lang->lang($title . '_CONFIRM'))) ? $title : $stk_lang->lang($title . '_CONFIRM'),
 
-		'YES_VALUE'			=> $lang['YES'],
+		'YES_VALUE'			=> $stk_lang->lang('YES'),
 		'S_CONFIRM_ACTION'	=> $u_action,
 		'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields)
 	);
@@ -396,7 +307,7 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
  */
 function perform_unauthed_quick_tasks($action, $submit = false)
 {
-	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $umil, $lang, $request, $user;
+	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $umil, $stk_lang, $request, $user;
 
 	switch ($action)
 	{
@@ -405,7 +316,7 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			setcookie('stk_token', '', (time() - 31536000));
 			$user->unset_admin();
 			meta_refresh(3, append_sid($phpbb_root_path . 'index.' . $phpEx));
-			trigger_error($lang['STK_LOGOUT_SUCCESS']);
+			trigger_error($stk_lang->lang('STK_LOGOUT_SUCCESS'));
 		break;
 
 		// Generate the passwd file
@@ -417,11 +328,11 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			$_pass_exprire = time() + 21600;
 
 			// Print a message and tell the user what to do and where to download this page
-			page_header($lang['GEN_PASS_FILE'], false);
+			page_header($stk_lang->lang('GEN_PASS_FILE'), false);
 
 			$template->assign_vars(array(
-				'PASS_GENERATED'			=> sprintf($lang['PASS_GENERATED'], $_pass_string, $user->format_date($_pass_exprire, false, true)),
-				'PASS_GENERATED_REDIRECT'	=> sprintf($lang['PASS_GENERATED_REDIRECT'], append_sid($stk_root_path . 'index.' . $phpEx)),
+				'PASS_GENERATED'			=> $stk_lang->lang('PASS_GENERATED', $_pass_string, $user->format_date($_pass_exprire, false, true)),
+				'PASS_GENERATED_REDIRECT'	=> $stk_lang->lang('PASS_GENERATED_REDIRECT', append_sid($stk_root_path . 'index.' . $phpEx)),
 				'S_HIDDEN_FIELDS'			=> build_hidden_fields(array('pass_string' => $_pass_string, 'pass_exp' => $_pass_exprire)),
 				'U_ACTION'					=> append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'downpasswdfile')),
 			));
@@ -440,7 +351,7 @@ function perform_unauthed_quick_tasks($action, $submit = false)
 			// Something went wrong, stop execution
 			if (!isset($_POST['download_passwd']) || empty($_pass_string) || $_pass_exprire <= 0)
 			{
-				trigger_error($lang['GEN_PASS_FAILED'], E_USER_ERROR);
+				trigger_error($stk_lang->lang('GEN_PASS_FAILED'), E_USER_ERROR);
 			}
 
 			// Create the file and let the user download it
@@ -474,7 +385,7 @@ if (!defined('IN_PHPBB') || !defined('STK_VERSION'))
  */
 function perform_authed_quick_tasks($action)
 {
-	global $stk_root_path, $phpEx, $user;
+	global $stk_root_path, $phpEx, $stk_lang;
 
 	$logout = false;
 
@@ -491,7 +402,7 @@ function perform_authed_quick_tasks($action)
 			if (file_exists($stk_root_path . 'passwd.' . $phpEx) && false === @unlink($stk_root_path . 'passwd.' . $phpEx))
 			{
 				// Shouldn't happen. Kill the script
-				trigger_error($user->lang['FAIL_REMOVE_PASSWD'], E_USER_ERROR);
+				trigger_error($stk_lang->lang('FAIL_REMOVE_PASSWD'), E_USER_ERROR);
 			}
 
 			// Log him out
@@ -522,12 +433,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 {
 	// First and foremost handle the case where phpBB calls trigger error
 	// but the STK really needs to continue.
-	global $stk_root_path, $phpEx, $critical_repair, $stk_no_error, $user, $lang;
-
-	if (!isset($lang))
-	{
-		stk_add_lang('common');
-	}
+	global $stk_root_path, $phpEx, $critical_repair, $stk_no_error, $user, $stk_lang;
 
 	if ($stk_no_error === true)
 	{
@@ -582,7 +488,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 		// Set out own message if needed
 		if ($errno == E_USER_ERROR)
 		{
-			$msg_text = user_lang('STK_FATAL_ERROR', $stk_root_path, $phpEx);
+			$msg_text = $stk_lang->lang('STK_FATAL_ERROR', $stk_root_path, $phpEx);
 		}
 
 		if (!isset($critical_repair))
@@ -648,17 +554,17 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 		case E_USER_ERROR:
 
-			if (!empty($user) && !empty($user->lang))
+			if (!empty($user))
 			{
-				$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
-				$msg_title = (!isset($msg_title)) ? $user->lang['GENERAL_ERROR'] : ((!empty($user->lang[$msg_title])) ? $user->lang[$msg_title] : $msg_title);
+				$msg_text = (!is_null($stk_lang->lang($msg_text))) ? $stk_lang->lang($msg_text) : $msg_text;
+				$msg_title = (!isset($msg_title)) ? $stk_lang->lang('GENERAL_ERROR') : ((!is_null($stk_lang->lang($msg_title))) ? $stk_lang->lang($msg_title) : $msg_title);
 
-				$l_return_index = sprintf($user->lang['RETURN_INDEX'], '<a href="' . $phpbb_root_path . '">', '</a>');
+				$l_return_index = $stk_lang->lang('RETURN_INDEX', '<a href="' . $phpbb_root_path . '">', '</a>');
 				$l_notify = '';
 
 				if (!empty($config['board_contact']))
 				{
-					$l_notify = '<p>' . sprintf($user->lang['NOTIFY_ADMIN_EMAIL'], $config['board_contact']) . '</p>';
+					$l_notify = '<p>' . $stk_lang->lang('NOTIFY_ADMIN_EMAIL', $config['board_contact']) . '</p>';
 				}
 			}
 			else
@@ -702,7 +608,7 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 			echo '<!DOCTYPE html>';
 			echo "\r\n";
-			echo '<html dir="' . $user->lang['DIRECTION'] . '" lang="' . $user->lang['USER_LANG'] . '">';
+			echo '<html dir="' . $stk_lang->lang('DIRECTION') . '" lang="' . $stk_lang->lang('USER_LANG') . '">';
 			echo "\r\n";
 			echo '<head>';
 			echo '<meta charset="utf-8">';
@@ -771,8 +677,8 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 				stk_send_status_line(404, 'Not Found');
 			}
 
-			$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
-			$msg_title = (!isset($msg_title)) ? $lang['INFORMATION'] : ((!empty($lang[$msg_title])) ? $lang[$msg_title] : $msg_title);
+			$msg_text = (!is_null($stk_lang->lang($msg_text))) ? $stk_lang->lang($msg_text) : $msg_text;
+			$msg_title = (!isset($msg_title)) ? $stk_lang->lang('INFORMATION') : ((!is_null($stk_lang->lang($msg_title))) ? $stk_lang->lang($msg_title) : $msg_title);
 
 			if (!defined('HEADER_INC'))
 			{
@@ -854,7 +760,7 @@ if (!function_exists('adm_back_link'))
 	*/
 	function adm_back_link($u_action)
 	{
-		return '<br /><br /><a href="' . $u_action . '">&laquo; ' . user_lang('BACK_TO_PREV') . '</a>';
+		return '<br /><br /><a href="' . $u_action . '">&laquo; ' . $stk_lang->lang('BACK_TO_PREV') . '</a>';
 	}
 }
 
@@ -1059,7 +965,7 @@ function sinc_stats()
 */
 function get_groups()
 {
-	global $lang;
+	global $stk_lang;
 	static $option_list = null;
 	$args = func_get_args();
 
@@ -1081,7 +987,7 @@ function get_groups()
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
-			$group_name = (($row['group_type'] == GROUP_SPECIAL) && isset($lang['G_' . $row['group_name']])) ? $lang['G_' . $row['group_name']] : $row['group_name'];
+			$group_name = (($row['group_type'] == GROUP_SPECIAL) && !is_null($stk_lang->lang('G_' . $row['group_name']))) ? $stk_lang->lang('G_' . $row['group_name']) : $row['group_name'];
 			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
 		}
 
@@ -1102,7 +1008,7 @@ function get_groups()
 
 function delete_style($style)
 {
-	global $db, $lang, $config;
+	global $db, $stk_lang, $config;
 
 	$id = $style['style_id'];
 	$path = $style['style_path'];
@@ -1122,7 +1028,7 @@ function delete_style($style)
 		// try to delete parent
 		if (!delete_style($conflict))
 		{
-			return sprintf($lang['STYLE_UNINSTALL_DEPENDENT'], $style['style_name']);
+			return $stk_lang->lang('STYLE_UNINSTALL_DEPENDENT', $style['style_name']);
 		}
 	}
 
@@ -1195,9 +1101,9 @@ function output($msg)
 
 function check_json($dir, $file_name)
 {
-	global $phpbb_root_path, $lang, $default_lang, $user;
+	global $phpbb_root_path, $stk_lang, $default_lang, $user;
 
-	stk_add_lang('ext_cleaner');
+	$stk_lang->add_lang('ext_cleaner');
 
 	if (file_exists($phpbb_root_path . $dir . '/' . $file_name . '.json'))
 	{
@@ -1207,51 +1113,51 @@ function check_json($dir, $file_name)
 
 		switch(json_last_error()) {
 			case JSON_ERROR_NONE:
-				$message = sprintf($lang['EXT_JSON_ERROR_NONE'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_NONE', $file_name);
 				$error_type = JSON_ERROR_NONE;
 			break;
 			case JSON_ERROR_DEPTH:
-				$message = sprintf($lang['EXT_JSON_ERROR_DEPTH'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_DEPTH', $file_name);
 				$error_type = JSON_ERROR_DEPTH;
 			break;
 			case JSON_ERROR_STATE_MISMATCH:
-				$message = sprintf($lang['EXT_JSON_ERROR_STATE_MISMATCH'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_STATE_MISMATCH', $file_name);
 				$error_type = JSON_ERROR_STATE_MISMATCH;
 			break;
 			case JSON_ERROR_CTRL_CHAR:
-				$message = sprintf($lang['EXT_JSON_ERROR_CTRL_CHAR'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_CTRL_CHAR', $file_name);
 				$error_type = JSON_ERROR_CTRL_CHAR;
 			break;
 			case JSON_ERROR_SYNTAX:
-				$message = sprintf($lang['EXT_JSON_ERROR_SYNTAX'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_SYNTAX', $file_name);
 				$error_type = JSON_ERROR_SYNTAX;
 			break;
 			case JSON_ERROR_UTF8:
-				$message = sprintf($lang['EXT_JSON_ERROR_UTF8'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_UTF8', $file_name);
 				$error_type = JSON_ERROR_UTF8;
 			break;
 			case JSON_ERROR_RECURSION:
-				$message = sprintf($lang['EXT_JSON_ERROR_RECURSION'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_RECURSION', $file_name);
 				$error_type = JSON_ERROR_RECURSION;
 			break;
 			case JSON_ERROR_INF_OR_NAN:
-				$message = sprintf($lang['EXT_JSON_ERROR_INF_OR_NAN'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_INF_OR_NAN', $file_name);
 				$error_type = JSON_ERROR_INF_OR_NAN;
 			break;
 			case JSON_ERROR_UNSUPPORTED_TYPE:
-				$message = sprintf($lang['EXT_JSON_ERROR_UNSUPPORTED_TYPE'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_UNSUPPORTED_TYPE', $file_name);
 				$error_type = JSON_ERROR_UNSUPPORTED_TYPE;
 			break;
 			case JSON_ERROR_INVALID_PROPERTY_NAME:
-				$message = sprintf($lang['EXT_JSON_ERROR_INVALID_PROPERTY_NAME'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_INVALID_PROPERTY_NAME', $file_name);
 				$error_type = JSON_ERROR_INVALID_PROPERTY_NAME;
 			break;
 			case JSON_ERROR_UTF16:
-				$message = sprintf($lang['EXT_JSON_ERROR_UTF16'], $file_name);
+				$message = $stk_lang->lang('EXT_JSON_ERROR_UTF16', $file_name);
 				$error_type = JSON_ERROR_UTF16;
 			break;
 			default:
-			$message = sprintf($lang['EXT_JSON_ERROR_UNKNOWN'], $file_name);
+			$message = $stk_lang->lang('EXT_JSON_ERROR_UNKNOWN', $file_name);
 			$error_type = 100000;
 			break;
 		}
@@ -1260,20 +1166,108 @@ function check_json($dir, $file_name)
 	}
 	else
 	{
-		return array('message' => sprintf($lang['EXT_NO_JSON'], $file_name, $dir), 'error_type' => 150000);
+		return array('message' => $stk_lang->lang('EXT_NO_JSON', $file_name, $dir), 'error_type' => 150000);
 	}
 }
 
-function delete_directory_recursiv($path)
+/**
+* Purge directory with all elements
+*
+* @return null
+*/
+function purge_dir($path, $check = false)
 {
-	$files = array_diff(scandir($path), array('.','..'));
-
-	foreach($files as $file)
+	// Purge all files
+	try
 	{
-		is_dir("$path/$file") ? delete_directory_recursiv("$path/$file") : unlink("$path/$file");
+		$iterator = new \DirectoryIterator($path);
+	}
+	catch (\Exception $e)
+	{
+		return;
 	}
 
-	return rmdir($path);
+	foreach ($iterator as $fileInfo)
+	{
+		if ($fileInfo->isDot())
+		{
+			continue;
+		}
+		$filename = $fileInfo->getFilename();
+		if ($fileInfo->isDir())
+		{
+			remove_dir($path, $fileInfo->getPathname());
+		}
+
+		if ($check && !is_writable($path))
+		{
+			// E_USER_ERROR - not using language entry - intended.
+			trigger_error('Unable to remove files within ' . $path . '. Please check directory permissions.', E_USER_ERROR);
+		}
+
+		remove_file($path, $filename);
+	}
+
+	if (function_exists('opcache_reset'))
+	{
+		@opcache_reset();
+	}
+}
+
+/**
+* Removes/unlinks file
+*
+* @param string $filename Filename to remove
+* @param bool $check Check file permissions
+* @return bool True if the file was successfully removed, otherwise false
+*/
+function remove_file($path, $filename,  $check = false)
+{
+	if ($check && !is_writable($path))
+	{
+		// E_USER_ERROR - not using language entry - intended.
+		trigger_error('Unable to remove files within ' . $path . '. Please check directory permissions.', E_USER_ERROR);
+	}
+
+	return @unlink($filename);
+}
+
+/**
+* Remove directory
+*
+* @param string $dir Directory to remove
+*
+* @return null
+*/
+function remove_dir($path, $dir)
+{
+	try
+	{
+		$iterator = new \DirectoryIterator($dir);
+	}
+	catch (\Exception $e)
+	{
+		return;
+	}
+
+	foreach ($iterator as $fileInfo)
+	{
+		if ($fileInfo->isDot())
+		{
+			continue;
+		}
+
+		if ($fileInfo->isDir())
+		{
+			remove_dir($path, $fileInfo->getPathname());
+		}
+		else
+		{
+			remove_file($path, $fileInfo->getPathname());
+		}
+	}
+
+	@rmdir($dir);
 }
 
 /**

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Recache moderators
-* @version $Id$
-* @copyright (c) 2010 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -31,13 +30,13 @@ class recache_moderators
 	{
 		if (!function_exists('cache_moderators'))
 		{
-			global $phpbb_root_path, $phpEx;
+			global $stk_lang, $phpbb_root_path, $phpEx;
 
 			include "{$phpbb_root_path}includes/functions_admin.$phpEx";
 		}
 
 		cache_moderators();
 
-		trigger_error(user_lang('RECACHE_MODERATORS_COMPLETE'));
+		trigger_error($stk_lang->lang('RECACHE_MODERATORS_COMPLETE'));
 	}
 }

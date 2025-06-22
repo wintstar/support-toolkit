@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Database Cleaner
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 /**
 * @ignore
@@ -47,7 +47,9 @@ function get_config_rows(&$phpbb_config, &$config_rows, &$existing_config)
 */
 function get_extension_groups_rows(&$extension_groups_data, &$extension_groups_rows, &$existing_extension_groups)
 {
-	global $db, $user, $lang;
+	global $db, $stk_lang;
+
+	$lang = $stk_lang->get_lang_array();
 
 	$existing_extension_groups = array();
 	$sql_ary = array(
@@ -82,7 +84,9 @@ function get_extension_groups_rows(&$extension_groups_data, &$extension_groups_r
 */
 function get_extensions($group, &$group_id)
 {
-	global $db, $user, $lang;
+	global $db, $stk_lang;
+
+	$lang = $stk_lang->get_lang_array();
 
 	$sql_ary = array(
 		'SELECT'	=> 'e.extension, eg.group_id',
@@ -342,7 +346,7 @@ function get_columns($table)
 */
 function get_phpbb_tables()
 {
-	global $db, $table_prefix;
+	global $db, $table_prefix, $stk_lang;
 
 	static $_tables = array();
 	if (!empty($_tables))
@@ -383,8 +387,8 @@ function get_phpbb_tables()
 		global $template;
 
 		$template->assign_vars(array(
-			'ERROR_MESSAGE' => user_lang('EMPTY_PREFIX_EXPLAIN'),
-			'ERROR_TITLE'	=> user_lang('EMPTY_PREFIX'),
+			'ERROR_MESSAGE' => $stk_lang->lang('EMPTY_PREFIX_EXPLAIN'),
+			'ERROR_TITLE'	=> $stk_lang->lang('EMPTY_PREFIX'),
 		));
 
 		$_tables = $all_tables;

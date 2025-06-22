@@ -103,11 +103,6 @@ class umil
 	var $auto_display_results = false;
 
 	/**
-	* Stand Alone option (this makes it possible to just use the single umil file and not worry about any language stuff
-	*/
-	var $stand_alone = false;
-
-	/**
 	* Were any new permissions added (used in umil_frontend)?
 	*/
 	var $permissions_added = false;
@@ -130,7 +125,7 @@ class umil
 	/**
 	* Constructor
 	*/
-	function __construct($stand_alone = false, $db = false)
+	function __construct($db = false)
 	{
 		// Setup $this->db
 		if ($db !== false)
@@ -157,35 +152,6 @@ class umil
 		}
 
 		$this->db_tools = new phpbb\db\tools\tools($this->db);
-
-		$this->stand_alone = $stand_alone;
-
-		if (!$stand_alone)
-		{
-			global $config, $user, $phpbb_root_path, $phpEx;
-
-			// Include the umil language file.  First we check if the language file for the user's language is available, if not we check if the board's default language is available, if not we use the english file.
-			if (isset($user->data['user_lang']) && file_exists("{$phpbb_root_path}umil/language/{$user->data['user_lang']}/umil.$phpEx"))
-			{
-				$path = $user->data['user_lang'];
-			}
-			else if (file_exists("{$phpbb_root_path}umil/language/" . basename($config['default_lang']) . "/umil.$phpEx"))
-			{
-				$path = basename($config['default_lang']);
-			}
-			else if (file_exists("{$phpbb_root_path}umil/language/en/umil.$phpEx"))
-			{
-				$path = 'en';
-			}
-			else
-			{
-				trigger_error('Language Files Missing.<br /><br />Please download the latest UMIL (Unified MOD Install Library) from: <a href="http://www.phpbb.com/mods/umil/">phpBB.com/mods/umil</a>', E_USER_ERROR);
-			}
-
-			$user->add_lang('./../../umil/language/' . $path . '/umil');
-
-			$user->add_lang(array('acp/common', 'acp/permissions'));
-		}
 	}
 
 	/**
@@ -195,13 +161,13 @@ class umil
 	*/
 	function umil_start()
 	{
-		global $lang;
+		global $stk_lang;
 
 		// Set up the command.  This will get the arguments sent to the function.
 		$args = func_get_args();
 		$this->command = call_user_func_array(array($this, 'get_output_text'), $args);
 
-		$this->result = (isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS';
+		$this->result = (!is_null($stk_lang->lang('SUCCESS')) ? $stk_lang->lang('SUCCESS') : 'SUCCESS');
 		$this->db->sql_return_on_error(true);
 
 		//$this->db->sql_transaction('begin');
@@ -214,7 +180,7 @@ class umil
 	*/
 	function umil_end()
 	{
-		global $lang;
+		global $stk_lang;
 
 		// Set up the result.  This will get the arguments sent to the function.
 		$args = func_get_args();
@@ -223,7 +189,7 @@ class umil
 
 		if ($this->db->get_sql_error_triggered())
 		{
-			if ($this->result == ((isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS'))
+			if ($this->result == !is_null($stk_lang->lang('SUCCESS')) ? $stk_lang->lang('SUCCESS') : 'SUCCESS')
 			{
 				$error_returned = $this->db->get_sql_error_returned();
 				$result = 'SQL ERROR ' . $error_returned['message'];
@@ -264,7 +230,7 @@ class umil
 	*/
 	function get_output_text()
 	{
-		global $user;
+		global $stk_lang;
 
 		// Set up the command.  This will get the arguments sent to the function.
 		$args = func_get_args();
@@ -277,14 +243,14 @@ class umil
 				$lang_args = array();
 				foreach ($args as $arg)
 				{
-					$lang_args[] = (isset($user->lang[$arg])) ? $user->lang[$arg] : $arg;
+					$lang_args[] = (!is_null($stk_lang->lang($arg))) ? $stk_lang->lang($arg) : $arg;
 				}
 
-				return @vsprintf(((isset($user->lang[$lang_key])) ? $user->lang[$lang_key] : $lang_key), $lang_args);
+				return @vsprintf(((!is_null($stk_lang->lang($lang_key))) ? $stk_lang->lang($lang_key) : $lang_key), $lang_args);
 			}
 			else
 			{
-				return ((isset($user->lang[$lang_key])) ? $user->lang[$lang_key] : $lang_key);
+				return (!is_null(($stk_lang->lang($lang_key))) ? $stk_lang->lang($lang_key) : $lang_key);
 			}
 		}
 
@@ -530,7 +496,7 @@ class umil
 	*/
 	function cache_purge($type = '', $style_id = 0)
 	{
-		global $auth, $cache, $user, $phpbb_root_path, $phpEx;
+		global $auth, $cache, $stk_lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $type))
@@ -578,7 +544,7 @@ class umil
 					if (!$imageset_row)
 					{
 						$this->umil_start('IMAGESET_CACHE_PURGE', 'UNKNOWN');
-						return $this->umil_end($user->lang['FAIL']);
+						return $this->umil_end($stk_lang->lang('FAIL'));
 					}
 
 					$this->umil_start('IMAGESET_CACHE_PURGE', $imageset_row['imageset_name']);
@@ -709,7 +675,7 @@ class umil
 					if (!$template_row)
 					{
 						$this->umil_start('TEMPLATE_CACHE_PURGE', 'UNKNOWN');
-						return $this->umil_end($user->lang['FAIL']);
+						return $this->umil_end($stk_lang->lang('FAIL'));
 					}
 
 					$this->umil_start('TEMPLATE_CACHE_PURGE', $template_row['template_name']);
@@ -1123,7 +1089,7 @@ class umil
 	*/
 	function module_add($class, $parent = 0, $data = array(), $include_path = false)
 	{
-		global $stk_root_path, $cache, $lang, $phpbb_root_path, $phpEx;
+		global $stk_root_path, $cache, $stk_lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1134,8 +1100,8 @@ class umil
 		// Prevent stupid things like trying to add a module with no name or any data on it
 		if (empty($data))
 		{
-			$this->umil_start($lang['MODULE_ADD'], $class, 'UNKNOWN');
-			return $this->umil_end($lang['FAIL']);
+			$this->umil_start($stk_lang->lang('MODULE_ADD'), $class, 'UNKNOWN');
+			return $this->umil_end($stk_lang->lang('FAIL'));
 		}
 
         // Allows '' to be sent as 0
@@ -1158,8 +1124,8 @@ class umil
 			// The manual and automatic ways both failed...
 			if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 			{
-				$this->umil_start($lang['MODULE_ADD'], $class, $info_file);
-				return $this->umil_end($lang['FAIL']);
+				$this->umil_start($stk_lang->lang('MODULE_ADD'), $class, $info_file);
+				return $this->umil_end($stk_lang->lang('FAIL'));
 			}
 
 			$classname = "{$class}_{$basename}_info";
@@ -1197,8 +1163,8 @@ class umil
 		}
 
 		// The "manual" way
-		$this->umil_start($lang['MODULE_ADD'], $class, ((isset($lang[$data['module_langname']])) ? $lang[$data['module_langname']] : $data['module_langname']));
-		add_log('admin', 'LOG_MODULE_ADD', ((isset($lang[$data['module_langname']])) ? $lang[$data['module_langname']] : $data['module_langname']));
+		$this->umil_start($stk_lang->lang('MODULE_ADD'), $class, ((!is_null($stk_lang->lang($data['module_langname']))) ? $stk_lang->lang($data['module_langname']) : $data['module_langname']));
+		add_log('admin', 'LOG_MODULE_ADD', ((!is_null($stk_lang->lang($data['module_langname']))) ? $stk_lang->lang($data['module_langname']) : $data['module_langname']));
 
 		$class = $this->db->sql_escape($class);
 
@@ -1225,7 +1191,7 @@ class umil
 
 		if ($this->module_exists($class, $parent, $data['module_langname']))
 		{
-			return $this->umil_end($lang['MODULE_ALREADY_EXIST']);
+			return $this->umil_end($stk_lang->lang('MODULE_ALREADY_EXIST'));
 		}
 
 		if (!class_exists('acp_modules'))
@@ -1530,7 +1496,7 @@ class umil
 					if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 					{
 						$this->umil_start('MODULE_ADD', $class, $info_file);
-						return $this->umil_end($lang['FAIL']);
+						return $this->umil_end($stk_lang->lang('FAIL'));
 					}
 
 					$classname = "{$class}_{$basename}_info";
@@ -1651,7 +1617,7 @@ class umil
 	*/
 	function module_remove($class, $parent = 0, $module = '', $include_path = false)
 	{
-		global $stk_root_path, $cache, $lang, $phpbb_root_path, $phpEx;
+		global $stk_root_path, $cache, $stk_lang, $phpbb_root_path, $phpEx;
 
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $class))
@@ -1672,7 +1638,7 @@ class umil
 			if (!isset($module['module_basename']))
 			{
 				$this->umil_start('MODULE_REMOVE', $class, 'UNKNOWN');
-				return $this->umil_end($lang['FAIL']);
+				return $this->umil_end($stk_lang->lang('FAIL'));
 			}
 
 			// Automatic method
@@ -1683,7 +1649,7 @@ class umil
 			if (!file_exists((($include_path === false) ? $phpbb_root_path . 'includes/' : $include_path) . $info_file))
 			{
 				$this->umil_start('MODULE_REMOVE', $class, $info_file);
-				return $this->umil_end($lang['FAIL']);
+				return $this->umil_end($stk_lang->lang('FAIL'));
 			}
 
 			$classname = "{$class}_{$basename}_info";
@@ -1713,7 +1679,7 @@ class umil
 
 			if (!$this->module_exists($class, $parent, $module))
 			{
-				$this->umil_start('MODULE_REMOVE', $class, ((isset($lang[$module])) ? $lang[$module] : $module));
+				$this->umil_start('MODULE_REMOVE', $class, ((!is_null($stk_lang->lang($module))) ? $stk_lang->lang($module) : $module));
 				return $this->umil_end('MODULE_NOT_EXIST');
 			}
 
@@ -1773,8 +1739,8 @@ class umil
 				$module_ids[] = $module;
 			}
 
-			$this->umil_start('MODULE_REMOVE', $class, ((isset($lang[$module_name])) ? $lang[$module_name] : $module_name));
-			add_log('admin', 'LOG_MODULE_REMOVED', ((isset($lang[$module_name])) ? $lang[$module_name] : $module_name));
+			$this->umil_start('MODULE_REMOVE', $class, ((!is_null($stk_lang->lang($module_name))) ? $stk_lang->lang($module_name) : $module_name));
+			add_log('admin', 'LOG_MODULE_REMOVED', ((!is_null($stk_lang->lang($module_name))) ? $stk_lang->lang($module_name) : $module_name));
 
 			if (!class_exists('acp_modules'))
 			{
@@ -1789,7 +1755,7 @@ class umil
 				$result = $acp_modules->delete_module($module_id);
 				if (!empty($result))
 				{
-					if ($this->result == ((isset($lang['SUCCESS'])) ? $lang['SUCCESS'] : 'SUCCESS'))
+					if ($this->result == !is_null($stk_lang->lang('SUCCESS')) ? $stk_lang->lang('SUCCESS') : 'SUCCESS')
 					{
 						$this->result = implode('<br />', $result);
 					}
@@ -2760,7 +2726,7 @@ class umil
 
 		if (!sizeof($data))
 		{
-			return $this->umil_end($lang['FAIL']);
+			return $this->umil_end($stk_lang->lang('FAIL'));
 		}
 
 		$this->get_table_name($table_name);
@@ -2791,6 +2757,8 @@ class umil
 	*/
 	function table_row_remove($table_name, $data = array())
 	{
+		global $stk_lang;
+
 		// Multicall
 		if ($this->multicall(__FUNCTION__, $table_name))
 		{
@@ -2799,7 +2767,7 @@ class umil
 
 		if (!sizeof($data))
 		{
-			return $this->umil_end($lang['FAIL']);
+			return $this->umil_end($stk_lang->lang('FAIL'));
 		}
 
 		$this->get_table_name($table_name);

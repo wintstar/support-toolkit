@@ -1,11 +1,10 @@
 <?php
 /**
 *
-* @package Support Toolkit - Merge Users
-* @version $Id$
+* @package Support Toolkit
 * @author Chris Smith <toonarmy@phpbb.com> (http://www.cs278.org/)
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -20,8 +19,6 @@ class merge_users
 	*/
 	function display_options()
 	{
-		global $user;
-
 		return array(
 			'title'		=> 'MERGE_USERS',
 			'explain'	=> true,
@@ -43,9 +40,9 @@ class merge_users
 	*/
 	function run_tool(&$error)
 	{
-		global $phpbb_root_path, $phpEx, $config, $user, $db, $cache, $request;
+		global $phpbb_root_path, $phpEx, $config, $stk_lang, $db, $cache, $request;
 
-		$user->add_lang('ucp');
+		$stk_lang->add_lang('ucp', null, true);
 
 		if (!check_form_key('merge_users'))
 		{
@@ -181,7 +178,7 @@ class merge_users
 		update_last_username();
 		$cache->destroy('sql', MODERATOR_CACHE_TABLE);
 
-		trigger_error(user_lang('MERGE_USERS_MERGED'));
+		trigger_error($stk_lang->lang('MERGE_USERS_MERGED'));
 	}
 
 	function merge($source, $target)

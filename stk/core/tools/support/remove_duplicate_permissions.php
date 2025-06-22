@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Duplicate Permission Remover
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,7 +18,7 @@ class remove_duplicate_permissions
 
 	function run_tool()
 	{
-		global $db;
+		global $stk_lang, $db;
 
 		$acl_options = $acl_duplicates = array();
 
@@ -40,7 +39,7 @@ class remove_duplicate_permissions
 
 		if (empty($acl_duplicates))
 		{
-			trigger_error(user_lang('NO_DUPLICATES_FOUND'));
+			trigger_error($stk_lang->lang('NO_DUPLICATES_FOUND'));
 		}
 
 		foreach ($acl_duplicates as $dup_id => $orig_id)
@@ -108,6 +107,6 @@ class remove_duplicate_permissions
 		// Purge the auth cache in the users table
 		$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_permissions = \'\'');
 
-		trigger_error(user_lang('DUPLICATES_FOUND'));
+		trigger_error($stk_lang->lang('DUPLICATES_FOUND'));
 	}
 }

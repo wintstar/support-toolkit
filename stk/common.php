@@ -2,8 +2,8 @@
 /**
 *
 * @package Support Toolkit
-* @copyright (c) 2010-2019 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -59,17 +59,7 @@ if (!defined('IN_ERK'))
 {
 	$critical_repair = new \core\erk\erk();
 
-	$user->session_begin();
-	$auth->acl($user->data);
-
-	if (!empty($user) && $user->data['user_id'] == ANONYMOUS && isset($config['default_lang']))
-	{
-		$user->data['user_lang'] = $config['default_lang'];
-	}
-
-	$user->setup('acp/common', $config['default_style']);
-
-	$umil = new umil(true);
+	$umil = new umil();
 }
 
 // Load STK config when not in the erk

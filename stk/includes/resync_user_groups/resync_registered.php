@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resynchronise Users groups
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 /**
  * @ignore
@@ -75,7 +75,7 @@ class resync_registered
 			{
 				$insert = $this->_get_new_group($row['user_birthday']);
 
-				array_push($$insert, array(
+				array_push($insert, array(
 					'group_id'		=> (int) ($insert == 'insert_coppa') ? $g['REGISTERED_COPPA'] : $g['REGISTERED'],
 					'user_id'		=> (int) $row['user_id'],
 					'group_leader'	=> false,

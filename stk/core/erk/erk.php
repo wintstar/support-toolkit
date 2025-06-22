@@ -2,7 +2,6 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -81,6 +80,8 @@ class erk
 	*/
 	function run_tool($tool)
 	{
+		global $stk_lang;
+
 		static $tools_loaded = array();
 
 		if (isset($tools_loaded[$tool]))
@@ -93,7 +94,7 @@ class erk
 			$class = new \ReflectionClass("\\core\\repair\\{$tool}");
 			$tools_loaded[$tool] = $class->newInstance();
 		} catch (Exception $e) {
-			trigger_error(sprintf($lang['INCORRECT_CLASS'], $e), E_USER_ERROR);
+			trigger_error($stk_lang->lang('INCORRECT_CLASS', $e), E_USER_ERROR);
 		}
 
 		return $tools_loaded[$tool];
@@ -105,6 +106,8 @@ class erk
 	*/
 	function autorun_tools()
 	{
+		global $stk_lang;
+
 		static $tools_loaded = array();
 
 		foreach ($this->autorun_tools as $tool)
@@ -118,8 +121,8 @@ class erk
 				// Construct the class
 				$class = new \ReflectionClass("\\core\\repair\\autorun\\{$tool}");
 				$tools_loaded[$tool] = $class->newInstance();
-			} catch (Exception $e) {
-				trigger_error(sprintf($lang['INCORRECT_CLASS'], $e), E_USER_ERROR);
+			} catch (\Exception $e) {
+				trigger_error($stk_lang->lang('INCORRECT_CLASS', $e->message), E_USER_ERROR);
 			}
 
 			return $tools_loaded[$tool];
@@ -135,7 +138,7 @@ class erk
 	 */
 	function trigger_error($msg, $redirect_stk = false)
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $user, $lang;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $user;
 
 		if (!is_array($msg))
 		{
@@ -165,14 +168,14 @@ class erk
 					<?php
 					if ($redirect_stk)
 					{
-						echo '<a href="' . $stk_root_path . '">' . $lang['SUPPORT_TOOL_KIT_INDEX'] . '</a> &bull; ';
+						echo '<a href="' . $stk_root_path . '">' . $stk_lang->lang('SUPPORT_TOOL_KIT_INDEX') . '</a> &bull; ';
 					}
 					else
 					{
-						echo '<a href="' . $stk_root_path . 'erk.'.$phpEx.'">' . $lang['CAT_ERK'] . '</a> &bull; ';
+						echo '<a href="' . $stk_root_path . 'erk.'.$phpEx.'">' . $stk_lang->lang('CAT_ERK') . '</a> &bull; ';
 					}
 					?>
-					<a href="<?php echo $phpbb_root_path; ?>"><?php echo $lang['FORUM_INDEX'] ?></a>
+					<a href="<?php echo $phpbb_root_path; ?>"><?php echo $stk_lang->lang('FORUM_INDEX') ?></a>
 				</p>
 			</div>
 			<div id="page-body">
@@ -180,7 +183,7 @@ class erk
 					<div class="panel">
 						<span class="corners-top"><span></span></span>
 							<div id="content">
-								<h1><?php echo $lang['CAT_ERK'] ?></h1>
+								<h1><?php echo $stk_lang->lang('CAT_ERK') ?></h1>
 								<?php
 								foreach ($msg as $m)
 								{
@@ -188,7 +191,7 @@ class erk
 									$pos = strripos($m, 'Undefined index: user_id');
 									if($pos)
 									{
-										$msg = sprintf($lang['ANONYMOUS_MISSING'], ''.$stk_root_path.'erk.'.$phpEx.'');
+										$msg = $stk_lang->lang('ANONYMOUS_MISSING', $stk_root_path . 'erk.' . $phpEx);
 										?><hr><?php
 										echo $msg;
 										?><hr><?php
@@ -199,12 +202,12 @@ class erk
 									<?php
 									if ($redirect_stk)
 									{
-										$msg = sprintf($lang['RELOAD_STK'], $stk_root_path);
+										$msg = $stk_lang->lang('RELOAD_STK', $stk_root_path);
 										echo $msg;
 									}
 									else
 									{
-										$msg = sprintf($lang['RELOAD_ARK'], ''.$stk_root_path.'erk.'.$phpEx.'');
+										$msg = $stk_lang->lang('RELOAD_ARK', $stk_root_path . 'erk.' . $phpEx);
 										echo $msg;
 									}
 									?>

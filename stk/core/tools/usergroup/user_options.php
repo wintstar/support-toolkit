@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - User Options
-* @version $Id$
-* @copyright (c) 2015 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +13,7 @@ class user_options
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $template, $lang, $db, $request;
+		global $stk_root_path, $phpEx, $template, $stk_lang, $db, $request;
 
 		$settings_value = $request->variable('settings', array('' => ''), true);
 		$groups = $request->variable('user_groups', array(0));
@@ -48,7 +47,7 @@ class user_options
 		$s_options = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$group_name = (isset($lang['G_' . $row['group_name'] . ''])) ? $lang['G_' . $row['group_name'] . ''] : $row['group_name'];
+			$group_name = (!is_null($stk_lang->lang('G_' . $row['group_name'] . ''))) ? $stk_lang->lang('G_' . $row['group_name'] . '') : $row['group_name'];
 			$s_options .= '<option value="' . $row['group_id'] . '">' . $group_name;
 		}
 		$db->sql_freeresult($result);
@@ -61,7 +60,7 @@ class user_options
 				$template->assign_block_vars('settings', array(
 					'SETTINGS'		=> $settings,
 					'BIT'			=> $bit,
-					'SETTINGS_NAME'	=> user_lang($settings),
+					'SETTINGS_NAME'	=> $stk_lang->lang($settings),
 				));
 			}
 		}
@@ -106,10 +105,10 @@ class user_options
 			}
 
 			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_options'));
-			trigger_error(user_lang('USER_OPTIONS_OK'));
+			trigger_error($stk_lang->lang('USER_OPTIONS_OK'));
 		}
 
-		page_header(user_lang('USER_OPTIONS'), false);
+		page_header($stk_lang->lang('USER_OPTIONS'), false);
 		page_footer();
 	}
 }

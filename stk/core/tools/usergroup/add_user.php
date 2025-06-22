@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Add User
-* @version $Id$
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -46,7 +46,7 @@ class add_user
 	*/
 	function run_tool(&$error)
 	{
-		global $cache, $config, $db, $user, $request;
+		global $stk_lang, $cache, $config, $db, $user, $request;
 
 		if (!check_form_key('add_user'))
 		{
@@ -168,7 +168,7 @@ class add_user
 		}
 
 		// And done
-		trigger_error(user_lang('USER_ADDED'));
+		trigger_error($stk_lang->lang('USER_ADDED'));
 	}
 
 	/**
@@ -180,7 +180,7 @@ class add_user
 	*/
 	function validate_data($data, &$error)
 	{
-		global $phpbb_root_path, $phpEx, $config, $user, $lang;
+		global $phpbb_root_path, $phpEx, $config, $user, $stk_lang;
 
 		if (!function_exists('validate_data'))
 		{
@@ -202,7 +202,7 @@ class add_user
 		));
 		if ($data['new_password'] != $data['password_confirm'])
 		{
-			$error[] = $lang['NEW_PASSWORD_ERROR'];
+			$error[] = $stk_lang->lang('NEW_PASSWORD_ERROR');
 		}
 	}
 

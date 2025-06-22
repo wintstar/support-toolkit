@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Reparse BBCode
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -128,9 +127,10 @@ class reparse_bbcode
 	*/
 	function run_tool()
 	{
-		global $phpbb_root_path, $phpEx, $cache, $config, $db, $user, $request, $lang, $language;
+		global $phpbb_root_path, $phpEx, $stk_lang, $cache, $config, $db, $user, $request;
+
 		// Prevent some errors from missing language strings.
-		$language->add_lang(array('posting'));
+		$stk_lang->add_lang('posting', null, true);
 
 		// Define some vars that we'll need
 		$last_batch			= false;
@@ -152,7 +152,7 @@ class reparse_bbcode
 
 		if (!sizeof($reparse_forum_ids) && !$reparse_id && !$reparse_pm_id && !$all && !$reparse_sig && $step == 0)
 		{
-			trigger_error(user_lang('REPARSE_IDS_EMPTY'), E_USER_WARNING);
+			trigger_error($stk_lang->lang('REPARSE_IDS_EMPTY'), E_USER_WARNING);
 		}
 
 		// If post IDs or PM IDs were specified, we need to make sure the list is valid.
@@ -181,7 +181,7 @@ class reparse_bbcode
 
 			if (!sizeof($reparse_posts))
 			{
-				trigger_error(user_lang('REPARSE_IDS_INVALID'), E_USER_WARNING);
+				trigger_error($stk_lang->lang('REPARSE_IDS_INVALID'), E_USER_WARNING);
 			}
 
 			// Make sure there's no extra whitespace
@@ -203,7 +203,7 @@ class reparse_bbcode
 
 			if (!sizeof($reparse_pms))
 			{
-				trigger_error(user_lang('REPARSE_IDS_INVALID'));
+				trigger_error($stk_lang->lang('REPARSE_IDS_INVALID'));
 			}
 
 			if (!$all)
@@ -469,7 +469,7 @@ class reparse_bbcode
 			// Done!
 			$cache->destroy('_stk_reparse_posts');
 			$cache->destroy('_stk_reparse_pms');
-			trigger_error($lang['REPARSE_BBCODE_COMPLETE']);
+			trigger_error($stk_lang->lang('REPARSE_BBCODE_COMPLETE'));
 		}
 		else if ($last_batch)
 		{
@@ -489,7 +489,7 @@ class reparse_bbcode
 	*/
 	function _next_step($step, $mode, $next_mode = false)
 	{
-		global $stk_root_path, $phpEx, $template, $user, $request;
+		global $stk_root_path, $phpEx, $stk_lang, $template, $user, $request;
 
 		$all = $request->variable('reparseall', false);
 		$create_backup = $request->variable('create_backup', false);
@@ -515,11 +515,11 @@ class reparse_bbcode
 
 		if ($next_mode === false)
 		{
-			trigger_error('' . user_lang('REPARSE_BBCODE_MODE', $mode) . '<br />' . user_lang('REPARSE_BBCODE_PROGRESS', ($_next_step * $this->step_size), $this->max) . '');
+			trigger_error('' . $stk_lang->lang('REPARSE_BBCODE_MODE', $mode) . '<br />' . $stk_lang->lang('REPARSE_BBCODE_PROGRESS', ($_next_step * $this->step_size), $this->max) . '');
 		}
 		else
 		{
-			trigger_error(user_lang('REPARSE_BBCODE_SWITCH_MODE', $mode));
+			trigger_error($stk_lang->lang('REPARSE_BBCODE_SWITCH_MODE', $mode));
 		}
 	}
 

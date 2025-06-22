@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Purge Cache
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -29,7 +28,7 @@ class purge_cache
 	*/
 	function run_tool(&$error)
 	{
-		global $auth, $cache;
+		global $stk_lang, $auth, $cache;
 
 		$cache->purge();
 
@@ -39,6 +38,6 @@ class purge_cache
 
 		add_log('admin', 'LOG_PURGE_CACHE');
 
-		trigger_error(user_lang('PURGE_CACHE_COMPLETE'));
+		trigger_error($stk_lang->lang('PURGE_CACHE_COMPLETE'));
 	}
 }

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Database Cleaner
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -252,7 +251,7 @@ class database_cleaner_controller
 	*/
 	function extension_groups($error, $selected)
 	{
-		global $db, $lang;
+		global $db, $stk_lang;
 
 		$extension_groups_rows = $existing_extension_groups = array();
 		get_extension_groups_rows($this->db_cleaner->data->extension_groups, $extension_groups_rows, $existing_extension_groups);
@@ -263,7 +262,7 @@ class database_cleaner_controller
 				continue;
 			}
 
-			if (isset($selected[$lang[$name]]))
+			if (isset($selected[$stk_lang->lang($name)]))
 			{
 				if (isset($this->db_cleaner->data->extension_groups[$name]) && !in_array($name, $existing_extension_groups))
 				{
@@ -336,17 +335,17 @@ class database_cleaner_controller
 	*/
 	function final_step()
 	{
-		global $phpbb_root_path, $config;
+		global $phpbb_root_path, $config, $stk_lang;
 
 		// Purge teh caches
 		$path = $phpbb_root_path . 'cache/production';
-		delete_directory_recursiv($path);
+		purge_dir($path);
 
 		$config->set('board_disable', 0);
 		$config->set('board_disable_msg', '');
 
 		// Finished!
-		trigger_error(user_lang('DATABASE_CLEANER_SUCCESS'));
+		trigger_error($stk_lang->lang('DATABASE_CLEANER_SUCCESS'));
 	}
 
 	/**
@@ -402,7 +401,7 @@ class database_cleaner_controller
 	*/
 	function introduction()
 	{
-		global $stk_root_path, $phpEx, $user, $config;
+		global $stk_root_path, $phpEx, $stk_lang, $config;
 
 		// Redirect if they selected quit
 		if (isset($_POST['quit']))
@@ -412,7 +411,7 @@ class database_cleaner_controller
 
 		// Start by disabling the board
 		$config->set('board_disable', 1);
-		$config->set('board_disable_msg', user_lang('BOARD_DISABLE_REASON'));
+		$config->set('board_disable_msg', $stk_lang->lang('BOARD_DISABLE_REASON'));
 	}
 
 	/**
@@ -423,7 +422,7 @@ class database_cleaner_controller
 	*/
 	function modules($error)
 	{
-		global $stk_root_path, $phpEx, $db, $lang;
+		global $stk_root_path, $phpEx, $db, $stk_lang;
 
 		if (isset($_POST['yes']))
 		{
@@ -869,9 +868,11 @@ class database_cleaner_controller
 			// Did the user remove any of the original reasons?
 			if (!empty($this->db_cleaner->data->report_reasons))
 			{
-				global $user;
+				global $stk_lang;
 
-				$user->add_lang('install');
+				$stk_lang->add_lang('ucp', null, true);
+
+				template_convert_lang();
 
 				if (!function_exists('adjust_language_keys_callback'))
 				{
@@ -892,7 +893,7 @@ class database_cleaner_controller
 				{
 					$insert[] = array(
 						'reason_title'			=> $deleted,
-						'reason_description'	=> $user->lang[preg_replace_callback('#\{L_([A-Z0-9\-_]*)\}#s', 'adjust_language_keys_callback', $data[0])],
+						'reason_description'	=> $stk_lang->lang(preg_replace_callback('#\{L_([A-Z0-9\-_]*)\}#s', 'adjust_language_keys_callback', $data[0])),
 						'reason_order'			=> ++$order,
 					);
 				}
@@ -1047,9 +1048,11 @@ class database_cleaner_controller
 	*/
 	function acp_modules($error, $selected)
 	{
-		global $stk_root_path, $db, $user, $phpbb_root_path, $phpEx, $umil, $lang;
-		$user->add_lang('ucp');
-		$user->add_lang('mcp');
+		global $stk_root_path, $db, $stk_lang, $phpbb_root_path, $phpEx, $umil;
+	
+		$stk_lang->add_lang(array('mcp', 'ucp'), null, true);
+
+		template_convert_lang();
 
 		if (sizeof($selected))
 		{
@@ -1101,7 +1104,7 @@ class database_cleaner_controller
 						$module_class = $row['module_class'];
 						if (!$module_class)
 						{
-							$error[] = '' . $lang['MODULE_ADD'] . ' &laquo;' . $module_langname . '&raquo; ' . $lang['NO_PARENT'] . '';
+							$error[] = '' . $stk_lang->lang('MODULE_ADD') . ' &laquo;' . $module_langname . '&raquo; ' . $stk_lang->lang('NO_PARENT') . '';
 							continue;
 						}
 						$parent_id = $row['module_id'];
@@ -1140,7 +1143,7 @@ class database_cleaner_controller
 						'module_auth'			=> $module_auth,
 					);
 					$result = $umil->module_add($module_class, $parent_id, $data);
-					$error[] = '&laquo;' . $user->lang[$module_langname] . '&raquo; ' . $result . '';
+					$error[] = '&laquo;' . $stk_lang->lang($module_langname) . '&raquo; ' . $result . '';
 				}
 			}
 		}

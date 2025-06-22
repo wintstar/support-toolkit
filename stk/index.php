@@ -2,8 +2,8 @@
 /**
 *
 * @package Support Toolkit
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,10 +19,19 @@ require $stk_root_path . 'common.' . $phpEx;
 // Setup the user
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('acp/common', $config['default_style']);
+$user->setup();
+
+// Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
+$language_file_loader = new \core\language\language_file_loader($stk_root_path, $phpbb_root_path, $phpEx);
+$stk_lang = new \core\language\language($language_file_loader);
+$stk_lang->set_default_language($stk_config['default_lang']);
+$stk_lang->set_user_language($user->data['user_lang']);
+$stk_lang->add_lang(array('common', 'install', 'acp/common'), null, true);
+
+template_convert_lang();
 
 // Load UMIL
-$umil = new umil(true);
+$umil = new umil();
 
 // Set a constant so we know when the STK got to a point where it savely loaded all absolutely required stuff
 define('IN_STK', true);
@@ -42,9 +51,6 @@ if (!defined('PHPBB_DISPLAY_LOAD_TIME'))
 }
 ini_set('display_startup_errors', true);
 ini_set('display_errors', 'on');
-
-// Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
-stk_add_lang('common');
 
 // Do not use the normal template path (to prevent issues with boards using alternate styles)
 $template->set_custom_style('stk', $stk_root_path . 'style');
@@ -139,10 +145,10 @@ if ($stk_passwd !== false)
 		{
 			$template->assign_vars(array(
 				// Password field related
-				'TITLE'			=> $lang['SUPPORT_TOOL_KIT_PASSWORD'],
-				'TITLE_EXPLAIN'	=> $lang['SUPPORT_TOOL_KIT_PASSWORD_EXPLAIN'],
+				'TITLE'			=> $stk_lang->lang('SUPPORT_TOOL_KIT_PASSWORD'),
+				'TITLE_EXPLAIN'	=> $stk_lang->lang('SUPPORT_TOOL_KIT_PASSWORD_EXPLAIN'),
 				// Other page stuff
-				'LOGIN_ERROR'			=> (!empty($err_msg)) ? $lang[$err_msg] : false,
+				'LOGIN_ERROR'			=> (!empty($err_msg)) ? $stk_lang->lang($err_msg) : false,
 				'U_ACTION'				=> append_sid($stk_root_path . 'index.' . $phpEx, false, true, $user->session_id),
 				'U_INDEX'				=> append_sid($phpbb_root_path . 'index.' . $phpEx),
 				// Identify this method in the template
@@ -162,24 +168,24 @@ if ($stk_passwd !== false)
 	// Tell the template engine we're logged through this
 	$template->assign_vars(array(
 		'S_STK_LOGIN'			=> true,
-		'STK_LOGIN_DISABLE_MSG'	=> sprintf($lang['USING_STK_LOGIN'], append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'delpasswdfile'))),
+		'STK_LOGIN_DISABLE_MSG'	=> $stk_lang->lang('USING_STK_LOGIN', append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'delpasswdfile'))),
 	));
 
 	// Don't use "Anonymous" as username
-	$user->data['username'] = $lang['EMERGENCY_LOGIN_NAME'];
+	$user->data['username'] = $stk_lang->lang('EMERGENCY_LOGIN_NAME');
 }
 // phpBB authentication. Only allow founders to pass!
 else
 {
 	if (!$user->data['is_registered'])
 	{
-		$user->add_lang('ucp');
+		$stk_lang->add_lang('ucp', null, true);
 
 		// Assign a string only used here
-		$template->assign_var('GEN_PASS_FILE_EXPLAIN', sprintf($lang['GEN_PASS_FILE_EXPLAIN'], append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'genpasswdfile'))));
+		$template->assign_var('GEN_PASS_FILE_EXPLAIN', $stk_lang->lang('GEN_PASS_FILE_EXPLAIN', append_sid($stk_root_path . 'index.' . $phpEx, array('action' => 'genpasswdfile'))));
 
 		// A user can potentially access this file directly
-		login_box('', $lang['STK_NON_LOGIN'], '', false, false);
+		login_box('', $stk_lang->lang('STK_NON_LOGIN'), '', false, false);
 	}
 
 	// This requires that the user is logged in as an administrator (like how the ACP requires two logins)
@@ -188,13 +194,13 @@ else
 		// Proceed to ACP is misleading
 		//$lang['PROCEED_TO_ACP'] = $lang['PROCEED_TO_STK'];
 
-		login_box('', $lang['STK_FOUNDER_ONLY'], $lang['LOGIN_STK_SUCCESS'], true, false);
+		login_box('', $stk_lang->lang('STK_FOUNDER_ONLY'), $stk_lang->lang('LOGIN_STK_SUCCESS'), true, false);
 	}
 
 	// Only Board Founders may use the STK
 	if ($user->data['user_type'] != USER_FOUNDER)
 	{
-		trigger_error($lang['BOARD_FOUNDER_ONLY']);
+		trigger_error($stk_lang->lang('BOARD_FOUNDER_ONLY'));
 	}
 }
 /*
@@ -244,8 +250,6 @@ if (isset($_POST['cancel']))
 	redirect(append_sid($stk_root_path . 'index.' . $phpEx, false, true, $user->session_id));
 }
 
-$user->add_lang('install');
-
 // Setup the plugin manager
 $plugin = new \core\plugin\plugin();
 
@@ -266,7 +270,7 @@ try
 		'S_STK_VERSION_UP_TO_DATE'		=> empty($stk_updates_available),
 		'S_STK_VERSION_UPGRADEABLE'		=> !empty($stk_upgrades_available),
 		'S_STK_VERSIONCHECK_FORCE'		=> (bool) $stk_recheck,
-		'STK_UPGRADE_INSTRUCTIONS'		=> !empty($stk_upgrades_available) ? user_lang('STK_UPGRADE_INSTRUCTIONS', $stk_upgrades_available['current'], $stk_upgrades_available['announcement']) : false,
+		'STK_UPGRADE_INSTRUCTIONS'		=> !empty($stk_upgrades_available) ? $stk_lang->lang('STK_UPGRADE_INSTRUCTIONS', $stk_upgrades_available['current'], $stk_upgrades_available['announcement']) : false,
 	));
 }
 catch (stk_exception\runtime_exception $e)
@@ -301,7 +305,7 @@ try
 		'S_VERSION_UP_TO_DATE'		=> empty($updates_available),
 		'S_VERSION_UPGRADEABLE'		=> !empty($upgrades_available),
 		'S_VERSIONCHECK_FORCE'		=> (bool) $recheck,
-		'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? user_lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
+		'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? $stk_lang->lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
 	));
 }
 catch (\phpbb\exception\runtime_exception $e)
@@ -350,11 +354,11 @@ if ($plugin->get_part('t'))
 		{
 			if ($msg === false)
 			{
-				$msg = $lang['TOOL_NOT_AVAILABLE'];
+				$msg = $stk_lang->lang('TOOL_NOT_AVAILABLE');
 			}
 			else
 			{
-				$msg = isset($lang[$msg]) ? $lang[$msg] : $msg;
+				$msg = !is_null($stk_lang->lang($msg)) ? $stk_lang->lang($msg) : $msg;
 			}
 
 			trigger_error($msg);
@@ -362,6 +366,7 @@ if ($plugin->get_part('t'))
 	}
 
 	$error = array();
+
 	if ($submit)
 	{
 		// In run_tool do whatever is required.  If there is an error, put it into the array and the display options will be ran again
@@ -378,9 +383,9 @@ if ($plugin->get_part('t'))
 
 		if (is_array($options) && isset($options['vars']))
 		{
-			page_header($lang[$options['title']]);
+			page_header($stk_lang->lang($options['title']));
 
-			// Go through each error and see if the key exists in the $lang.  If it does, use that.
+			// Go through each error and see if the key exists in the $stk_lang->lang($key).  If it does, use that.
 			if (!empty($error))
 			{
 				array_walk($error, 'use_lang');
@@ -394,8 +399,8 @@ if ($plugin->get_part('t'))
 			}
 
 			$template->assign_vars(array(
-				'L_TITLE'			=> $lang[$options['title']],
-				'L_TITLE_EXPLAIN'	=> (isset($lang[$options['title'] . '_EXPLAIN'])) ? $lang[$options['title'] . '_EXPLAIN'] : '',
+				'L_TITLE'			=> $stk_lang->lang($options['title']),
+				'L_TITLE_EXPLAIN'	=> (!is_null($stk_lang->lang($options['title'] . '_EXPLAIN'))) ? $stk_lang->lang($options['title'] . '_EXPLAIN') : '',
 			));
 
 			foreach ($options['vars'] as $name => $vars)
@@ -409,7 +414,7 @@ if ($plugin->get_part('t'))
 				{
 					$template->assign_block_vars('options', array(
 						'S_LEGEND'		=> true,
-						'LEGEND'		=> (isset($lang[$vars])) ? $lang[$vars] : $vars)
+						'LEGEND'		=> (!is_null($stk_lang->lang($vars))) ? $stk_lang->lang($vars) : $vars)
 					);
 
 					continue;
@@ -420,11 +425,11 @@ if ($plugin->get_part('t'))
 				$l_explain = '';
 				if ($vars['explain'] && isset($vars['lang_explain']))
 				{
-					$l_explain = (isset($lang[$vars['lang_explain']])) ? $lang[$vars['lang_explain']] : $vars['lang_explain'];
+					$l_explain = (!is_null($stk_lang->lang($vars['lang_explain']))) ? $stk_lang->lang($vars['lang_explain']) : $vars['lang_explain'];
 				}
 				else if ($vars['explain'])
 				{
-					$l_explain = (isset($lang[$vars['lang'] . '_EXPLAIN'])) ? $lang[$vars['lang'] . '_EXPLAIN'] : '';
+					$l_explain = (!is_null($stk_lang->lang($vars['lang'] . '_EXPLAIN'))) ? $stk_lang->lang($vars['lang'] . '_EXPLAIN') : '';
 				}
 
 				$content = build_cfg_template($type, $name, $vars);
@@ -436,7 +441,7 @@ if ($plugin->get_part('t'))
 
 				$template->assign_block_vars('options', array(
 					'KEY'			=> $name,
-					'TITLE'			=> (isset($lang[$vars['lang']])) ? $lang[$vars['lang']] : $vars['lang'],
+					'TITLE'			=> (!is_null($stk_lang->lang($vars['lang']))) ? $stk_lang->lang($vars['lang']) : $vars['lang'],
 					'S_EXPLAIN'		=> $vars['explain'],
 					'TITLE_EXPLAIN'	=> $l_explain,
 					'CONTENT'		=> $content['tpl'],
@@ -477,7 +482,7 @@ if ($plugin->get_part('t'))
 else
 {
 	// Output the main page
-	page_header($lang['SUPPORT_TOOL_KIT']);
+	page_header($stk_lang->lang('SUPPORT_TOOL_KIT'));
 
 	// In de event the request category is empty force it to main.
 	if (!$plugin->get_part('c'))
@@ -487,11 +492,11 @@ else
 
 	// Category title and desc if available
 	$template->assign_vars(array(
-		'L_TITLE'			=> $lang['CAT_' . strtoupper($plugin->get_part('c'))],
-		'L_TITLE_EXPLAIN'	=> isset($lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN']) ? $lang['CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN'] : '',
+		'L_TITLE'			=> $stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c'))),
+		'L_TITLE_EXPLAIN'	=> !is_null($stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN')) ? $stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN') : '',
 		'CAT'				=> $plugin->get_part('c'),
 
-		'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $user->lang['ON'] : $user->lang['OFF'],
+		'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $stk_lang->lang('ON') : $stk_lang->lang('OFF'),
 		'DATABASE_INFO'		=> $db->sql_server_info(),
 		'BOARD_VERSION'		=> $config['version'],
 		'DBMS'				=> $db->get_sql_layer(),

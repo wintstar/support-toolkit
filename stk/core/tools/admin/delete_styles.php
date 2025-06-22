@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Delete Styles
- * @copyright (c) 2019 phpBBGuru Sheer
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) 2019 phpBBGuru Sheer
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 namespace core\tools\admin;
 
@@ -13,12 +13,12 @@ class delete_styles
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $lang, $config;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $config;
 
 		$submit = $request->variable('sa', false);
 		$list = '';
 
-		page_header(user_lang('DELETE_STYLES'));
+		page_header($stk_lang->lang('DELETE_STYLES'));
 
 		if ($submit)
 		{
@@ -42,7 +42,7 @@ class delete_styles
 				// Install prosilver
 				if (!file_exists($dir . 'prosilver/style.cfg'))
 				{
-					trigger_error($lang['NOT_EXISTS_ PROSILVER'], E_USER_WARNING);
+					trigger_error($stk_lang->lang('NOT_EXISTS_ PROSILVER'), E_USER_WARNING);
 				}
 
 				$sql_ary = array(
@@ -67,7 +67,7 @@ class delete_styles
 			{
 				if (!file_exists($dir . $style_path . '/style.cfg'))
 				{
-					trigger_error('Not exists'. $style_name);
+					trigger_error($stk_lang->lang('NOT_EXISTS_CFG', $style_name));
 				}
 			}
 			// Delete styles
@@ -81,14 +81,14 @@ class delete_styles
 				$res = delete_style($style);
 				if ($res === true)
 				{
-					$list .= sprintf($lang['STYLE_UNINSTALL_SUCESS'], $data['style_name']) . '<br />';
+					$list .= $stk_lang->lang('STYLE_UNINSTALL_SUCESS', $data['style_name']) . '<br />';
 				}
 				else
 				{
 					$list .= $res;
 				}
 			}
-			$message = ($list)? '' . user_lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : user_lang('DELETE_STYLES_EMPTY');
+			$message = ($list)? '' . $stk_lang->lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : $stk_lang->lang('DELETE_STYLES_EMPTY');
 
 			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin'));
 			trigger_error($message);

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - User Notifycations
-* @version $Id$
-* @copyright (c) 2015 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,9 +13,11 @@ class user_notifications
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $template, $lang, $db, $request, $language, $user, $phpbb_container;
+		global $stk_root_path, $phpEx, $template, $stk_lang, $db, $request, $user, $phpbb_container;
 
-		$user->add_lang(array('ucp'));
+		$stk_lang->add_lang('ucp', null, true);
+
+		template_convert_lang();
 
 		$phpbb_notifications = $phpbb_container->get('notification_manager');
 
@@ -48,7 +49,7 @@ class user_notifications
 			'notification.type.pm',
 		);
 		$block = 'notification_types';
-		$period_ary = array(0 => $lang['ALL'], 1 => $lang['7_DAYS'], 2 => $lang['1_MONTH'], 3 => $lang['3_MONTHS'], 4 => $lang['6_MONTHS'], 5 => $lang['1_YEAR']);
+		$period_ary = array(0 => $stk_lang->lang('ALL'), 1 => $stk_lang->lang('7_DAYS'), 2 => $stk_lang->lang('1_MONTH'), 3 => $stk_lang->lang('3_MONTHS'), 4 => $stk_lang->lang('6_MONTHS'), 5 => $stk_lang->lang('1_YEAR'));
 		$times = array(0 => 0, 1 => 7, 2 => 30, 3 => 90, 4 => 180, 5 => 365);
 		$groups = array();
 		$inactive_time = ($period) ? (time() - 86400 * $period) : 0;
@@ -93,7 +94,7 @@ class user_notifications
 			{
 				$options[] = array(
 					'type' => $type,
-					'lang' => ($type == 'moderation_queue') ? $user->lang['NOTIFICATION_TYPE_MODERATION_QUEUE'] : $user->lang[strtoupper(str_replace('.', '_', $type))],
+					'lang' => ($type == 'moderation_queue') ? $stk_lang->lang('NOTIFICATION_TYPE_MODERATION_QUEUE') : $stk_lang->lang(strtoupper(str_replace('.', '_', $type))),
 				);
 				$subr['NOTIFICATION_GROUP_POSTING'] = $options;
 			}
@@ -101,7 +102,7 @@ class user_notifications
 			{
 				$mods[] = array(
 					'type' => $type,
-					'lang' => ($type == 'notification.type.needs_approval') ? $user->lang['NOTIFICATION_TYPE_IN_MODERATION_QUEUE'] : $user->lang[strtoupper(str_replace('.', '_', $type))],
+					'lang' => ($type == 'notification.type.needs_approval') ? $stk_lang->lang('NOTIFICATION_TYPE_IN_MODERATION_QUEUE') : $stk_lang->lang(strtoupper(str_replace('.', '_', $type))),
 				);
 				$subr['NOTIFICATION_GROUP_MODERATION'] = $mods;
 			}
@@ -128,14 +129,14 @@ class user_notifications
 		foreach ($subr as $group => $data)
 		{
 			$template->assign_block_vars($block, array(
-				'GROUP_NAME'	=> (isset($user->lang[$group])) ? $user->lang[$group] : $lang[$group],
+				'GROUP_NAME'	=> $stk_lang->lang($group),
 			));
 
 			foreach ($data as $type => $type_data)
 			{
 				$template->assign_block_vars($block, array(
 					'TYPE'		=> str_replace('.', '_', $type_data['type']),
-					'NAME'		=> $user->lang($type_data['lang']),
+					'NAME'		=> $stk_lang->lang($type_data['lang']),
 				));
 
 				foreach ($notification_methods as $method => $method_data)
@@ -211,26 +212,28 @@ class user_notifications
 				}
 			}
 			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_notifications'));
-			trigger_error($lang['USER_NORIFY_OK']);
+			trigger_error($stk_lang->lang('USER_NORIFY_OK'));
 		}
 
 		$template->set_filenames(array(
 			'body' => 'tools/user_notifications.html',
 		));
 
-		page_header(user_lang('USER_NOTIFICATIONS'), false);
+		page_header($stk_lang->lang('USER_NOTIFICATIONS'), false);
 		page_footer();
 	}
 
 	public function output_notification_methods(\phpbb\notification\manager $phpbb_notifications, \phpbb\template\template $template, \phpbb\user $user, $block = 'notification_methods')
 	{
+		global $stk_lang;
+
 		$notification_methods = $phpbb_notifications->get_subscription_methods();
 
 		foreach ($notification_methods as $method => $method_data)
 		{
 			$template->assign_block_vars($block, array(
 				'METHOD'	=> $method_data['id'],
-				'NAME'		=> $user->lang($method_data['lang']),
+				'NAME'		=> $stk_lang->lang($method_data['lang']),
 			));
 		}
 	}

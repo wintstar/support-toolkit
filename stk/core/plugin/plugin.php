@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Plugin handler
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -132,7 +131,7 @@ class plugin
 	 */
 	function load_tool($tool_cat, $tool_name, $return = true)
 	{
-		global $lang, $user;
+		global $user, $stk_lang;
 
 		static $tools_loaded = array();
 
@@ -146,15 +145,16 @@ class plugin
 			$class = new \ReflectionClass("\\core\\tools\\{$tool_cat}\\{$tool_name}");
 			$tools_loaded[$tool_name] = $class->newInstance();
 		} catch (Exception $e) {
-			trigger_error(sprintf($lang['INCORRECT_CLASS'], $e), E_USER_ERROR);
+			trigger_error($stk_lang->lang('INCORRECT_CLASS', $e), E_USER_ERROR);
 		}
 
 		// Add the language file (not needed for 'erk' ;))
 		if ($tool_name != 'erk')
 		{
 			// SRT Generator gets handled a bit different
-			$force_lang = $user->data['user_lang'];
-			stk_add_lang('tools/' . $tool_cat . '/' . $tool_name, $force_lang);
+			$stk_lang->add_lang($tool_name, $tool_cat);
+
+			template_convert_lang();
 		}
 
 		// Return
@@ -217,7 +217,7 @@ class plugin
 	 */
 	function gen_top_nav()
 	{
-		global $stk_root_path, $phpEx, $template, $lang;
+		global $stk_root_path, $phpEx, $stk_lang, $template;
 
 		// Loop through the plugin list. The first keys are the categories
 		$cats = array_keys($this->plugin_list);
@@ -234,7 +234,7 @@ class plugin
 
 			// Assign to the template
 			$template->assign_block_vars('top_nav', array(
-				'L_TITLE'		=> $lang['CAT_' . strtoupper($cat)],
+				'L_TITLE'		=> $stk_lang->lang('CAT_' . strtoupper($cat)),
 				'S_SELECTED'	=> $_s_active,
 				'U_TITLE'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => $cat)),
 			));
@@ -247,7 +247,7 @@ class plugin
 	 */
 	function gen_left_nav()
 	{
-		global $stk_root_path, $phpEx, $template, $lang, $config;
+		global $stk_root_path, $phpEx, $template, $stk_lang, $config;
 
 		// Grep the correct category
 		$tool_list = $this->plugin_list[$this->_parts['c']];
@@ -281,7 +281,7 @@ class plugin
 			{
 				// For us lazy people
 				$info = array(
-					'NAME' => (isset($lang[strtoupper($tool)])) ? $lang[strtoupper($tool)] : strtoupper($tool),
+					'NAME' => (!is_null($stk_lang->lang(strtoupper($tool)))) ? $stk_lang->lang(strtoupper($tool)) : strtoupper($tool),
 				);
 			}
 

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Users without groups
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -22,7 +21,7 @@ class users_nogroups
 	*/
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $db, $template;
+		global $stk_root_path, $phpEx, $stk_lang, $db, $template;
 
 		$sql = 'SELECT user_id, username, user_colour
 			FROM ' . USERS_TABLE . '
@@ -55,7 +54,7 @@ class users_nogroups
 			'body' => 'tools/users_nogroups.html',
 		));
 
-		page_header(user_lang('USERS_NOGROUPS'), false);
+		page_header($stk_lang->lang('USERS_NOGROUPS'), false);
 		page_footer();
 	}
 
@@ -66,13 +65,13 @@ class users_nogroups
 
 	function run_tool()
 	{
-		global $phpbb_root_path, $phpEx, $lang, $request;
+		global $phpbb_root_path, $phpEx, $stk_lang, $request;
 
 		$users = $request->variable('users', array(0));
 
 		if (empty($users))
 		{
-			trigger_error($lang['NO_USERS_SELECTED'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_USERS_SELECTED'), E_USER_WARNING);
 		}
 
 		include $phpbb_root_path . 'includes/functions_user.' . $phpEx;
@@ -103,6 +102,6 @@ class users_nogroups
 				}
 			}
 		}
-		trigger_error($lang['ASSIGHN_GROUPS_SUCCESS']);
+		trigger_error($stk_lang->lang('ASSIGHN_GROUPS_SUCCESS'));
 	}
 }

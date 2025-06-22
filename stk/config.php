@@ -2,9 +2,8 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
-* @copyright (c) 2010 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -17,7 +16,11 @@ if (!defined('IN_PHPBB'))
 * @var Array STK configuration array
 */
 $stk_config = array(
-	/**
+	/* 
+	* Support Toolkit default lang, en
+	*/
+	'default_lang' => 'en',
+	/*
 	* AdminNeo Config
 	* @see https://www.adminneo.org/configuration
 	*/

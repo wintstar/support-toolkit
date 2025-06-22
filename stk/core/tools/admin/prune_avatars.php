@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Prune Avatars
- * @copyright (c) 2015 phpBBGuru Sheer
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) 2015 phpBBGuru Sheer
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 namespace core\tools\admin;
 
@@ -22,7 +22,8 @@ class prune_avatars
 
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $config, $cache, $request;
+
 		$list = '';
 
 		$submit = $request->variable('sa', false);
@@ -93,13 +94,13 @@ class prune_avatars
 			}
 			else
 			{
-				$list = (sizeof($unsuccess)) ? '' : user_lang('PRUNE_AVATARS_FINISHED');
+				$list = (sizeof($unsuccess)) ? '' : $stk_lang->lang('PRUNE_AVATARS_FINISHED');
 				$exit = true;
 			}
 
 			if (sizeof($unsuccess))
 			{
-				$list .= '' . user_lang('PRUNE_AVATARS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
+				$list .= '' . $stk_lang->lang('PRUNE_AVATARS_FAIL') . '<br />' . implode('<br />', $unsuccess) . '';
 			}
 
 			if ($exit)
@@ -117,17 +118,17 @@ class prune_avatars
 			else
 			{
 				meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=prune_avatars&sa=true'));
-				trigger_error('' . user_lang('PRUNE_AVATARS_PROGRESS') . '<br />' . $list . '');
+				trigger_error('' . $stk_lang->lang('PRUNE_AVATARS_PROGRESS') . '<br />' . $list . '');
 			}
 		}
 
-		page_header(user_lang('PRUNE_AVATARS'));
+		page_header($stk_lang->lang('PRUNE_AVATARS'));
 
 		$template->assign_vars(array(
 			'U_DISPLAY_ACTION'	=> append_sid($stk_root_path . 'index.' . $phpEx, 't=prune_avatars&amp;go=1'),
 
-			'L_PRUNE_AVATARS'			=> user_lang('PRUNE_AVATARS'),
-			'L_PRUNE_AVATARS_EXPLAIN'	=> user_lang('PRUNE_AVATARS_EXPLAIN'),
+			'L_PRUNE_AVATARS'			=> $stk_lang->lang('PRUNE_AVATARS'),
+			'L_PRUNE_AVATARS_EXPLAIN'	=> $stk_lang->lang('PRUNE_AVATARS_EXPLAIN'),
 		));
 
 		$template->set_filenames(array(

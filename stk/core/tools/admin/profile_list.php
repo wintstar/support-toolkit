@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Profile List
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,13 +13,13 @@ class profile_list
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template, $user, $phpbb_container, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template, $user, $phpbb_container, $request, $stk_lang;
 
 		$submit = $request->variable('sa', false);
 
-		page_header(user_lang('PROFILE_LIST'));
+		page_header($stk_lang->lang('PROFILE_LIST'));
 
-		$user->add_lang('memberlist');
+		$stk_lang->add_lang('memberlist', null, true);
 
 		// Handle delete
 		if ($submit)
@@ -39,12 +38,12 @@ class profile_list
 					user_delete('remove', $uid);
 				}
 
-				trigger_error($lang['USERS_DELETE_SUCCESSFULL']);
+				trigger_error($stk_lang->lang('USERS_DELETE_SUCCESSFULL'));
 			}
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_user_id' => $uids));
-				stk_confirm_box(false, $lang['USERS_DELETE_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=profile_list&amp;sa=' . true);
+				stk_confirm_box(false, $stk_lang->lang('USERS_DELETE_CONFIRM'), $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=profile_list&amp;sa=' . true);
 			}
 		}
 
@@ -100,7 +99,7 @@ class profile_list
 		{
 			$template->assign_block_vars('options', array(
 				'OPTION'	=> $option,
-				'LANG'		=> isset($lang[$lang_key]) ? $lang[$lang_key] : $lang_key,
+				'LANG'		=> !is_null($stk_lang->lang($lang_key)) ? $stk_lang->lang($lang_key) : $lang_key,
 				'SELECTED'	=> ($display == $option) ? true : false,
 			));
 
@@ -161,7 +160,7 @@ class profile_list
 		{
 			$template->assign_block_vars('order', array(
 				'OPTION'	=> $option,
-				'LANG'		=> $lang[$lang_key],
+				'LANG'		=> $stk_lang->lang($lang_key),
 				'SELECTED'	=> ($order_by == $option) ? true : false,
 			));
 		}
@@ -199,23 +198,23 @@ class profile_list
 		$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$inactive_reason = $user->lang['INACTIVE_REASON_UNKNOWN'];
+			$inactive_reason = $stk_lang->lang('INACTIVE_REASON_UNKNOWN');
 			switch ($row['user_inactive_reason'])
 			{
 				case INACTIVE_REGISTER:
-					$inactive_reason = $user->lang['INACTIVE_REASON_REGISTER'];
+					$inactive_reason = $stk_lang->lang('INACTIVE_REASON_REGISTER');
 				break;
 
 				case INACTIVE_PROFILE:
-					$inactive_reason = $user->lang['INACTIVE_REASON_PROFILE'];
+					$inactive_reason = $stk_lang->lang('INACTIVE_REASON_PROFILE');
 				break;
 
 				case INACTIVE_MANUAL:
-					$inactive_reason = $user->lang['INACTIVE_REASON_MANUAL'];
+					$inactive_reason = $stk_lang->lang('INACTIVE_REASON_MANUAL');
 				break;
 
 				case INACTIVE_REMIND:
-					$inactive_reason = $user->lang['INACTIVE_REASON_REMIND'];
+					$inactive_reason = $stk_lang->lang('INACTIVE_REASON_REMIND');
 				break;
 			}
 
@@ -242,7 +241,7 @@ class profile_list
 				'WEBSITE'			=> $row['pf_phpbb_website'],
 
 				'OPTION_SECTION'		=> (isset($options[$display])) ? $row[$display] : '',
-				'ORDER_SECTION'			=> (in_array($order_by, $timestamps)) ? (($row[$order_by]) ? $user->format_date($row[$order_by]) : $user->lang['NEVER']) : $row[$order_by],
+				'ORDER_SECTION'			=> (in_array($order_by, $timestamps)) ? (($row[$order_by]) ? $user->format_date($row[$order_by]) : $stk_lang->lang('NEVER')) : $row[$order_by],
 				'USER_INACTIVE_REASON'	=> $inactive_reason,
 
 				'U_USER_ADMIN'		=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx, 'i=users&amp;mode=overview&amp;u=' . $row['uid'], true, $user->session_id),
@@ -269,9 +268,9 @@ class profile_list
 			'U_SELECTED_ACTION'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'profile_list', 'sa' => true)),
 
 			'LIMIT'					=> $limit,
-			'OPTION_SECTION'		=> (isset($options[$display]) && $display != 'user_sig') ? $user->lang[$options[$display]] : '',
-			'ORDER_SECTION'			=> ($order_by == 'username_clean') ? '' : ((isset($order[$order_by])) ? $user->lang[$order[$order_by]] : $user->lang['JOINED']),
-			'TOTAL_ITEMS'			=> '' . user_lang('TOTAL') . ': ' . $count . '',
+			'OPTION_SECTION'		=> (isset($options[$display]) && $display != 'user_sig') ? $stk_lang->lang($options[$display]) : '',
+			'ORDER_SECTION'			=> ($order_by == 'username_clean') ? '' : ((isset($order[$order_by])) ? $stk_lang->lang($order[$order_by]) : $stk_lang->lang('JOINED')),
+			'TOTAL_ITEMS'			=> '' . $stk_lang->lang('TOTAL') . ': ' . $count . '',
 
 			'S_DESC'				=> ($order_dir == 'DESC') ? true : false,
 			'S_DISPLAY_ALL'			=> (!isset($options[$display])) ? true : false,

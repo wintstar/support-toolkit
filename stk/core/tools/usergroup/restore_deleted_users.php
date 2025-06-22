@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Restore Deleted Users
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,7 +18,7 @@ class restore_deleted_users
 	*/
 	function display_options()
 	{
-		global $db, $template, $request;
+		global $stk_lang, $db, $template, $request;
 
 		$conflicted = $request->variable('conflicted', array(0 => 0));
 
@@ -64,7 +63,7 @@ class restore_deleted_users
 		// Nothing to do
 		if (empty($users) && empty($damaged))
 		{
-			trigger_error(user_lang('NO_DELETED_USERS'));
+			trigger_error($stk_lang->lang('NO_DELETED_USERS'));
 		}
 
 		$return = array('title'	=> $title);
@@ -124,7 +123,7 @@ class restore_deleted_users
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $db, $phpbb_root_path, $request;
+		global $stk_lang, $config, $db, $phpbb_root_path, $request;
 
 		$post		= $request->variable('post', array(0));
 		$conflicted	= $request->variable('conflicted', array(0 => 0));
@@ -214,9 +213,9 @@ class restore_deleted_users
 
 		// Purge teh caches
 		$path = $phpbb_root_path . 'cache/production';
-		delete_directory_recursiv($path);
+		purge_dir($path);
 
-		trigger_error(((sizeof($non_conflicted) > 1) ? user_lang('USERS_RESTORED_SUCCESSFULLY') : user_lang('USER_RESTORED_SUCCESSFULLY')));
+		trigger_error(((sizeof($non_conflicted) > 1) ? $stk_lang->lang('USERS_RESTORED_SUCCESSFULLY') : $stk_lang->lang('USER_RESTORED_SUCCESSFULLY')));
 	}
 
 	/**

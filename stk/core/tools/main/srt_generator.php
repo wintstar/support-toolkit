@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Support Request Generator
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -54,7 +53,7 @@ class srt_generator
 	 */
 	function tool_active()
 	{
-		global $config, $request;
+		global $config, $request, $stk_lang;
 
 		// This tool relies on the cache, if the user has the `NULL`
 		// cache enabled he can't use this!
@@ -185,9 +184,7 @@ class srt_generator
 	 */
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $cache, $template, $lang;
-
-		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
+		global $stk_root_path, $phpEx, $cache, $template, $stk_lang;
 
 		// Step 0 is easy
 		if ($this->step == 0)
@@ -254,13 +251,15 @@ class srt_generator
 						$this->_format_options($options, $question['name']);
 					}
 
+					require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
+
 					$template->assign_block_vars('questionrow', array(
-						'EXPLAIN'			=> (!empty($lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']])) ? $lang['SRT_QUESTIONS_EXPLAIN']["step{$this->step}"][$question['name']] : '',
+						'EXPLAIN'			=> !is_null($stk_lang->lang(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name'])) ? $stk_lang->lang(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name']) : '',
 						'NAME'				=> $question['name'],
 						'OPTIONS'			=> ($question['type'] == 'dropdown') ? $options : '',
 						'PREFILL'			=> $_p_callback_result,
 						'QUESTION'			=> $english['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
-						'QUESTION_LABEL'	=> $lang['SRT_QUESTIONS']["step{$this->step}"][$question['name']],
+						'QUESTION_LABEL'	=> $stk_lang->lang(array('SRT_QUESTIONS', 'step' . $this->step), $question['name']),
 						'TYPE'				=> $question['type'],
 						'ID_COUNT'			=> $question['name'] . '_' . $questionrow_count++,
 					));
@@ -274,7 +273,7 @@ class srt_generator
 		));
 
 		// Spit out teh page
-		page_header(user_lang('SRT_GENERATOR'));
+		page_header($stk_lang->lang('SRT_GENERATOR'));
 
 		$template->set_filenames(array(
 			'body' => 'tools/main_srt_generator.html',
@@ -288,9 +287,7 @@ class srt_generator
 	 */
 	function run_tool()
 	{
-		global $stk_root_path, $phpEx, $cache, $lang, $request;
-
-		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
+		global $stk_root_path, $phpEx, $cache, $stk_lang, $request;
 
 		// Step 0 is a special place to be, only available for special people
 		// this user isn't special so kick him to the user spot
@@ -311,14 +308,14 @@ class srt_generator
 
 			if (!empty($ext_related) && $ext_related == '1')
 			{
-				trigger_error($lang['STEP1_EXT_ERROR']);
+				trigger_error($stk_lang->lang('STEP1_EXT_ERROR'));
 			}
 
 			$hacked = $request->variable('hacked', false);
 
 			if (!empty($hacked) && $hacked == '1')
 			{
-				trigger_error($lang['STEP1_HACKED_ERROR']);
+				trigger_error($stk_lang->lang('STEP1_HACKED_ERROR'));
 			}
 		}
 
@@ -362,6 +359,8 @@ class srt_generator
 					break;
 
 					case 'dropdown'	:
+						require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
+
 						// The correct one
 						if (!empty($question['options']))
 						{
@@ -392,9 +391,10 @@ class srt_generator
 	 */
 	function _build_srt()
 	{
-		global $stk_root_path, $phpEx, $cache, $template, $lang, $user;
+		global $stk_root_path, $phpEx, $cache, $template, $stk_lang, $user;
 
-		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
+		// Prevent some errors from missing language strings.
+		$stk_lang->add_lang('viewtopic', null, true);
 
 		$_template = array();
 
@@ -403,8 +403,10 @@ class srt_generator
 		if ($_answers === false)
 		{
 			// Shouldn't happening in normal operation
-			trigger_error($lang['COULDNT_LOAD_SRT_ANSWERS']);
+			trigger_error($stk_lang->lang('COULDNT_LOAD_SRT_ANSWERS'));
 		}
+
+		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 		// Header
 		$_template[] = '[size=115][color=#368AD2][b]' . $english['SRT_GENERATOR'] . '[/b][/color][/size]<br />';
@@ -438,7 +440,6 @@ class srt_generator
 		$_template[] = '<br />[size=80]' . sprintf($english['BY_SRT_GENERATOR'], STK_VERSION) . '[/size]';
 
 		// Output
-		$user->add_lang('viewtopic');
 		$template->assign_var('COMPILED_TEMPLATE', nl2br(implode('<br />', $_template)));
 	}
 
@@ -458,7 +459,7 @@ class srt_generator
 	 */
 	function _format_options(&$options, $name = '')
 	{
-		global $stk_root_path, $phpEx, $lang;
+		global $stk_root_path, $phpEx, $stk_lang;
 
 		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
@@ -474,9 +475,11 @@ class srt_generator
 		else
 		{
 			// If there is no language entry for this list return an empty array
-			if (!empty($lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name]))
+			$options = $stk_lang->get_lang_array();
+
+			if (!empty($options['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name]))
 			{
-				foreach ($lang['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name] as $_key => $_value)
+				foreach ($options['SRT_DROPDOWN_OPTIONS']["step{$this->step}"][$name] as $_key => $_value)
 				{
 					$_option_list[] = "<option value='{$_key}'>{$_value}</option>";
 				}
@@ -634,7 +637,7 @@ class srt_generator
 
 	function _prefill_gzip()
 	{
-		global $stk_root_path, $phpEx, $config, $lang;
+		global $stk_root_path, $phpEx, $config;
 
 		require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 

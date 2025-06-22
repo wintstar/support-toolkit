@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - DB Tables optimizer
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +13,7 @@ class optimize_tables
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $user, $template, $db, $request;
+		global $stk_lang, $stk_root_path, $phpEx, $user, $template, $db, $request;
 
 		$submit = $request->variable('sa', false);
 		$tables = $request->variable('tables_list', array(''));
@@ -32,11 +31,11 @@ class optimize_tables
 					$sql = 'OPTIMIZE TABLE '.$tables[$i].'';
 					$db->sql_query($sql);
 				}
-				$message = user_lang('SUCESS');
+				$message = $stk_lang->lang('SUCESS');
 			}
 			else
 			{
-				$message =  $user->lang['NOTHING'];
+				$message =  $stk_lang->lang('NOTHING');
 			}
 			meta_refresh(3, $action);
 			trigger_error($message);
@@ -69,21 +68,21 @@ class optimize_tables
 				'FRAGMENTED'			=> $fragmented,
 				'U_DISPLAY_ACTION'		=> $action,
 
-				'L_OPTIMIZE_TABLES'			=> user_lang('OPTIMIZE_TABLES'),
-				'L_OPTIMIZE_TABLES_EXPLAIN'	=> user_lang('OPTIMIZE_TABLES_EXPLAIN'),
-				'L_NOT_FOUND'				=> user_lang('NOT_FOUND'),
-				'L_TABLE_NAME'				=> user_lang('TABLE_NAME'),
-				'L_UPDATE_TIME'				=> user_lang('UPDATE_TIME'),
-				'L_TABLE_SIZE'				=> user_lang('TABLE_SIZE'),
-				'L_FRAGMENTED'				=> user_lang('FRAGMENTED'),
-				'L_OPTIMIZER_MESSAGE'		=> user_lang('OPTIMIZER_MESSAGE'),
+				'L_OPTIMIZE_TABLES'			=> $stk_lang->lang('OPTIMIZE_TABLES'),
+				'L_OPTIMIZE_TABLES_EXPLAIN'	=> $stk_lang->lang('OPTIMIZE_TABLES_EXPLAIN'),
+				'L_NOT_FOUND'				=> $stk_lang->lang('NOT_FOUND'),
+				'L_TABLE_NAME'				=> $stk_lang->lang('TABLE_NAME'),
+				'L_UPDATE_TIME'				=> $stk_lang->lang('UPDATE_TIME'),
+				'L_TABLE_SIZE'				=> $stk_lang->lang('TABLE_SIZE'),
+				'L_FRAGMENTED'				=> $stk_lang->lang('FRAGMENTED'),
+				'L_OPTIMIZER_MESSAGE'		=> $stk_lang->lang('OPTIMIZER_MESSAGE'),
 				)
 			);
 		}
 
 		// This is kinda like the main page
 		// Output the main page
-		page_header(user_lang('SUPPORT_TOOL_KIT'));
+		page_header($stk_lang->lang('SUPPORT_TOOL_KIT'));
 
 		$template->set_filenames(array(
 			'body' => 'tools/db_optimizer.html',

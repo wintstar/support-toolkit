@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resynchronise Users groups
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 /**
  * @ignore
@@ -42,8 +42,9 @@ class resync_newly_registered
 	 */
 	function __construct($main_object)
 	{
-		global $user;
-		$user->add_lang('acp/groups');
+		global $stk_lang;
+
+		$stk_lang->add_lang('acp/groups', null, true);
 
 		$this->parent = $main_object;
 	}
@@ -61,7 +62,7 @@ class resync_newly_registered
 	 */
 	function resync()
 	{
-		global $stk_root_path, $config, $template, $request;
+		global $stk_lang, $stk_root_path, $config, $template, $request;
 
 		// Get global variables
 		$last = $request->variable('last', 0); // The user_id of the last user in this batch
@@ -84,7 +85,7 @@ class resync_newly_registered
 			{
 				meta_refresh(3, append_sid($stk_root_path, array('c' => 'user_group', 't' => 'resync_user_groups', 'step' => ++$step, 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 				$template->assign_var('U_BACK_TOOL', false);
-				trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
+				trigger_error($stk_lang->lang('RUN_RNR_NOT_FINISHED'));
 			}
 		}
 
@@ -128,7 +129,7 @@ class resync_newly_registered
 			// Handle the errors, though continue if all users are already part of the group
 			if ($error != 'GROUP_USERS_EXIST')
 			{
-				trigger_error(user_lang($error));
+				trigger_error($stk_lang->lang($error));
 			}
 		}
 
@@ -138,7 +139,7 @@ class resync_newly_registered
 		// Next batch
 		meta_refresh(3, append_sid($stk_root_path, array('c' => 'usergroup', 't' => 'resync_user_groups', 'step' => $step, 'last' => array_pop($users), 'submit' => true, 'rr' => $this->parent->run_rr, 'rnr' => $this->parent->run_rnr)));
 		$template->assign_var('U_BACK_TOOL', false);
-		trigger_error(user_lang('RUN_RNR_NOT_FINISHED'));
+		trigger_error($stk_lang->lang('RUN_RNR_NOT_FINISHED'));
 	}
 
 	/**

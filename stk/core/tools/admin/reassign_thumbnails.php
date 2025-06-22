@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Reassign Thumbnails
- * @copyright (c) 2017 phpBBGuru Sheer
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) 2017 phpBBGuru Sheer
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 namespace core\tools\admin;
 
@@ -31,7 +31,7 @@ class reassign_thumbnails
 
 	function run_tool()
 	{
-		global $config, $db, $lang, $cache, $template, $stk_root_path, $phpbb_root_path, $phpEx;
+		global $config, $db, $stk_lang, $cache, $template, $stk_root_path, $phpbb_root_path, $phpEx;
 
 		include_once $phpbb_root_path . 'includes/functions_posting.' . $phpEx;
 		ignore_user_abort(true);
@@ -53,10 +53,10 @@ class reassign_thumbnails
 		{
 			// Nothing to do
 			$cache->destroy('_stk_reassign_thumbnails');
-			trigger_error($lang['NO_THUMBNAILS_TO_REBUILD'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_THUMBNAILS_TO_REBUILD'), E_USER_WARNING);
 		}
 
-		$list = sprintf($lang['NEED_TO_PROCESS'], $total) . '<br />';
+		$list = $stk_lang->lang('NEED_TO_PROCESS', $total) . '<br />';
 
 		// Get the batch
 		$batch = $this->get_images($begin, $this->_batch_size);
@@ -72,17 +72,17 @@ class reassign_thumbnails
 			{
 				if (create_thumbnail($upload_path . $batch[$i]['physical_filename'], $upload_path . $thumb_file_name, $batch[$i]['mimetype']))
 				{
-					$output[] = $lang['REBUILT'] . $batch[$i]['physical_filename'] . ' ' . $lang['THUMB'] . ' '. $thumb_file_name;
+					$output[] = $stk_lang->lang('REBUILT') . $batch[$i]['physical_filename'] . ' ' . $stk_lang->lang('THUMB'). ' '. $thumb_file_name;
 					$thumbs[] = $batch[$i]['attach_id'];
 				}
 				else
 				{
-					$output[] = $lang['NO_NEED_REBUILT'] . $batch[$i]['physical_filename'];
+					$output[] = $stk_lang->lang('NO_NEED_REBUILT') . $batch[$i]['physical_filename'];
 				}
 			}
 			else
 			{
-				$output[] = $lang['SOURCE_UNAVAILABLE'] . $batch[$i]['physical_filename'];
+				$output[] = $stk_lang->lang('SOURCE_UNAVAILABLE') . $batch[$i]['physical_filename'];
 			}
 		}
 
@@ -96,7 +96,7 @@ class reassign_thumbnails
 			{
 				$db->sql_query('UPDATE ' . ATTACHMENTS_TABLE . ' SET thumbnail = 1 WHERE ' . $db->sql_in_set('attach_id', $thumbs));
 			}
-			trigger_error($lang['REASSIGN_THUMBNAILS_FINISHED']);
+			trigger_error($stk_lang->lang('REASSIGN_THUMBNAILS_FINISHED'));
 		}
 
 		// Next step
@@ -107,12 +107,12 @@ class reassign_thumbnails
 		$cache->put('_stk_thumbnails', $thumbs);
 		$template->assign_var('U_BACK_TOOL', false);
 		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reassign_thumbnails', 'step' => ++$step, 'submit' => true)));
-		trigger_error('' . $lang['REASSIGN_THUMBNAILS_PROGRESS'] . '<br />' . $list . implode("<br />", $output) . '');
+		trigger_error('' . $stk_lang->lang('REASSIGN_THUMBNAILS_PROGRESS') . '<br />' . $list . implode("<br />", $output) . '');
 	}
 
 	function count_total_images()
 	{
-		global $db, $config, $lang;
+		global $db, $config, $stk_lang;
 
 		$extensions = array();
 
@@ -127,13 +127,13 @@ class reassign_thumbnails
 		{
 			$sql = 'SELECT group_id
 				FROM ' . EXTENSION_GROUPS_TABLE . '
-				WHERE group_name = \'' . $lang['IMAGES'] . '\'';
+				WHERE group_name = \'' . $stk_lang->lang('IMAGES') . '\'';
 			$result = $db->sql_query($sql);
 			$group_id = (int) $db->sql_fetchfield('group_id');
 			$db->sql_freeresult($result);
 			if (!$group_id)
 			{
-				trigger_error($lang['NO_EXTENSIONS_GROUP'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_EXTENSIONS_GROUP'), E_USER_WARNING);
 			}
 		}
 
@@ -149,7 +149,7 @@ class reassign_thumbnails
 
 		if (!$extensions)
 		{
-			trigger_error($lang['NO_EXTENSIONS'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_EXTENSIONS'), E_USER_WARNING);
 		}
 
 		$sql_where = '';
@@ -171,7 +171,7 @@ class reassign_thumbnails
 
 	function get_images($start = 0 , $limit = 20)
 	{
-		global $config, $db, $lang;
+		global $config, $db, $stk_lang;
 
 		$data = array();
 
@@ -185,13 +185,13 @@ class reassign_thumbnails
 		{
 			$sql = 'SELECT group_id
 				FROM ' . EXTENSION_GROUPS_TABLE . '
-				WHERE group_name = \'' . $lang['IMAGES'] . '\'';
+				WHERE group_name = \'' . $stk_lang->lang('IMAGES') . '\'';
 			$result = $db->sql_query($sql);
 			$group_id = (int) $db->sql_fetchfield('group_id');
 			$db->sql_freeresult($result);
 			if (!$group_id)
 			{
-				trigger_error($lang['NO_EXTENSIONS_GROUP'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_EXTENSIONS_GROUP'), E_USER_WARNING);
 			}
 		}
 

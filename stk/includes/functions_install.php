@@ -25,7 +25,6 @@ if (!defined('IN_PHPBB'))
 */
 function get_available_dbms($dbms = false, $return_unavailable = false, $only_20x_options = false)
 {
-	global $lang;
 	$available_dbms = array(
 		// Note: php 5.5 alpha 2 deprecated mysql.
 		// Keep mysqli before mysql in this list.
@@ -169,14 +168,14 @@ function get_available_dbms($dbms = false, $return_unavailable = false, $only_20
 */
 function dbms_select($default = '', $only_20x_options = false)
 {
-	global $lang;
+	global $stk_lang;
 
 	$available_dbms = get_available_dbms(false, false, $only_20x_options);
 	$dbms_options = '';
 	foreach ($available_dbms as $dbms_name => $details)
 	{
 		$selected = ($dbms_name == $default) ? ' selected="selected"' : '';
-		$dbms_options .= '<option value="' . $dbms_name . '"' . $selected .'>' . $lang['DLL_' . strtoupper($dbms_name)] . '</option>';
+		$dbms_options .= '<option value="' . $dbms_name . '"' . $selected .'>' . $stk_lang->lang('DLL_' . strtoupper($dbms_name)) . '</option>';
 	}
 	return $dbms_options;
 }
@@ -189,7 +188,7 @@ function dbms_select($default = '', $only_20x_options = false)
 */
 function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix, $dbhost, $dbuser, $dbpasswd, $dbname, $dbport, $prefix_may_exist = false, $load_dbal = true, $unicode_check = true)
 {
-	global $phpbb_root_path, $phpEx, $config, $lang;
+	global $phpbb_root_path, $phpEx, $config, $stk_lang;
 
 	$dbms = $dbms_details['DRIVER'];
 
@@ -200,14 +199,14 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 	// Check that we actually have a database name before going any further.....
 	if ($dbms_details['DRIVER'] != 'phpbb\db\driver\sqlite' && $dbms_details['DRIVER'] != 'phpbb\db\driver\sqlite3' && $dbms_details['DRIVER'] != 'phpbb\db\driver\oracle' && $dbname === '')
 	{
-		$error[] = $lang['INST_ERR_DB_NO_NAME'];
+		$error[] = $stk_lang->lang('INST_ERR_DB_NO_NAME');
 		return false;
 	}
 
 	// Make sure we don't have a daft user who thinks having the SQLite database in the forum directory is a good idea
 	if (($dbms_details['DRIVER'] == 'phpbb\db\driver\sqlite' || $dbms_details['DRIVER'] == 'phpbb\db\driver\sqlite3') && stripos(phpbb_realpath($dbhost), phpbb_realpath('../')) === 0)
 	{
-		$error[] = $lang['INST_ERR_DB_FORUM_PATH'];
+		$error[] = $stk_lang->lang('INST_ERR_DB_FORUM_PATH');
 		return false;
 	}
 
@@ -218,7 +217,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 		case 'phpbb\db\driver\mysqli':
 			if (strspn($table_prefix, '-./\\') !== 0)
 			{
-				$error[] = $lang['INST_ERR_PREFIX_INVALID'];
+				$error[] = $stk_lang->lang('INST_ERR_PREFIX_INVALID');
 				return false;
 			}
 
@@ -246,7 +245,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 
 	if (strlen($table_prefix) > $prefix_length)
 	{
-		$error[] = sprintf($lang['INST_ERR_PREFIX_TOO_LONG'], $prefix_length);
+		$error[] = $stk_lang->lang('INST_ERR_PREFIX_TOO_LONG', $prefix_length);
 		return false;
 	}
 
@@ -254,7 +253,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 	if (is_array($db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, true)))
 	{
 		$db_error = $db->sql_error();
-		$error[] = $lang['INST_ERR_DB_CONNECT'] . '<br />' . (($db_error['message']) ? utf8_convert_message($db_error['message']) : $lang['INST_ERR_DB_NO_ERROR']);
+		$error[] = $stk_lang->lang('INST_ERR_DB_CONNECT') . '<br />' . (($db_error['message']) ? utf8_convert_message($db_error['message']) : $stk_lang->lang('INST_ERR_DB_NO_ERROR'));
 	}
 	else
 	{
@@ -270,7 +269,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 
 			if (sizeof($table_intersect))
 			{
-				$error[] = $lang['INST_ERR_PREFIX'];
+				$error[] = $stk_lang->lang('INST_ERR_PREFIX');
 			}
 		}
 
@@ -280,14 +279,14 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 			case 'phpbb\db\driver\mysqli':
 				if (version_compare(mysqli_get_server_info($db->get_db_connect_id()), '4.1.3', '<'))
 				{
-					$error[] = $lang['INST_ERR_DB_NO_MYSQLI'];
+					$error[] = $stk_lang->lang('INST_ERR_DB_NO_MYSQLI');
 				}
 			break;
 
 			case 'phpbb\db\driver\sqlite':
 				if (version_compare(sqlite_libversion(), '2.8.2', '<'))
 				{
-					$error[] = $lang['INST_ERR_DB_NO_SQLITE'];
+					$error[] = $stk_lang->lang('INST_ERR_DB_NO_SQLITE');
 				}
 			break;
 
@@ -295,7 +294,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 				$version = \SQLite3::version();
 				if (version_compare($version['versionString'], '3.6.15', '<'))
 				{
-					$error[] = $lang['INST_ERR_DB_NO_SQLITE3'];
+					$error[] = $stk_lang->lang('INST_ERR_DB_NO_SQLITE3');
 				}
 			break;
 
@@ -316,7 +315,7 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 
 					if (version_compare($stats['NLS_RDBMS_VERSION'], '9.2', '<') && $stats['NLS_CHARACTERSET'] !== 'UTF8')
 					{
-						$error[] = $lang['INST_ERR_DB_NO_ORACLE'];
+						$error[] = $stk_lang->lang('INST_ERR_DB_NO_ORACLE');
 					}
 				}
 			break;
@@ -331,12 +330,11 @@ function connect_check_db($error_connect, &$error, $dbms_details, $table_prefix,
 
 					if ($row['server_encoding'] !== 'UNICODE' && $row['server_encoding'] !== 'UTF8')
 					{
-						$error[] = $lang['INST_ERR_DB_NO_POSTGRES'];
+						$error[] = $stk_lang->lang('INST_ERR_DB_NO_POSTGRES');
 					}
 				}
 			break;
 		}
-
 	}
 
 	if ($error_connect && (!isset($error) || !sizeof($error)))
@@ -393,9 +391,9 @@ function adjust_language_keys_callback($matches)
 {
 	if (!empty($matches[1]))
 	{
-		global $lang, $db;
+		global $stk_lang, $db;
 
-		return (!empty($lang[$matches[1]])) ? $db->sql_escape($lang[$matches[1]]) : $db->sql_escape($matches[1]);
+		return (!is_null($stk_lang->lang($matches[1]))) ? $db->sql_escape($stk_lang->lang($matches[1])) : $db->sql_escape($matches[1]);
 	}
 }
 

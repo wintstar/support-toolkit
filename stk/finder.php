@@ -19,22 +19,28 @@ require $stk_root_path . 'common.' . $phpEx;
 // Setup the user
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('acp/common', $config['default_style']);
+$user->setup();
+
+// Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
+$language_file_loader = new \core\language\language_file_loader($stk_root_path, $phpbb_root_path, $phpEx);
+$stk_lang = new \core\language\language($language_file_loader);
+$stk_lang->set_default_language($stk_config['default_lang']);
+$stk_lang->set_user_language($user->data['user_lang']);
+$stk_lang->add_lang('ext_finder', 'ext');
+$stk_lang->add_lang(array('common', 'acp/common'), null, true);
 
 if (!isset($user->data['session_admin']) || !$user->data['session_admin'])
 {
 	exit;
 }
 else
+{
 	// Only Board Founders may use the STK
 	if ($user->data['user_type'] != USER_FOUNDER)
 	{
 		trigger_error('BOARD_FOUNDER_ONLY');
 	}
-
-// Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
-stk_add_lang('common');
-stk_add_lang('tools/ext/ext_finder');
+}
 
 // Do not use the normal template path (to prevent issues with boards using alternate styles)
 $template->set_custom_style('stk', $stk_root_path . 'style');
@@ -198,9 +204,9 @@ if ($table)
 	$info = (isset($extra_data['tables'])) ? finder($extra_data['tables'], $table) : '';
 	$extra = (isset($info['data'])) ? '' . $table_prefix . '' . $info['data'] . '' : '' . $table_prefix . '' . $table. '';
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $lang['TABLE'],
-		'L_EXTRA_DATA'			=> $lang['EXT_TABLE_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_TABLE_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $stk_lang->lang('TABLE'),
+		'L_EXTRA_DATA'			=> $stk_lang->lang('EXT_TABLE_FINDER'),
+		'L_EXTRA_DATA_EXPLAIN'	=> $stk_lang->lang('EXT_TABLE_FINDER_EXPLAIN'),
 	));
 }
 else if($column)
@@ -208,9 +214,9 @@ else if($column)
 	$info = (isset($extra_data['colimns'])) ? finder($extra_data['colimns'], $column) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $column;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $lang['COLUMN'],
-		'L_EXTRA_DATA'			=> $lang['EXT_COLUMN_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_COLUMN_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $stk_lang->lang('COLUMN'),
+		'L_EXTRA_DATA'			=> $stk_lang->lang('EXT_COLUMN_FINDER'),
+		'L_EXTRA_DATA_EXPLAIN'	=> $stk_lang->lang('EXT_COLUMN_FINDER_EXPLAIN'),
 	));
 }
 else if($_config)
@@ -218,9 +224,9 @@ else if($_config)
 	$info = (isset($extra_data['configs'])) ? finder($extra_data['configs'], $_config) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $_config;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $lang['CONFIG'],
-		'L_EXTRA_DATA'			=> $lang['EXT_CONFIG_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_CONFIG_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $stk_lang->lang('CONFIG'),
+		'L_EXTRA_DATA'			=> $stk_lang->lang('EXT_CONFIG_FINDER'),
+		'L_EXTRA_DATA_EXPLAIN'	=> $stk_lang->lang('EXT_CONFIG_FINDER_EXPLAIN'),
 	));
 }
 else if($module)
@@ -228,9 +234,9 @@ else if($module)
 	$info = (isset($extra_data['modules'])) ? finder($extra_data['modules'], $module) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $module;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $lang['MODULE'],
-		'L_EXTRA_DATA'			=> $lang['EXT_MODULE_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_MODULE_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $stk_lang->lang('MODULE'),
+		'L_EXTRA_DATA'			=> $stk_lang->lang('EXT_MODULE_FINDER'),
+		'L_EXTRA_DATA_EXPLAIN'	=> $stk_lang->lang('EXT_MODULE_FINDER_EXPLAIN'),
 	));
 }
 else if($permission)
@@ -238,9 +244,9 @@ else if($permission)
 	$info = (isset($extra_data['permissions'])) ? finder($extra_data['permissions'], $permission) : '';
 	$extra = (isset($info['data'])) ? $info['data'] : $permission;
 	$template->assign_vars(array(
-		'L_EXTRA_DATA_UNIT'		=> $lang['PERMISSION'],
-		'L_EXTRA_DATA'			=> $lang['EXT_PERM_FINDER'],
-		'L_EXTRA_DATA_EXPLAIN'	=> $lang['EXT_PERM_FINDER_EXPLAIN'],
+		'L_EXTRA_DATA_UNIT'		=> $stk_lang->lang('PERMISSION'),
+		'L_EXTRA_DATA'			=> $stk_lang->lang('EXT_PERM_FINDER'),
+		'L_EXTRA_DATA_EXPLAIN'	=> $stk_lang->lang('EXT_PERM_FINDER_EXPLAIN'),
 	));
 }
 
@@ -275,7 +281,7 @@ if ($info)
 $template->assign_vars(array(
 	'EXTRA_DATA'	=> (isset($extra)) ? $extra : '',
 	'PATH'			=> (isset($info['ext'])) ? $path : '',
-	'INFO'			=> (isset($info['ext'])) ? '<b style="color: ' . $color . '">' . $display_name . '</b>/' . $version . ' - ' . $description . '' : $lang['NOT_IN_EXT'],
+	'INFO'			=> (isset($info['ext'])) ? '<b style="color: ' . $color . '">' . $display_name . '</b>/' . $version . ' - ' . $description . '' : $stk_lang->lang('NOT_IN_EXT'),
 ));
 
 // Output the main page

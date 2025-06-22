@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Make Founder
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,7 +18,7 @@ class manage_founders
 	*/
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user;
 
 		// Generate a list of founders
 		$sql = 'SELECT user_id, username, user_colour
@@ -47,7 +46,7 @@ class manage_founders
 			'body' => 'tools/manage_founders.html',
 		));
 
-		page_header(user_lang('MANAGE_FOUNDERS'), false);
+		page_header($stk_lang->lang('MANAGE_FOUNDERS'), false);
 		page_footer();
 	}
 
@@ -58,7 +57,7 @@ class manage_founders
 	*/
 	function run_tool(&$error)
 	{
-		global $phpbb_root_path, $phpEx, $db, $user, $request;
+		global $stk_lang, $phpbb_root_path, $phpEx, $db, $user, $request;
 
 		if (!check_form_key('manage_founders'))
 		{
@@ -102,9 +101,9 @@ class manage_founders
 				// Did everything to right?
 				if (sizeof($founder_ids) == $db->sql_affectedrows())
 				{
-					trigger_error(user_lang('DEMOTE_SUCCESSFULL', $db->sql_affectedrows()));
+					trigger_error($stk_lang->lang('DEMOTE_SUCCESSFULL', $db->sql_affectedrows()));
 				}
-				trigger_error(user_lang('DEMOTE_FAILED'));
+				trigger_error($stk_lang->lang('DEMOTE_FAILED'));
 			break;
 
 			case 'promote' :
@@ -173,9 +172,9 @@ class manage_founders
 				// Success?
 				if ($db->sql_affectedrows() == 1)
 				{
-					trigger_error(user_lang('MAKE_FOUNDER_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
+					trigger_error($stk_lang->lang('MAKE_FOUNDER_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, array('mode' => 'viewprofile', 'u' => $user_id[0])), $username));
 				}
-				trigger_error($user->lang['MAKE_FOUNDER_FAILED']);
+				trigger_error($stk_lang->lang('MAKE_FOUNDER_FAILED'));
 			break;
 
 			default :

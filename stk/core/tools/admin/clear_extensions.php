@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Clear Extensions
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) 2025 wintstar, St. Frank www.stephan-frank.de
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -14,16 +13,19 @@ class clear_extensions
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template,$phpbb_admin_path, $lang;
-		global $cache, $request, $phpbb_extension_manager, $config, $user;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_dir_name, $db, $template,$phpbb_admin_path;
+		global $stk_lang, $cache, $request, $phpbb_extension_manager, $config, $user;
 		$this->ext_manager = $phpbb_extension_manager;
 
-		$user->add_lang('acp/extensions');
+		$stk_lang->add_lang('acp/extensions', null, true);
+
+		template_convert_lang();
+
 		$u_action = append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=clear_extensions');
 		$off = $request->variable('off', false);
 		$on = $request->variable('on', false);
 
-		page_header($lang['CLEAR_EXTENSIONS']);
+		page_header($stk_lang->lang('CLEAR_EXTENSIONS'));
 
 		if ($off)
 		{
@@ -31,7 +33,7 @@ class clear_extensions
 			if (empty($uids))
 			{
 				$error[] = 'NO_EXT_SELECTED';
-				trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_EXT_SELECTED'), E_USER_WARNING);
 			}
 			if (stk_confirm_box(true))
 			{
@@ -40,12 +42,12 @@ class clear_extensions
 					WHERE ' . $db->sql_in_set('ext_name', $uids, false);
 				$db->sql_query($sql);
 				$cache->purge(); // Purge the cache
-				trigger_error($lang['OFF_EXT_SUCCESS']);
+				trigger_error($stk_lang->lang('OFF_EXT_SUCCESS'));
 			}
 			else
 			{
 				$hidden = build_hidden_fields(array('marked_name' => $uids));
-				stk_confirm_box(false, $lang['EXT_OFF_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
+				stk_confirm_box(false, $stk_lang->lang('EXT_OFF_CONFIRM'), $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;off=' . true);
 			}
 		}
 
@@ -63,7 +65,7 @@ class clear_extensions
 				WHERE ' . $db->sql_in_set('ext_name', $uids, false);
 			$db->sql_query($sql);
 			$cache->purge(); // Purge the cache
-			trigger_error($lang['ON_EXT_SUCCESS']);
+			trigger_error($stk_lang->lang('ON_EXT_SUCCESS'));
 		}
 
 		$row_set = array();
@@ -199,14 +201,14 @@ class clear_extensions
 
 	function run_tool(&$error)
 	{
-		global $stk_dir_name, $phpEx, $cache, $db, $template, $request, $lang, $config;
+		global $stk_dir_name, $phpEx, $stk_lang, $cache, $db, $template, $request, $config;
 
 		$uids = $request->variable('marked_name', array('', ''));
 
 		if (empty($uids))
 		{
 			$error[] = 'NO_EXT_SELECTED';
-			trigger_error($lang['NO_EXT_SELECTED'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_EXT_SELECTED'), E_USER_WARNING);
 		}
 
 		if (stk_confirm_box(true))
@@ -231,13 +233,13 @@ class clear_extensions
 			{
 				// Purge the cache
 				$cache->purge();
-				trigger_error($lang['CLEAR_EXT_SUCCESS']);
+				trigger_error($stk_lang->lang('CLEAR_EXT_SUCCESS'));
 			}
 		}
 		else
 		{
 			$hidden = build_hidden_fields(array('marked_name' => $uids));
-			stk_confirm_box(false, $lang['EXT_DELETE_CONFIRM'], $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
+			stk_confirm_box(false, $stk_lang->lang('EXT_DELETE_CONFIRM'), $hidden, 'confirm_body.html', $stk_dir_name . '/index.' . $phpEx . '?c=admin&amp;t=clear_extensions&amp;submit=' . true);
 		}
 	}
 }

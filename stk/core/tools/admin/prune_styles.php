@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Prune Styles
- * @copyright (c) 2019 phpBBGuru Sheer
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) 2019 phpBBGuru Sheer
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 namespace core\tools\admin;
 
@@ -13,13 +13,13 @@ class prune_styles
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $request, $stk_lang;
 
 		$submit = $request->variable('sa', false);
 		$list = '';
 		$styles = array();
 
-		page_header(user_lang('PRUNE_STYLES'));
+		page_header($stk_lang->lang('PRUNE_STYLES'));
 
 		if ($submit)
 		{
@@ -39,7 +39,7 @@ class prune_styles
 					$res = delete_style($styles[$key]);
 					if ($res === true)
 					{
-						$list .= sprintf($lang['STYLE_UNINSTALL_SUCESS'], $styles[$key]['style_name']) . '<br />';
+						$list .= $stk_lang->lang('STYLE_UNINSTALL_SUCESS', $styles[$key]['style_name']) . '<br />';
 					}
 					else
 					{
@@ -48,7 +48,7 @@ class prune_styles
 				}
 			}
 
-			$message = ($list)? '' . user_lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : user_lang('PRUNE_STYLES_EMPTY');
+			$message = ($list)? '' . $stk_lang->lang('PRUNE_STYLES_SUCCESS') . '<br />' . $list . '' : $stk_lang->lang('PRUNE_STYLES_EMPTY');
 
 			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin'));
 			trigger_error($message);

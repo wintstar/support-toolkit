@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Reset Styles
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,9 +18,9 @@ class reset_styles
 	*/
 	function display_options()
 	{
-		global $config, $user;
+		global $config, $stk_lang;
 
-		$user->add_lang('acp/board');
+		$stk_lang->add_lang('acp/board', null, true);
 
 		return array(
 			'title'	=> 'RESET_STYLES',
@@ -39,7 +38,7 @@ class reset_styles
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $request, $config, $lang;
+		global $db, $request, $config, $stk_lang;
 
 		if (!check_form_key('reset_styles'))
 		{
@@ -58,7 +57,7 @@ class reset_styles
 
 		$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_style = ' . $style_id);
 
-		trigger_error($lang['RESET_STYLE_COMPLETE']);
+		trigger_error($stk_lang->lang('RESET_STYLE_COMPLETE'));
 	}
 
 	function style_select2($value, $key)

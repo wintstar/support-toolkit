@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Readd Module Management
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -73,7 +72,7 @@ class readd_module_management
 	*/
 	function run_tool()
 	{
-		global $cache, $db, $umil;
+		global $cache, $db, $stk_lang, $umil;
 
 		$s_changed = false;
 
@@ -111,17 +110,17 @@ class readd_module_management
 		if ($s_changed)
 		{
 			$cache->destroy('_modules_acp');
-			trigger_error(user_lang('READD_MODULE_MANAGEMENT_SUCCESS'));
+			trigger_error($stk_lang->lang('READD_MODULE_MANAGEMENT_SUCCESS'));
 		}
 		else
 		{
-			trigger_error(user_lang('NO_NEED_READD_MODULE_MANAGEMENT'));
+			trigger_error($stk_lang->lang('NO_NEED_READD_MODULE_MANAGEMENT'));
 		}
 	}
 
 	function module_add($lang_name, $class, $parent, $module_data)
 	{
-		global $stk_root_path, $db, $phpbb_root_path, $phpEx, $user;
+		global $stk_root_path, $db, $phpbb_root_path, $phpEx, $stk_lang;
 
 		$sql = 'SELECT module_id
 			FROM ' . MODULES_TABLE . '
@@ -144,7 +143,8 @@ class readd_module_management
 		if (!class_exists('acp_modules'))
 		{
 			include $stk_root_path . 'includes/acp_modules.' . $phpEx;
-			$user->add_lang('acp/modules');
+
+			$stk_lang->add_lang('acp/modules', null, true);
 		}
 		$acp_modules = new acp_modules();
 		$result = $acp_modules->update_module_data($data, true);
@@ -152,7 +152,7 @@ class readd_module_management
 		if (is_string($result))
 		{
 			// Error
-			trigger_error($user->lang['NO_MODULE'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_MODULE'), E_USER_WARNING);
 		}
 	}
 }

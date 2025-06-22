@@ -75,6 +75,8 @@ class stk_file_downloader
 	 */
 	public function get(string $host, string $directory, string $filename, int $port = 443, int $timeout = 6)
 	{
+		global $stk_lang;
+
 		try
 		{
 			// Initialize Guzzle client
@@ -82,7 +84,7 @@ class stk_file_downloader
 		}
 		catch (\RuntimeException $exception)
 		{
-			throw new stk_runtime_exception(user_lang('STK_HTTP_HANDLER_NOT_FOUND'));
+			throw new stk_runtime_exception($stk_lang->lang('STK_HTTP_HANDLER_NOT_FOUND'));
 		}
 
 		// Set default values for error variables
@@ -101,7 +103,7 @@ class stk_file_downloader
 			else
 			{
 				$this->error_number = $response->getStatusCode();
-				throw new stk_runtime_exception(user_lang('STK_FILE_NOT_FOUND', $filename));
+				throw new stk_runtime_exception($stk_lang->lang('STK_FILE_NOT_FOUND', $filename));
 			}
 		}
 		catch (RequestException $exception)
@@ -112,13 +114,13 @@ class stk_file_downloader
 
 				if ($this->error_number == self::NOT_FOUND)
 				{
-					throw new stk_runtime_exception(user_lang('STK_FILE_NOT_FOUND', $filename));
+					throw new stk_runtime_exception($stk_lang->lang('STK_FILE_NOT_FOUND', $filename));
 				}
 			}
 			else
 			{
 				$this->error_number = self::REQUEST_TIMEOUT;
-				throw new stk_runtime_exception(user_lang('STK_FSOCK_TIMEOUT'));
+				throw new stk_runtime_exception($stk_lang->lang('STK_FSOCK_TIMEOUT'));
 			}
 
 			$this->error_string = utf8_convert_message($exception->getMessage());
@@ -132,7 +134,7 @@ class stk_file_downloader
 		catch (\Throwable $exception)
 		{
 			$this->error_string = utf8_convert_message($exception->getMessage());
-			throw new stk_runtime_exception(user_lang('STK_FSOCK_DISABLED'));
+			throw new stk_runtime_exception($stk_lang->lang('STK_FSOCK_DISABLED'));
 		}
 	}
 

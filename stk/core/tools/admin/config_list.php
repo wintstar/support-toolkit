@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Config List
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) 2014 Sheer
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -14,7 +13,7 @@ class config_list
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $db, $template, $config, $lang, $cache, $phpbb_container, $request, $user;
+		global $stk_root_path, $phpEx, $db, $template, $config, $stk_lang, $cache, $phpbb_container, $request, $user;
 
 		$start = $request->variable('start', 0);
 		$limit = $request->variable('limit', $config['topics_per_page']);
@@ -44,33 +43,33 @@ class config_list
 			$cache->purge();
 
 			meta_refresh(3, append_sid("" . $stk_root_path . "index." . $phpEx . "", 'c=admin&amp;t=config_list&amp;start=' . $start . ''));
-			trigger_error(user_lang('CONFIG_CHANGED_SUCCESS'));
+			trigger_error($stk_lang->lang('CONFIG_CHANGED_SUCCESS'));
 		}
 
 		$options = array(
-			'all'				=> $lang['ALL'],
-			'statistics'		=> $lang['STATISTICS'],
-			'cron'				=> $lang['CRON_TASKS'],
-			'attachments'		=> $lang['ATTACHMENTS'],
-			'board_config'		=> $lang['BOARD_CONFIG'],
-			'board_functions'	=> $lang['BOARD_FUNCTIONS'],
-			'avatars'			=> $lang['AVATARS'],
-			'pm'				=> $lang['PM'],
-			'messages'			=> $lang['MESSAGES'],
-			'signatures'		=> $lang['SIGNATURES'],
-			'feed'				=> $lang['FEED'],
-			'user_register'		=> $lang['USER_REGISTER'],
-			'anti_spam'			=> $lang['ANTI_SPAM'],
-			'auth'				=> $lang['AUTH'],
-			'email'				=> $lang['EMAIL'],
-			'config_jabber'		=> $lang['CONFIG_JABBER'],
-			'cookies'			=> $lang['COOKIES'],
-			'server'			=> $lang['SERVER'],
-			'security'			=> $lang['SECURITY'],
-			'load'				=> $lang['LOAD'],
-			'search'			=> $lang['SEARCH'],
-			'reparsing'			=> 'REPARSING',
-			'misc'				=> $lang['MISC'],
+			'all'				=> $stk_lang->lang('ALL'),
+			'statistics'		=> $stk_lang->lang('STATISTICS'),
+			'cron'				=> $stk_lang->lang('CRON_TASKS'),
+			'attachments'		=> $stk_lang->lang('ATTACHMENTS'),
+			'board_config'		=> $stk_lang->lang('BOARD_CONFIG'),
+			'board_functions'	=> $stk_lang->lang('BOARD_FUNCTIONS'),
+			'avatars'			=> $stk_lang->lang('AVATARS'),
+			'pm'				=> $stk_lang->lang('PM'),
+			'messages'			=> $stk_lang->lang('MESSAGES'),
+			'signatures'		=> $stk_lang->lang('SIGNATURES'),
+			'feed'				=> $stk_lang->lang('FEED'),
+			'user_register'		=> $stk_lang->lang('USER_REGISTER'),
+			'anti_spam'			=> $stk_lang->lang('ANTI_SPAM'),
+			'auth'				=> $stk_lang->lang('AUTH'),
+			'email'				=> $stk_lang->lang('EMAIL'),
+			'config_jabber'		=> $stk_lang->lang('CONFIG_JABBER'),
+			'cookies'			=> $stk_lang->lang('COOKIES'),
+			'server'			=> $stk_lang->lang('SERVER'),
+			'security'			=> $stk_lang->lang('SECURITY'),
+			'load'				=> $stk_lang->lang('LOAD'),
+			'search'			=> $stk_lang->lang('SEARCH'),
+			'reparsing'			=> $stk_lang->lang('REPARSING'),
+			'misc'				=> $stk_lang->lang('MISC'),
 		);
 
 		$config_cron = array(
@@ -239,7 +238,7 @@ class config_list
 		{
 			$template->assign_block_vars('options', array(
 				'OPTION'	=> $option,
-				'LANG'		=> isset($lang[$lang_key]) ? $lang[$lang_key] : $lang_key,
+				'LANG'		=> !is_null($stk_lang->lang($lang_key)) ? $stk_lang->lang($lang_key) : $lang_key,
 				'SELECTED'	=> ($display == $option) ? true : false,
 			));
 		}
@@ -327,7 +326,7 @@ class config_list
 			$sql_where = ' WHERE ' . $db->sql_in_set('config_name', $where) . '';
 		}
 
-		page_header(user_lang('CONFIG_LIST'));
+		page_header($stk_lang->lang('CONFIG_LIST'));
 
 		$sql = 'SELECT COUNT(config_name) as count
 				FROM ' . CONFIG_TABLE . '
@@ -376,7 +375,7 @@ class config_list
 			}
 
 			$template->assign_block_vars('row', array(
-				'CONFIG_PURPOSE'		=> (isset($lang[$row['config_name']])) ? $lang[$row['config_name']] : $lang['UNKNOWN'],
+				'CONFIG_PURPOSE'		=> (!is_null($stk_lang->lang($row['config_name']))) ? $stk_lang->lang($row['config_name']) : $stk_lang->lang('UNKNOWN'),
 				'CONFIG_NAME'			=> $row['config_name'],
 				'CONFIG_VALUE'			=> $row['config_value'],
 				'IS_DINAMIC'			=> $row['is_dynamic'],
@@ -396,12 +395,12 @@ class config_list
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $count, $limit, $start);
 
 		$template->assign_vars(array(
-			'L_CONFIG_LIST'			=> $lang['CONFIG_LIST'],
-			'L_CONFIG_LIST_EXPLAIN'	=> $lang['CONFIG_LIST_EXPLAIN'],
-			'L_LIMIT'				=> $lang['LIMIT'],
-			'L_FILTER'				=> $lang['FILTER'],
-			'L_TOTAL_ITEMS'			=> $lang['TOTAL_ITEMS'],
-			'L_CLICK_HERE_TO_CHANGE'=> $lang['CLICK_HERE_TO_CHANGE'],
+			'L_CONFIG_LIST'			=> $stk_lang->lang('CONFIG_LIST'),
+			'L_CONFIG_LIST_EXPLAIN'	=> $stk_lang->lang('CONFIG_LIST_EXPLAIN'),
+			'L_LIMIT'				=> $stk_lang->lang('LIMIT'),
+			'L_FILTER'				=> $stk_lang->lang('FILTER'),
+			'L_TOTAL_ITEMS'			=> $stk_lang->lang('TOTAL_ITEMS'),
+			'L_CLICK_HERE_TO_CHANGE'=> $stk_lang->lang('CLICK_HERE_TO_CHANGE'),
 
 			'TOTAL_ITEMS'		=> $count,
 			'LIMIT'				=> $limit,

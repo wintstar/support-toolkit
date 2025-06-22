@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - No User Posts
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -19,7 +18,7 @@ class no_user_posts
 	*/
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $stk_lang, $db, $template;
 
 		$sql = 'SELECT post_id, post_subject, post_text, bbcode_uid, bbcode_bitfield, p.forum_id, f.forum_name, p.topic_id
 			FROM ' . POSTS_TABLE . ' p
@@ -56,7 +55,7 @@ class no_user_posts
 			'body' => 'tools/no_user_posts.html',
 		));
 
-		page_header(user_lang('NO_USER_POSTS'), false);
+		page_header($stk_lang->lang('NO_USER_POSTS'), false);
 		page_footer();
 	}
 
@@ -67,7 +66,9 @@ class no_user_posts
 	*/
 	function run_tool(&$error)
 	{
-		global $db, $lang, $request;
+		global $db, $stk_lang, $request;
+
+		$stk_lang->add_lang('orphaned_posts.php', 'support');
 
 		if (isset($_POST['reassign']))
 		{
@@ -82,7 +83,7 @@ class no_user_posts
 
 			if (!sizeof($post_map))
 			{
-				trigger_error($lang['NO_AUTHOR_SELECTED'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_AUTHOR_SELECTED'), E_USER_WARNING);
 			}
 
 			foreach ($post_map as $post_id => $author)
@@ -95,7 +96,7 @@ class no_user_posts
 				$db->sql_freeresult($result);
 				if ($user_id)
 				{
-					$post_username = ($user_id == ANONYMOUS) ? $lang['GUEST'] : '';
+					$post_username = ($user_id == ANONYMOUS) ? $stk_lang->lang('GUEST') : '';
 					$sql = 'UPDATE ' . POSTS_TABLE . '
 						SET poster_id = ' . $user_id . ', post_username = \'' . $post_username . '\'
 						WHERE post_id = ' . $post_id;
@@ -103,7 +104,7 @@ class no_user_posts
 				}
 			}
 			sinc_stats();
-			trigger_error(sprintf($lang['AUTHOR_POSTS_REASSIGNED'], sizeof($post_map)));
+			trigger_error($stk_lang->lang('AUTHOR_POSTS_REASSIGNED', sizeof($post_map)));
 		}
 
 		if (isset($_POST['delete']))
@@ -112,7 +113,7 @@ class no_user_posts
 
 			if (!sizeof($post_ids))
 			{
-				trigger_error($lang['NO_POSTS_SELECTED'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_POSTS_SELECTED'), E_USER_WARNING);
 			}
 
 			if (!function_exists('delete_posts'))
@@ -122,7 +123,7 @@ class no_user_posts
 
 			$return = delete_posts('post_id', $post_ids);
 			sinc_stats();
-			trigger_error(sprintf($lang['POSTS_DELETED'], $return));
+			trigger_error($stk_lang->lang('POSTS_DELETED', $return));
 		}
 
 		if (isset($_POST['reassign_anonymous']))
@@ -131,16 +132,16 @@ class no_user_posts
 
 			if (!sizeof($post_ids))
 			{
-				trigger_error($lang['NO_POSTS_SELECTED'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('NO_POSTS_SELECTED'), E_USER_WARNING);
 			}
 
 			$sql = 'UPDATE ' . POSTS_TABLE . '
-				SET poster_id = 1, post_username = \'' . $lang['GUEST'] . '\'
+				SET poster_id = 1, post_username = \'' . $stk_lang->lang('GUEST') . '\'
 					WHERE ' . $db->sql_in_set('post_id', $post_ids, false);
 			$db->sql_query($sql);
 
 			sinc_stats();
-			trigger_error(sprintf($lang['POSTS_REASSIGNED_TO_GUEST'], sizeof($post_ids)));
+			trigger_error($stk_lang->lang('POSTS_REASSIGNED_TO_GUEST', sizeof($post_ids)));
 		}
 	}
 }

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Change Password
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -38,9 +37,9 @@ class change_password
 	*/
 	function run_tool(&$error)
 	{
-		global $phpbb_root_path, $phpEx, $config, $db, $user, $request;
+		global $phpbb_root_path, $phpEx, $config, $db, $stk_lang, $request;
 
-		$user->add_lang('ucp');
+		$stk_lang->add_lang('ucp', null, true);
 
 		if (!check_form_key('change_password'))
 		{
@@ -129,6 +128,6 @@ class change_password
 
 		add_log('admin', 'LOG_USER_NEW_PASSWORD', $username);
 
-		trigger_error(user_lang('CHANGE_PASSWORD_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, 'mode=viewprofile&amp;u=' . $user_id), $username));
+		trigger_error($stk_lang->lang('CHANGE_PASSWORD_SUCCESS', append_sid($phpbb_root_path . 'memberlist.' . $phpEx, 'mode=viewprofile&amp;u=' . $user_id), $username));
 	}
 }

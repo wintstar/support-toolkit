@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Update email hashes
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -22,6 +21,13 @@ class update_email_hashes
 	*/
 	function display_options()
 	{
+		global $config, $stk_root_path, $phpEx;
+
+		if ($config['version'] >= '3.3.1')
+		{
+			redirect(append_sid($stk_root_path . 'index.' . $phpEx));
+		}
+
 		return 'UPDATE_EMAIL_HASHES';
 	}
 
@@ -30,7 +36,7 @@ class update_email_hashes
 	*/
 	function run_tool()
 	{
-		global $stk_root_path, $phpEx, $db, $template, $request, $lang;
+		global $stk_root_path, $phpEx, $db, $template, $request, $stk_lang;
 
 		$step = $request->variable('step', 0);
 
@@ -43,7 +49,7 @@ class update_email_hashes
 
 		if (!$batch)
 		{
-			trigger_error($lang['UPDATE_EMAIL_HASHES_COMPLETE']);
+			trigger_error($stk_lang->lang('UPDATE_EMAIL_HASHES_COMPLETE'));
 		}
 
 		foreach ($batch as $userrow)
@@ -64,7 +70,7 @@ class update_email_hashes
 		meta_refresh(0, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'update_email_hashes', 'submit' => true, 'step' => ++$step)));
 		$template->assign_var('U_BACK_TOOL', false);
 
-		trigger_error($lang['UPDATE_EMAIL_HASHES_NOT_COMPLETE']);
+		trigger_error($stk_lang->lang('UPDATE_EMAIL_HASHES_NOT_COMPLETE'));
 	}
 
 	/**

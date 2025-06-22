@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Flash Checker
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 namespace core\tools\support;
 
@@ -38,7 +38,7 @@ class flash_checker
 	 */
 	function run_tool()
 	{
-		global $stk_root_path, $phpEx;
+		global $stk_lang, $stk_root_path, $phpEx;
 
 		$this->check_table_flash_bbcodes(POSTS_TABLE, 'post_id', 'post_text', 'bbcode_uid', 'bbcode_bitfield');
 		$this->check_table_flash_bbcodes(PRIVMSGS_TABLE, 'msg_id', 'message_text', 'bbcode_uid', 'bbcode_bitfield');
@@ -52,7 +52,7 @@ class flash_checker
 		// Nothing found
 		if (empty($this->_vulnerable))
 		{
-			trigger_error(user_lang('FLASH_CHECKER_NO_FOUND'));
+			trigger_error($stk_lang->lang('FLASH_CHECKER_NO_FOUND'));
 		}
 
 		// Here we'll create the cache files the reparse BBCode tool expects so
@@ -64,15 +64,15 @@ class flash_checker
 		{
 			$cache->put('_stk_reparse_posts', $ids);
 			$ids = implode(',', $this->_vulnerable[POSTS_TABLE]);
-			$message = user_lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparseids' => $ids, 'submit' => true)));
-			$message .= '<br />' . user_lang('FLASH_CHECKER_POST', append_sid($phpbb_root_path . 'viewtopic.' . $phpEx . '?p='. $ids . '#' . $ids)) . '';
+			$message = $stk_lang->lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparseids' => $ids, 'submit' => true)));
+			$message .= '<br />' . $stk_lang->lang('FLASH_CHECKER_POST', append_sid($phpbb_root_path . 'viewtopic.' . $phpEx . '?p='. $ids . '#' . $ids)) . '';
 		}
 
 		if (!empty($this->_vulnerable[PRIVMSGS_TABLE]))
 		{
 			$cache->put('_stk_reparse_pms', implode(',', $this->_vulnerable[PRIVMSGS_TABLE]));
 			$privmsgs_ids = implode(',', $this->_vulnerable[PRIVMSGS_TABLE]);
-			$message = user_lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparsepms' => $privmsgs_ids, 'submit' => true)));
+			$message = $stk_lang->lang('FLASH_CHECKER_FOUND', append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'reparse_bbcode', 'reparsepms' => $privmsgs_ids, 'submit' => true)));
 		}
 		trigger_error($message, E_USER_WARNING);
 	}

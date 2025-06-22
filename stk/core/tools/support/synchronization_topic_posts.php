@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Synchronization topics/posts
-* @version $Id$
-* @copyright (c) 2016 Alg http://www.phpbbguru.net/community/memberlist.php?mode=viewprofile&u=41189
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +13,7 @@ class synchronization_topic_posts
 {
 	function display_options()
 	{
-		global $db, $template, $lang, $stk_root_path, $phpbb_root_path, $phpEx;
+		global $db, $template, $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx;
 
 		// Not synchronized topics
 		$sql = 'SELECT t.forum_id, topic_id, topic_title, topic_last_post_id, topic_last_poster_id, topic_last_poster_name, topic_last_post_time,
@@ -45,10 +44,10 @@ class synchronization_topic_posts
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
-			'L_TOPIC_TOTAL_POSTS'				=> sprintf($lang['TOPIC_TOTAL_POSTS'], TOPICS_TABLE),
-			'L_POSTS_TOTAL_CAPTION'				=> sprintf($lang['POSTS_TOTAL'], POSTS_TABLE),
-			'L_FROM_TOPICS_TABLE'				=> sprintf($lang['FROM_TABLE'], TOPICS_TABLE),
-			'L_FROM_POSTS_TABLE'				=> sprintf($lang['FROM_TABLE'], POSTS_TABLE),
+			'L_TOPIC_TOTAL_POSTS'				=> $stk_lang->lang('TOPIC_TOTAL_POSTS', TOPICS_TABLE),
+			'L_POSTS_TOTAL_CAPTION'				=> $stk_lang->lang('POSTS_TOTAL', POSTS_TABLE),
+			'L_FROM_TOPICS_TABLE'				=> $stk_lang->lang('FROM_TABLE', TOPICS_TABLE),
+			'L_FROM_POSTS_TABLE'				=> $stk_lang->lang('FROM_TABLE', POSTS_TABLE),
 			'U_SYNCHRONIZATION_TOPIC_POSTS'		=> append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'synchronization_topic_posts', 'submit' => 1)),
 		));
 
@@ -56,7 +55,7 @@ class synchronization_topic_posts
 			'body' => 'tools/synchronization_topic_posts.html',
 		));
 
-		page_header($lang['SYNCHRONIZATION_TOPIC_POSTS'], false);
+		page_header($stk_lang->lang('SYNCHRONIZATION_TOPIC_POSTS'), false);
 		page_footer();
 	}
 
@@ -67,7 +66,7 @@ class synchronization_topic_posts
 	*/
 	function run_tool(&$error)
 	{
-		global $stk_root_path, $phpEx, $db, $lang;
+		global $stk_root_path, $phpEx, $db, $stk_lang;
 
 		if (!check_form_key('synchronization_topic_posts'))
 		{
@@ -77,7 +76,7 @@ class synchronization_topic_posts
 		$topic_ids = request_var('topics', array(0 => 0));
 		if (!sizeof($topic_ids))
 		{
-			trigger_error($lang['NO_TOPICS_SELECTED'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('NO_TOPICS_SELECTED'), E_USER_WARNING);
 		}
 		foreach($topic_ids as $topic_id)
 		{
@@ -120,6 +119,6 @@ class synchronization_topic_posts
 		    }
 		}
 		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'synchronization_topic_posts')));
-		trigger_error(sprintf($lang['TOPICS_SINCRONIZED'], sizeof($topic_ids)));
+		trigger_error($stk_lang->lang('TOPICS_SINCRONIZED', sizeof($topic_ids)));
 	}
 }

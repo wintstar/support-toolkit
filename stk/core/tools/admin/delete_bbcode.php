@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Reparse BBCode
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -111,9 +110,10 @@ class delete_bbcode
 	*/
 	function run_tool()
 	{
-		global $phpbb_root_path, $phpEx, $cache, $config, $db, $request, $language, $lang;
+		global $phpbb_root_path, $phpEx, $stk_lang, $cache, $config, $db, $request;
+
 		// Prevent some errors from missing language strings.
-		$language->add_lang(array('posting'));
+		$stk_lang->add_lang('posting', null, true);
 
 		// Define some vars that we'll need
 		$last_batch			= false;
@@ -127,7 +127,7 @@ class delete_bbcode
 
 		if (!sizeof($reparse_forum_ids) && !$reparse_id && !$all && $last_post_id == 0)
 		{
-			trigger_error(user_lang('IDS_EMPTY'), E_USER_WARNING);
+			trigger_error($stk_lang->lang('IDS_EMPTY'), E_USER_WARNING);
 		}
 
 		// If post IDs were specified, we need to make sure the list is valid.
@@ -156,7 +156,7 @@ class delete_bbcode
 
 			if (!sizeof($reparse_posts))
 			{
-				trigger_error(user_lang('REPARSE_IDS_INVALID'), E_USER_WARNING);
+				trigger_error($stk_lang->lang('REPARSE_IDS_INVALID'), E_USER_WARNING);
 			}
 
 			// Make sure there's no extra whitespace
@@ -307,7 +307,7 @@ class delete_bbcode
 		{
 			// Done!
 			$cache->destroy('_stk_reparse_posts');
-			trigger_error($lang['DELETE_BBCODE_COMPLETE']);
+			trigger_error($stk_lang->lang('DELETE_BBCODE_COMPLETE'));
 		}
 
 		// Next step
@@ -440,7 +440,7 @@ class delete_bbcode
 	*/
 	function _next_step($last_post_id)
 	{
-		global $stk_root_path, $phpEx, $template, $request;
+		global $stk_lang, $stk_root_path, $phpEx, $template, $request;
 
 		$all = $request->variable('reparseall', false);
 		$create_backup = $request->variable('create_backup', false);
@@ -460,7 +460,7 @@ class delete_bbcode
 		meta_refresh(2, append_sid($stk_root_path . 'index.' . $phpEx, $params));
 		$template->assign_var('U_BACK_TOOL', false);
 
-		trigger_error('' . user_lang('DELETE_BBCODES') . '<br />' . user_lang('DELETE_BBCODE_PROGRESS', ($this->step_size), $this->max) . '<br /><br />' . implode(', ', $this->pids));
+		trigger_error('DELETE_BBCODES' . '<br />' . $stk_lang->lang('DELETE_BBCODE_PROGRESS', ($this->step_size), $this->max) . '<br /><br />' . implode(', ', $this->pids));
 	}
 
 	function _trim_post_ids(&$post_id, $key)

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Database Cleaner
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -155,7 +154,6 @@ class database_cleaner
 
 		// Setup
 		$this->_setup();
-		$user->add_lang('acp/common');
 
 		// Setup $this->object
 		if (!class_exists('database_cleaner_views'))
@@ -227,16 +225,16 @@ class database_cleaner
 
 	function quit()
 	{
-		global $phpbb_root_path, $lang, $config;
+		global $phpbb_root_path, $stk_lang, $config;
 
 		// Purge teh caches
 		$path = $phpbb_root_path . 'cache/production';
-		delete_directory_recursiv($path);
+		purge_dir($path);
 
 		$config->set('board_disable', 0);
 		$config->set('board_disable_msg', '');
 
 		// Finished!
-		trigger_error($lang['DATABASE_CLEANER_BREAK'], E_USER_WARNING);
+		trigger_error($stk_lang->lang('DATABASE_CLEANER_BREAK'), E_USER_WARNING);
 	}
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resync Avatars
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 namespace core\tools\admin;
 
@@ -38,7 +38,7 @@ class resync_avatars
 
 	function run_tool()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
 
 		$mode	= $request->variable('mode', RESYNC_USER_AVATARS);
 		$step	= $request->variable('step', 0);
@@ -70,11 +70,11 @@ class resync_avatars
 			{
 				$template->assign_var('U_BACK_TOOL', false);
 				meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_avatars', 'step' => 0, 'mode' => RESYNC_GROUP_AVATARS, 'submit' => true)));
-				trigger_error(user_lang('RESYNC_AVATARS_NEXT_MODE'));
+				trigger_error($stk_lang->lang('RESYNC_AVATARS_NEXT_MODE'));
 			}
 
 			// Nothing to do
-			trigger_error(user_lang('RESYNC_AVATARS_FINISHED'));
+			trigger_error($stk_lang->lang('RESYNC_AVATARS_FINISHED'));
 		}
 
 		$update_sql = array();
@@ -137,6 +137,6 @@ class resync_avatars
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
 		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_avatars', 'step' => ++$step, 'mode' => $mode, 'submit' => true)));
-		trigger_error(user_lang('RESYNC_AVATARS_PROGRESS'));
+		trigger_error($stk_lang->lang('RESYNC_AVATARS_PROGRESS'));
 	}
 }

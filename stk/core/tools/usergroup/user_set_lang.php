@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - User Set Language
-* @version $Id$
-* @copyright (c) 2021 Sheer
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +13,7 @@ class user_set_lang
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpEx, $template, $lang, $db, $request, $config;
+		global $stk_root_path, $phpEx, $template, $stk_lang, $db, $request, $config;
 
 		$groups = $request->variable('user_groups', array(0));
 		$all_groups = $request->variable('all_groups', 0);
@@ -27,7 +26,7 @@ class user_set_lang
 		$s_options = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$group_name = (isset($lang['G_' . $row['group_name'] . ''])) ? $lang['G_' . $row['group_name'] . ''] : $row['group_name'];
+			$group_name = (!is_null($stk_lang->lang('G_' . $row['group_name'] . ''))) ? $stk_lang->lang('G_' . $row['group_name'] . '') : $row['group_name'];
 			$s_options .= '<option value="' . $row['group_id'] . '">' . $group_name;
 		}
 		$db->sql_freeresult($result);
@@ -70,10 +69,10 @@ class user_set_lang
 			$db->sql_query($sql);
 
 			meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, 'c=usergroup&amp;t=user_set_lang'));
-			trigger_error(user_lang('USER_LANG_OK'));
+			trigger_error($stk_lang->lang('USER_LANG_OK'));
 		}
 
-		page_header(user_lang('USER_SET_LANG'), false);
+		page_header($stk_lang->lang('USER_SET_LANG'), false);
 		page_footer();
 	}
 }

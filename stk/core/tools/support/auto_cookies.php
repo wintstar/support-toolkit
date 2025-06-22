@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Auto Cookies
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -19,9 +18,9 @@ class auto_cookies
 	*/
 	function display_options()
 	{
-		global $config, $user, $request;
+		global $config, $request, $stk_lang;
 
-		$user->add_lang('acp/board');
+		$stk_lang->add_lang('acp/board', null, true);
 
 		// Remove "www". Bug #62132
 		$http_host = $request->server('HTTP_HOST');
@@ -49,7 +48,7 @@ class auto_cookies
 	*/
 	function run_tool(&$error)
 	{
-		global $config, $request;
+		global $config, $request, $stk_lang;
 
 		if (!check_form_key('auto_cookies'))
 		{
@@ -62,6 +61,6 @@ class auto_cookies
 		$config->set('cookie_path', $request->variable('cookie_path', ''));
 		$config->set('cookie_secure', $request->variable('cookie_secure', 0));
 
-		trigger_error(user_lang('COOKIE_SETTINGS_UPDATED'));
+		trigger_error($stk_lang->lang('COOKIE_SETTINGS_UPDATED'));
 	}
 }

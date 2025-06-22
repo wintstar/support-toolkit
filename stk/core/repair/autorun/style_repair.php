@@ -2,7 +2,6 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *

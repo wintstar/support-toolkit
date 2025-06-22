@@ -2,9 +2,8 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
-* @copyright (c) 2010 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -58,12 +57,18 @@ $critical_repair->autorun_tools();
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('acp/common', $config['default_style']);
-stk_add_lang('common');
+$user->setup();
+
+// Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
+$language_file_loader = new \core\language\language_file_loader($stk_root_path, $phpbb_root_path, $phpEx);
+$stk_lang = new \core\language\language($language_file_loader);
+$stk_lang->set_default_language($stk_config['default_lang']);
+$stk_lang->set_user_language($user->data['user_lang']);
+$stk_lang->add_lang(array('common', 'acp/common'), null, true);
 
 // Purge teh caches
 $path = $phpbb_root_path . 'cache/production';
-delete_directory_recursiv($path);
+purge_dir($path);
 
 // Let's tell the user all is okay :)
-$critical_repair->trigger_error(user_lang('ERK_OK'), true);
+$critical_repair->trigger_error($stk_lang->lang('ERK_OK'), true);

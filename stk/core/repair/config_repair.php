@@ -2,7 +2,6 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
@@ -27,7 +26,7 @@ class config_repair
 
 	function repair()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $critical_repair, $user, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $critical_repair, $stk_config;
 
 		/*
 		*
@@ -36,8 +35,8 @@ class config_repair
 		*
 		*/
 		include $stk_root_path . 'includes/functions.' . $phpEx;
-		include $stk_root_path . 'language/' . $user->data['user_lang'] . '/common.' . $phpEx;
-		include $phpbb_root_path . 'language/' . $user->data['user_lang'] . '/install.' . $phpEx;
+		include $stk_root_path . 'language/' . $stk_config . '/common.' . $phpEx;
+		include $phpbb_root_path . 'language/' . $stk_config . '/install.' . $phpEx;
 
 		$available_dbms = $this->get_available_dbms();
 

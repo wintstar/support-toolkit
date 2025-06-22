@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Purge Sessions
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -29,7 +28,7 @@ class purge_sessions
 	*/
 	function run_tool()
 	{
-		global $db, $user;
+		global $stk_lang, $db, $user;
 
 		$tables = array(CONFIRM_TABLE, SESSIONS_TABLE, SESSIONS_KEYS_TABLE);
 		foreach ($tables as $table)
@@ -58,6 +57,6 @@ class purge_sessions
 		$sql = 'INSERT INTO ' . SESSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 
-		trigger_error(user_lang('PURGE_SESSIONS_COMPLETE'));
+		trigger_error($stk_lang->lang('PURGE_SESSIONS_COMPLETE'));
 	}
 }

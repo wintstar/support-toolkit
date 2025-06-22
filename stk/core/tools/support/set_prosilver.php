@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Set prosilver as default style
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -29,11 +28,11 @@ class set_prosilver
 	*/
 	function run_tool()
 	{
-		global $phpbb_root_path, $db, $request, $config, $lang;
+		global $phpbb_root_path, $db, $request, $config, $stk_lang;
 
 		if (!file_exists($phpbb_root_path . 'styles/prosilver/style.cfg'))
 		{
-			trigger_error($lang['SET_PROSILVER_DOES_NOT_EXIST'], E_USER_WARNING);
+			trigger_error($stk_lang->lang('SET_PROSILVER_DOES_NOT_EXIST'), E_USER_WARNING);
 		}
 
 		$sql = 'SELECT style_id, style_active
@@ -65,7 +64,7 @@ class set_prosilver
 			$config->set('guest_style', $id);
 			$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_style = ' . $id);
 
-			trigger_error($lang['SET_PROSILVER_RESET']);
+			trigger_error($stk_lang->lang('SET_PROSILVER_RESET'));
 		}
 
 		if ($style_id == $config['default_style'])
@@ -73,16 +72,16 @@ class set_prosilver
 			if (!$style_active)
 			{
 				$db->sql_query('UPDATE ' . STYLES_TABLE . ' SET style_active = 1 WHERE style_id = ' . $style_id . '');
-				trigger_error($lang['SET_PROSILVER_ACTIVATED']);
+				trigger_error($stk_lang->lang('SET_PROSILVER_ACTIVATED'));
 			}
-			trigger_error($lang['SET_PROSILVER_ALLREADY_ASSIGNED']);
+			trigger_error($stk_lang->lang('SET_PROSILVER_ALLREADY_ASSIGNED'));
 		}
 		else
 		{
 			$db->sql_query('UPDATE ' . STYLES_TABLE . ' SET style_active = 1 WHERE style_id = ' . $style_id . '');
 			$config->set('default_style', $style_id);
 			$config->set('guest_style', $style_id);
-			trigger_error($lang['SET_PROSILVER_RESET']);
+			trigger_error($stk_lang->lang('SET_PROSILVER_RESET'));
 		}
 	}
 }

@@ -2,7 +2,6 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
 * @copyright (c) 2015 Sheer
 * @license GNU General Public License, version 2 (GPL-2.0)
 *

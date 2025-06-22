@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - Fix Left/Right ID's
-* @version $Id$
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -29,7 +28,7 @@ class fix_left_right_ids
 	*/
 	function run_tool()
 	{
-		global $cache, $db;
+		global $stk_lang, $cache, $db;
 
 		$changes_made = false;
 
@@ -61,11 +60,11 @@ class fix_left_right_ids
 
 		if ($changes_made)
 		{
-			trigger_error(user_lang('LEFT_RIGHT_IDS_FIX_SUCCESS'));
+			trigger_error($stk_lang->lang('LEFT_RIGHT_IDS_FIX_SUCCESS'));
 		}
 		else
 		{
-			trigger_error(user_lang('LEFT_RIGHT_IDS_NO_CHANGE'));
+			trigger_error($stk_lang->lang('LEFT_RIGHT_IDS_NO_CHANGE'));
 		}
 	}
 

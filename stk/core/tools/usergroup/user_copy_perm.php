@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package Support Toolkit - User Options
-* @version $Id$
-* @copyright (c) 2015 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
 
@@ -14,7 +13,7 @@ class user_copy_perm
 {
 	function display_options()
 	{
-		global $phpbb_root_path, $phpEx, $template, $user, $db, $request;
+		global $stk_lang, $phpbb_root_path, $phpEx, $template, $user, $db, $request;
 
 		$submit = $request->variable('sa', false);
 		$source_name = $request->variable('source_name', '', true);
@@ -33,7 +32,7 @@ class user_copy_perm
 			// Not allowed to have both username and user_id filled.
 			if (($source_name && $source_id) || ($target_name && $target_id))
 			{
-				trigger_error(user_lang('BOTH_FIELDS_FILLED'), E_USER_WARNING);
+				trigger_error($stk_lang->lang('BOTH_FIELDS_FILLED'), E_USER_WARNING);
 			}
 
 			if ($source_name && empty($source_id))
@@ -68,7 +67,7 @@ class user_copy_perm
 
 			if (($target_id == $source_id) || ($source_name == $target_name))
 			{
-				trigger_error(user_lang('USERS_IDENTICAL'), E_USER_WARNING);
+				trigger_error($stk_lang->lang('USERS_IDENTICAL'), E_USER_WARNING);
 			}
 
 			$permissions = array();
@@ -110,7 +109,7 @@ class user_copy_perm
 				}
 			}
 
-			trigger_error(user_lang('COPY_USER_PERMISSIONS_OK'));
+			trigger_error($stk_lang->lang('COPY_USER_PERMISSIONS_OK'));
 		}
 
 		$template->assign_vars(array(
@@ -126,7 +125,7 @@ class user_copy_perm
 			'body' => 'tools/user_copy_perm.html',
 		));
 
-		page_header(user_lang('USER_COPY_PERM'), false);
+		page_header($stk_lang->lang('USER_COPY_PERM'), false);
 		page_footer();
 	}
 }

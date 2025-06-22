@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resynchronise Users groups
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 namespace core\tools\usergroup;
 
@@ -81,7 +81,7 @@ class resync_user_groups
 	 */
 	function run_tool(&$error)
 	{
-		global $request;
+		global $stk_lang, $request;
 
 		$this->_load_classes();
 		$this->run_rr	= $request->variable('rr', false);
@@ -90,7 +90,7 @@ class resync_user_groups
 		// Done nothing
 		if (!$this->run_rr && !$this->run_rnr)
 		{
-			trigger_error(user_lang('SELECT_RUN_GROUP'));
+			trigger_error($stk_lang->lang('SELECT_RUN_GROUP'));
 		}
 
 		// Run the required sections
@@ -109,12 +109,12 @@ class resync_user_groups
 		// Done trigger the correct notice
 		if ($this->run_rr && $this->run_rnr)
 		{
-			trigger_error(user_lang('RUN_BOTH_FINISHED'));
+			trigger_error($stk_lang->lang('RUN_BOTH_FINISHED'));
 		}
 
 		// only one
 		$msg = ($this->run_rr) ? 'RUN_RR_FINISHED' : 'RUN_RNR_FINISHED';
-		trigger_error(user_lang($msg));
+		trigger_error($stk_lang->lang($msg));
 	}
 
 	/**

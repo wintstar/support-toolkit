@@ -1,10 +1,11 @@
 <?php
 /**
 *
-* @package Support Toolkit - Anonymous group check
-* @version $Id: sanitize_anonymous_user.php 155 2009-06-13 20:06:09Z marshalrusty $
-* @copyright (c) 2009 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+* sanitize_anonymous_user.php 155 2009-06-13 20:06:09Z marshalrusty $
 *
 */
 
@@ -19,7 +20,7 @@ class sanitise_anonymous_user
 	*/
 	function display_options()
 	{
-		global $db, $plugin, $user, $lang, $action;
+		global $db, $plugin, $user, $stk_lang, $action;
 
 		// Grep the anonymous user
 		$sql = 'SELECT *
@@ -54,7 +55,7 @@ class sanitise_anonymous_user
 			return 'ANONYMOUS_WRONG_GROUPS';
 		}
 
-		trigger_error(user_lang('ANONYMOUS_CORRECT'));
+		trigger_error($stk_lang->lang('ANONYMOUS_CORRECT'));
 	}
 
 	/**
@@ -64,7 +65,7 @@ class sanitise_anonymous_user
 	*/
 	function run_tool()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $plugin, $lang, $request, $action;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $plugin, $stk_lang, $request, $action;
 
 		// Collect all the information a clean "Anonymous" should have
 		$sql = 'SELECT group_id, group_rank, group_colour
@@ -123,7 +124,7 @@ class sanitise_anonymous_user
 					SET ' . $db->sql_build_array('UPDATE', $clean_data) . '
 					WHERE user_id = ' . ANONYMOUS;
 				$db->sql_query($sql);
-				$msg = $lang['ANONYMOUS_CLEANED'];
+				$msg = $stk_lang->lang('ANONYMOUS_CLEANED');
 			break;
 
 			case 'groups' :
@@ -142,7 +143,7 @@ class sanitise_anonymous_user
 				{
 					if (($ret = group_user_del($group, ANONYMOUS)) !== false)
 					{
-						trigger_error($lang[$ret]);
+						trigger_error($stk_lang->lang($ret));
 					}
 				}
 
@@ -151,11 +152,11 @@ class sanitise_anonymous_user
 				{
 					if (($ret = group_user_add($guests_gr, ANONYMOUS, false, false, true)) !== false)
 					{
-						trigger_error($lang[$ret]);
+						trigger_error($stk_lang->lang($ret));
 					}
 				}
 
-				$msg = $lang['ANONYMOUS_GROUPS_REMOVED'];
+				$msg = $stk_lang->lang('ANONYMOUS_GROUPS_REMOVED');
 			break;
 
 			case 'missing' :
@@ -165,18 +166,18 @@ class sanitise_anonymous_user
 				$db->sql_query($sql);
 				if (!$db->sql_affectedrows())
 				{
-					trigger_error($lang['ANONYMOUS_CREATION_FAILED']);
+					trigger_error($stk_lang->lang('ANONYMOUS_CREATION_FAILED'));
 				}
-				$msg = $lang['ANONYMOUS_CREATED'];
+				$msg = $stk_lang->lang('ANONYMOUS_CREATED');
 			break;
 
 			default :
-				trigger_error($lang['NO_MODE']);
+				trigger_error($stk_lang->lang('NO_MODE'));
 		}
 
 		// Inform the user
 		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, $plugin->url_arg()));
-		trigger_error($msg . '<br />' . $lang['REDIRECT_NEXT_STEP']);
+		trigger_error($msg . '<br />' . $stk_lang->lang('REDIRECT_NEXT_STEP'));
 	}
 
 	function _anon_groups(&$_in_guests, &$_other_groups)

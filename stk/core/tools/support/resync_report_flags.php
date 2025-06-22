@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resynchronise report flags
- * @copyright (c) 2011 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 namespace core\tools\support;
 
@@ -29,7 +29,7 @@ class resync_report_flags
 	 */
 	function run_tool()
 	{
-		global $request;
+		global $stk_lang, $request;
 
 		$this->mode = $request->variable('m', 'pf');
 
@@ -56,7 +56,7 @@ class resync_report_flags
 			break;
 
 			case 'finished':
-				trigger_error(user_lang('RESYNC_REPORT_FLAGS_FINISHED'));
+				trigger_error($stk_lang->lang('RESYNC_REPORT_FLAGS_FINISHED'));
 			break;
 		}
 	}
@@ -274,7 +274,7 @@ class resync_report_flags
 	 */
 	function _next_mode()
 	{
-		global $stk_root_path, $phpEx, $template;
+		global $stk_lang, $stk_root_path, $phpEx, $template;
 
 		// These modes define the order in which the different checks
 		// are ran. These *must* remain ordered this way as the different
@@ -297,6 +297,6 @@ class resync_report_flags
 		$redirect = append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'support', 't' => 'resync_report_flags', 'm' => $next, 'submit' => true));
 		meta_refresh(3, $redirect);
 		$template->assign_var('U_BACK_TOOL', false);
-		trigger_error(user_lang('RESYNC_REPORT_FLAGS_NEXT'));
+		trigger_error($stk_lang->lang('RESYNC_REPORT_FLAGS_NEXT'));
 	}
 }

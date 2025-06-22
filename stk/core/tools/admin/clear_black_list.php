@@ -1,8 +1,7 @@
 <?php
 /**
 *
-* @package Support Toolkit - Clear Extensions
-* @version $Id$
+* @package Support Toolkit
 * @copyright (c) 2016 Sheer
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -14,9 +13,10 @@ class clear_black_list
 {
 	function display_options()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user, $cache, $request, $lang;
+		global $stk_root_path, $phpbb_root_path, $phpEx, $db, $template, $user, $cache, $stk_lang, $request;
 
-		$user->add_lang(array('acp/ban', 'acp/users'));
+		$stk_lang->add_lang(array('acp/ban', 'acp/users'), null, true);
+
 		$submit = $request->variable('sa', false);
 		$ban = $request->variable('unban', array(''));
 		$mode = 'ip';
@@ -28,7 +28,7 @@ class clear_black_list
 		{
 			if (!check_form_key($form_key))
 			{
-				trigger_error($user->lang['FORM_INVALID'], E_USER_WARNING);
+				trigger_error($stk_lang->lang('FORM_INVALID'), E_USER_WARNING);
 			}
 			if (!function_exists('user_ban'))
 			{
@@ -38,12 +38,12 @@ class clear_black_list
 			{
 				user_unban($mode, $ban);
 
-				trigger_error($user->lang['BAN_UPDATE_SUCCESSFUL']);
+				trigger_error($stk_lang->lang('BAN_UPDATE_SUCCESSFUL'));
 			}
 		}
 
 		// Ban length options
-		$ban_end_text = array(0 => $user->lang['PERMANENT'], 30 => $user->lang['30_MINS'], 60 => $user->lang['1_HOUR'], 360 => $user->lang['6_HOURS'], 1440 => $user->lang['1_DAY'], 10080 => $user->lang['7_DAYS'], 20160 => $user->lang['2_WEEKS'], 40320 => $user->lang['1_MONTH'], -1 => $user->lang['UNTIL'] . ' -&gt; ');
+		$ban_end_text = array(0 => $stk_lang->lang('PERMANENT'), 30 => $stk_lang->lang('30_MINS'), 60 => $stk_lang->lang('1_HOUR'), 360 => $stk_lang->lang('6_HOURS'), 1440 => $stk_lang->lang('1_DAY'), 10080 => $stk_lang->lang('7_DAYS'), 20160 => $stk_lang->lang('2_WEEKS'), 40320 => $stk_lang->lang('1_MONTH'), -1 => $stk_lang->lang('UNTIL') . ' -&gt; ');
 		$ban_end_options = '';
 		foreach ($ban_end_text as $length => $text)
 		{
@@ -77,17 +77,17 @@ class clear_black_list
 			if ($time_length == 0)
 			{
 				// Banned permanently
-				$ban_length = $user->lang('PERMANENT');
+				$ban_length = $stk_lang->lang('PERMANENT');
 			}
 			else if (isset($ban_end_text[$time_length]))
 			{
 				// Banned for a given duration
-				$ban_length = $user->lang('BANNED_UNTIL_DURATION', $ban_end_text[$time_length], $user->format_date($row['ban_end'], false, true));
+				$ban_length = $stk_lang->lang('BANNED_UNTIL_DURATION', $ban_end_text[$time_length], $user->format_date($row['ban_end'], false, true));
 			}
 			else
 			{
 				// Banned until given date
-				$ban_length = $user->lang('BANNED_UNTIL_DATE', $user->format_date($row['ban_end'], false, true));
+				$ban_length = $stk_lang->lang('BANNED_UNTIL_DATE', $user->format_date($row['ban_end'], false, true));
 			}
 
 			$template->assign_block_vars('bans', array(
@@ -105,14 +105,14 @@ class clear_black_list
 		$options = '';
 		if ($excluded_options)
 		{
-			$options .= '<optgroup label="' . $user->lang['OPTIONS_EXCLUDED'] . '">';
+			$options .= '<optgroup label="' . $stk_lang->lang('OPTIONS_EXCLUDED') . '">';
 			$options .= implode('', $excluded_options);
 			$options .= '</optgroup>';
 		}
 
 		if ($banned_options)
 		{
-			$options .= '<optgroup label="' . $user->lang['OPTIONS_BANNED'] . '">';
+			$options .= '<optgroup label="' . $stk_lang->lang('OPTIONS_BANNED') . '">';
 			$options .= implode('', $banned_options);
 			$options .= '</optgroup>';
 		}
@@ -123,7 +123,7 @@ class clear_black_list
 			'BANNED_OPTIONS'	=> $options,
 		));
 
-		page_header($lang['CLEAR_BLACK_LIST']);
+		page_header($stk_lang->lang('CLEAR_BLACK_LIST'));
 
 
 		$template->assign_vars(array(

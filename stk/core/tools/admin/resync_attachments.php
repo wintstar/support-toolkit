@@ -1,11 +1,11 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resync Attachments
- * @copyright (c) 2009 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit
+* @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @license GNU General Public License, version 2 (GPL-2.0)
+*
+*/
 
 namespace core\tools\admin;
 
@@ -31,7 +31,7 @@ class resync_attachments
 
 	function run_tool()
 	{
-		global $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
+		global $stk_lang, $stk_root_path, $phpbb_root_path, $phpEx, $config, $db, $template, $request;
 
 		$step	= $request->variable('step', 0);
 		$begin	= $this->_batch_size * $step;
@@ -46,7 +46,7 @@ class resync_attachments
 		if (empty($batch))
 		{
 			// Nothing to do
-			trigger_error(user_lang('RESYNC_ATTACHMENTS_FINISHED'));
+			trigger_error($stk_lang->lang('RESYNC_ATTACHMENTS_FINISHED'));
 		}
 
 		$delete_ids = array();
@@ -72,6 +72,6 @@ class resync_attachments
 		// Next step
 		$template->assign_var('U_BACK_TOOL', false);
 		meta_refresh(3, append_sid($stk_root_path . 'index.' . $phpEx, array('c' => 'admin', 't' => 'resync_attachments', 'step' => ++$step, 'submit' => true)));
-		trigger_error(user_lang('RESYNC_ATTACHMENTS_PROGRESS'));
+		trigger_error($stk_lang->lang('RESYNC_ATTACHMENTS_PROGRESS'));
 	}
 }
