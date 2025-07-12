@@ -275,7 +275,7 @@ class acp_modules
 	{
 		global $stk_lang;
 
-		return (!is_null($stk_lang->lang($module_langname))) ? $stk_lang->lang($module_langname) : $module_langname;
+		return ($stk_lang->is_set($module_langname) ? $stk_lang->lang($module_langname) : $module_langname);
 	}
 
 	/**

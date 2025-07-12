@@ -47,7 +47,7 @@ class user_options
 		$s_options = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$group_name = (!is_null($stk_lang->lang('G_' . $row['group_name'] . ''))) ? $stk_lang->lang('G_' . $row['group_name'] . '') : $row['group_name'];
+			$group_name = $stk_lang->is_set('G_' . $row['group_name'] . '') ? $stk_lang->lang('G_' . $row['group_name'] . '') : $row['group_name'];
 			$s_options .= '<option value="' . $row['group_id'] . '">' . $group_name;
 		}
 		$db->sql_freeresult($result);

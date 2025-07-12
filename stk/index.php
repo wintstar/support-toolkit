@@ -358,7 +358,7 @@ if ($plugin->get_part('t'))
 			}
 			else
 			{
-				$msg = !is_null($stk_lang->lang($msg)) ? $stk_lang->lang($msg) : $msg;
+				$msg = $stk_lang->is_set($msg) ? $stk_lang->lang($msg) : $msg;
 			}
 
 			trigger_error($msg);
@@ -400,7 +400,7 @@ if ($plugin->get_part('t'))
 
 			$template->assign_vars(array(
 				'L_TITLE'			=> $stk_lang->lang($options['title']),
-				'L_TITLE_EXPLAIN'	=> (!is_null($stk_lang->lang($options['title'] . '_EXPLAIN'))) ? $stk_lang->lang($options['title'] . '_EXPLAIN') : '',
+				'L_TITLE_EXPLAIN'	=> $stk_lang->is_set($options['title'] . '_EXPLAIN') ? $stk_lang->lang($options['title'] . '_EXPLAIN') : '',
 			));
 
 			foreach ($options['vars'] as $name => $vars)
@@ -414,7 +414,7 @@ if ($plugin->get_part('t'))
 				{
 					$template->assign_block_vars('options', array(
 						'S_LEGEND'		=> true,
-						'LEGEND'		=> (!is_null($stk_lang->lang($vars))) ? $stk_lang->lang($vars) : $vars)
+						'LEGEND'		=> $stk_lang->is_set($vars) ? $stk_lang->lang($vars) : $vars)
 					);
 
 					continue;
@@ -425,11 +425,11 @@ if ($plugin->get_part('t'))
 				$l_explain = '';
 				if ($vars['explain'] && isset($vars['lang_explain']))
 				{
-					$l_explain = (!is_null($stk_lang->lang($vars['lang_explain']))) ? $stk_lang->lang($vars['lang_explain']) : $vars['lang_explain'];
+					$l_explain = $stk_lang->is_set($vars['lang_explain']) ? $stk_lang->lang($vars['lang_explain']) : $vars['lang_explain'];
 				}
 				else if ($vars['explain'])
 				{
-					$l_explain = (!is_null($stk_lang->lang($vars['lang'] . '_EXPLAIN'))) ? $stk_lang->lang($vars['lang'] . '_EXPLAIN') : '';
+					$l_explain = $stk_lang->is_set($vars['lang'] . '_EXPLAIN') ? $stk_lang->lang($vars['lang'] . '_EXPLAIN') : '';
 				}
 
 				$content = build_cfg_template($type, $name, $vars);
@@ -441,7 +441,7 @@ if ($plugin->get_part('t'))
 
 				$template->assign_block_vars('options', array(
 					'KEY'			=> $name,
-					'TITLE'			=> (!is_null($stk_lang->lang($vars['lang']))) ? $stk_lang->lang($vars['lang']) : $vars['lang'],
+					'TITLE'			=> $stk_lang->is_set($vars['lang']) ? $stk_lang->lang($vars['lang']) : $vars['lang'],
 					'S_EXPLAIN'		=> $vars['explain'],
 					'TITLE_EXPLAIN'	=> $l_explain,
 					'CONTENT'		=> $content['tpl'],
@@ -493,7 +493,7 @@ else
 	// Category title and desc if available
 	$template->assign_vars(array(
 		'L_TITLE'			=> $stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c'))),
-		'L_TITLE_EXPLAIN'	=> !is_null($stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN')) ? $stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN') : '',
+		'L_TITLE_EXPLAIN'	=> $stk_lang->is_set('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN') ? $stk_lang->lang('CAT_' . strtoupper($plugin->get_part('c')) . '_EXPLAIN') : '',
 		'CAT'				=> $plugin->get_part('c'),
 
 		'GZIP_COMPRESSION'	=> ($config['gzip_compress'] && @extension_loaded('zlib')) ? $stk_lang->lang('ON') : $stk_lang->lang('OFF'),

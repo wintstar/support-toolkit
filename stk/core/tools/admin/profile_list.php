@@ -99,7 +99,7 @@ class profile_list
 		{
 			$template->assign_block_vars('options', array(
 				'OPTION'	=> $option,
-				'LANG'		=> !is_null($stk_lang->lang($lang_key)) ? $stk_lang->lang($lang_key) : $lang_key,
+				'LANG'		=> $stk_lang->is_set($lang_key) ? $stk_lang->lang($lang_key) : $lang_key,
 				'SELECTED'	=> ($display == $option) ? true : false,
 			));
 

@@ -238,7 +238,7 @@ class config_list
 		{
 			$template->assign_block_vars('options', array(
 				'OPTION'	=> $option,
-				'LANG'		=> !is_null($stk_lang->lang($lang_key)) ? $stk_lang->lang($lang_key) : $lang_key,
+				'LANG'		=> $stk_lang->is_set($lang_key) ? $stk_lang->lang($lang_key) : $lang_key,
 				'SELECTED'	=> ($display == $option) ? true : false,
 			));
 		}
@@ -375,7 +375,7 @@ class config_list
 			}
 
 			$template->assign_block_vars('row', array(
-				'CONFIG_PURPOSE'		=> (!is_null($stk_lang->lang($row['config_name']))) ? $stk_lang->lang($row['config_name']) : $stk_lang->lang('UNKNOWN'),
+				'CONFIG_PURPOSE'		=> $stk_lang->is_set($row['config_name']) ? $stk_lang->lang($row['config_name']) : $stk_lang->lang('UNKNOWN'),
 				'CONFIG_NAME'			=> $row['config_name'],
 				'CONFIG_VALUE'			=> $row['config_value'],
 				'IS_DINAMIC'			=> $row['is_dynamic'],

@@ -254,7 +254,7 @@ class srt_generator
 					require $stk_root_path . 'includes/translate_srt_generator.' . $phpEx;
 
 					$template->assign_block_vars('questionrow', array(
-						'EXPLAIN'			=> !is_null($stk_lang->lang(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name'])) ? $stk_lang->lang(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name']) : '',
+						'EXPLAIN'			=> $stk_lang->is_set(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name']) ? $stk_lang->lang(array('SRT_QUESTIONS_EXPLAIN', 'step' . $this->step), $question['name']) : '',
 						'NAME'				=> $question['name'],
 						'OPTIONS'			=> ($question['type'] == 'dropdown') ? $options : '',
 						'PREFILL'			=> $_p_callback_result,

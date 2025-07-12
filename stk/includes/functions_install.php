@@ -393,7 +393,7 @@ function adjust_language_keys_callback($matches)
 	{
 		global $stk_lang, $db;
 
-		return (!is_null($stk_lang->lang($matches[1]))) ? $db->sql_escape($stk_lang->lang($matches[1])) : $db->sql_escape($matches[1]);
+		return ($stk_lang->is_set($matches[1]) ? $db->sql_escape($stk_lang->lang($matches[1])) : $db->sql_escape($matches[1]));
 	}
 }
 

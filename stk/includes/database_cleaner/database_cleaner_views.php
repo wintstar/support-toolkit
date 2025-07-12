@@ -125,7 +125,7 @@ class database_cleaner_views
 		}
 
 		// Assign no changes text
-		if (empty($this->_section_data) && !is_null($stk_lang->lang(array('SECTION_NOT_CHANGED_TITLE'), $this->db_cleaner->step_to_action[$this->db_cleaner->step])))
+		if (empty($this->_section_data) && $stk_lang->is_set(array('SECTION_NOT_CHANGED_TITLE'), $this->db_cleaner->step_to_action[$this->db_cleaner->step]))
 		{
 			$template->assign_vars(array(
 				'NO_CHANGES_TEXT'	=> $stk_lang->lang(array('SECTION_NOT_CHANGED_EXPLAIN'), $this->db_cleaner->step_to_action[$this->db_cleaner->step]),
@@ -158,7 +158,7 @@ class database_cleaner_views
 		$msg = $this->success_message;
 		if (!$did_run && $this->db_cleaner->step > 0)
 		{
-			$msg = (!empty($this->not_run_message)) ? $this->not_run_message : ((!is_null($stk_lang->lang(array('SECTION_NOT_CHANGED_EXPLAIN'), $this->db_cleaner->step_to_action[$this->db_cleaner->step - 1]))) ? $stk_lang->lang(array('SECTION_NOT_CHANGED_EXPLAIN'), $this->db_cleaner->step_to_action[$this->db_cleaner->step - 1]) : $this->success_message);
+			$msg = (!empty($this->not_run_message)) ? $this->not_run_message : ($stk_lang->is_set(array('SECTION_NOT_CHANGED_EXPLAIN'), $this->db_cleaner->step_to_action[$this->db_cleaner->step - 1]) ? $stk_lang->lang(array('SECTION_NOT_CHANGED_EXPLAIN'), $this->db_cleaner->step_to_action[$this->db_cleaner->step - 1]) : $this->success_message);
 		}
 
 		$s_options = '';

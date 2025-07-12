@@ -281,7 +281,7 @@ class plugin
 			{
 				// For us lazy people
 				$info = array(
-					'NAME' => (!is_null($stk_lang->lang(strtoupper($tool)))) ? $stk_lang->lang(strtoupper($tool)) : strtoupper($tool),
+					'NAME' => $stk_lang->is_set(strtoupper($tool)) ? $stk_lang->lang(strtoupper($tool)) : strtoupper($tool),
 				);
 			}
 

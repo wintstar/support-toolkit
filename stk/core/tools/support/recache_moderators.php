@@ -28,10 +28,10 @@ class recache_moderators
 	*/
 	function run_tool()
 	{
+		global $stk_lang, $phpbb_root_path, $phpEx;
+
 		if (!function_exists('cache_moderators'))
 		{
-			global $stk_lang, $phpbb_root_path, $phpEx;
-
 			include "{$phpbb_root_path}includes/functions_admin.$phpEx";
 		}
 

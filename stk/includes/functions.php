@@ -251,11 +251,11 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
 
 	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 	{
-		adm_page_header(is_null($stk_lang->lang($title)) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
+		adm_page_header($stk_lang->is_set($title) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
 	}
 	else
 	{
-		page_header(is_null($stk_lang->lang($title)) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
+		page_header($stk_lang->is_set($title) ? $user->lang['CONFIRM'] : $stk_lang->lang($title));
 	}
 
 	$template->set_filenames(array(
@@ -275,8 +275,8 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
 	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
 
 	$template->assign_vars(array(
-		'MESSAGE_TITLE'		=> (is_null($stk_lang->lang($title))) ? $user->lang['CONFIRM'] : $stk_lang->lang($title),
-		'MESSAGE_TEXT'		=> (is_null($stk_lang->lang($title . '_CONFIRM'))) ? $title : $stk_lang->lang($title . '_CONFIRM'),
+		'MESSAGE_TITLE'		=> $stk_lang->is_set($title) ? $user->lang['CONFIRM'] : $stk_lang->lang($title),
+		'MESSAGE_TEXT'		=> $stk_lang->is_set($title . '_CONFIRM') ? $stk_lang->lang($title . '_CONFIRM') : $title,
 
 		'YES_VALUE'			=> $stk_lang->lang('YES'),
 		'S_CONFIRM_ACTION'	=> $u_action,
@@ -307,7 +307,7 @@ function stk_confirm_box($check, $title = '', $hidden = '', $html_body = 'confir
  */
 function perform_unauthed_quick_tasks($action, $submit = false)
 {
-	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $umil, $stk_lang, $request, $user;
+	global $stk_root_path, $phpbb_root_path, $phpEx, $template, $stk_lang, $request, $user;
 
 	switch ($action)
 	{
@@ -556,8 +556,8 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 
 			if (!empty($user))
 			{
-				$msg_text = (!is_null($stk_lang->lang($msg_text))) ? $stk_lang->lang($msg_text) : $msg_text;
-				$msg_title = (!isset($msg_title)) ? $stk_lang->lang('GENERAL_ERROR') : ((!is_null($stk_lang->lang($msg_title))) ? $stk_lang->lang($msg_title) : $msg_title);
+				$msg_text = $stk_lang->is_set($msg_text) ? $stk_lang->lang($msg_text) : $msg_text;
+				$msg_title = (!isset($msg_title)) ? $stk_lang->lang('GENERAL_ERROR') : ($stk_lang->is_set($msg_title) ? $stk_lang->lang($msg_title) : $msg_title);
 
 				$l_return_index = $stk_lang->lang('RETURN_INDEX', '<a href="' . $phpbb_root_path . '">', '</a>');
 				$l_notify = '';
@@ -677,8 +677,8 @@ function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 				stk_send_status_line(404, 'Not Found');
 			}
 
-			$msg_text = (!is_null($stk_lang->lang($msg_text))) ? $stk_lang->lang($msg_text) : $msg_text;
-			$msg_title = (!isset($msg_title)) ? $stk_lang->lang('INFORMATION') : ((!is_null($stk_lang->lang($msg_title))) ? $stk_lang->lang($msg_title) : $msg_title);
+			$msg_text = $stk_lang->is_set($msg_text) ? $stk_lang->lang($msg_text) : $msg_text;
+			$msg_title = (!isset($msg_title)) ? $stk_lang->lang('INFORMATION') : (($stk_lang->is_set($msg_title)) ? $stk_lang->lang($msg_title) : $msg_title);
 
 			if (!defined('HEADER_INC'))
 			{
@@ -987,7 +987,7 @@ function get_groups()
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$selected	= ($row['group_name'] == 'REGISTERED') ? 'selected=selected' : '';
-			$group_name = (($row['group_type'] == GROUP_SPECIAL) && !is_null($stk_lang->lang('G_' . $row['group_name']))) ? $stk_lang->lang('G_' . $row['group_name']) : $row['group_name'];
+			$group_name = (($row['group_type'] == GROUP_SPECIAL) && $stk_lang->is_set('G_' . $row['group_name'])) ? $stk_lang->lang('G_' . $row['group_name']) : $row['group_name'];
 			$option_list .= "<option value='{$row['group_id']}'{$selected}>{$group_name}</option>";
 		}
 
