@@ -1,3 +1,7 @@
+**Support Toolkit will become AdminPlus**
+**This will no longer be developed further. Info https://github.com/wintstar/support-toolkit/discussions/15**
+
+
 [![Support Toolkit](stk/images/support_toolkit_logo_large.png)](https://github.com/wintstar/support-toolkit/ "Support Toolkit")
 
 The Support Toolkit (STK) provides a second "Administration Control Panel" that can be used to recover various part of a corrupted phpBB 3.1.x installation or to solve commonly encountered problems with the software
